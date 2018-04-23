@@ -218,7 +218,7 @@ gl_FragColor = mixBack;
 
           col *= vec3(0.95,1.05,0.95);
 
-          col *= 0.9+0.1*( sin(10.0*time+uv.y*1000.0) + cos(10.0*time+uv.y*1000.0) );
+          col *= 0.9+0.1*( sin(10.0*time+uv.y*500.0) + cos(10.0*time+uv.y*500.0) );
 
           col *= 0.99+0.01*sin(11.0*time);
 

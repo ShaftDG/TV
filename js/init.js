@@ -110,7 +110,7 @@ function init() {
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20000 );
   //  camera.position.x = 20;
    // camera.position.y = 2.0;
-    camera.position.z = 115.0;
+    camera.position.z = 135.0;
   //  camera.position.x = 1.5;
     // scene
     scene = new THREE.Scene();
@@ -120,7 +120,7 @@ function init() {
     scene.add(sunlight);
 ////////////////////////////////////////////
     slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
-    slot.position.y = 4.0;
+    slot.position.y = -3.0;
    // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
@@ -130,7 +130,7 @@ function init() {
        map: textureLoader.load("textures/background/back2.jpg")
     });
     var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.z = -200;
+    mesh.position.z = -170;
     scene.add(mesh);
 ////////////////////////////////////////////
   /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
@@ -170,9 +170,9 @@ function init() {
     var stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 20, 20, -0.75);
-    totalScore2D.position.y = 50;
-    totalScore2D.position.z = 20;
+    totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 15, 15, -0.75);
+    totalScore2D.position.y = 44;
+    totalScore2D.position.z = 0;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();
