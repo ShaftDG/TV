@@ -168,7 +168,7 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 20, 20, -0.75);
-    totalScore2D.position.y = 100;
+    totalScore2D.position.y = 50;
     totalScore2D.position.z = 20;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
@@ -189,12 +189,12 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-  //  controls = new THREE.OrbitControls( camera, renderer.domElement );
-  //  controls.addEventListener( 'change', render ); // remove when using animation loop
+   controls = new THREE.OrbitControls( camera, renderer.domElement );
+   controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-  //  controls.enableZoom = true;
+    controls.enableZoom = true;
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -241,7 +241,7 @@ function animate() {
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
-    if (slot.getTotalSum() > totalRound /*&& boolStopScore */&& slot.getBoolEndAnimation()) {
+    if (slot.getTotalSum() > totalRound && boolStopScore && slot.getBoolEndAnimation()) {
         totalRound = slot.getTotalSum();
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
@@ -252,7 +252,6 @@ function animate() {
         //totalScore3D.visible = true;
         // totalScore3D.restart();
         boolStopScore = false;
-        boolStartStop = false;
         console.log("totalScore", totalScore);
         totalRound = 0;
     }
@@ -260,6 +259,7 @@ function animate() {
    // sunlight.updateWithTime( deltaTimeElapsed );
 ////////////////////////////////////////////////////////////
     slot.updateWithTime(deltaTimeElapsed, deltaTime);
+    totalScore2D.update(deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
    /* if (slot.getBoolEndAnimation()) {
         boolStartStop = false;
@@ -273,7 +273,7 @@ function animate() {
     button.updateWithTime(deltaTime);
 ////////////////////////////////////////////////////////////
 
-  //  controls.update();
+    controls.update();
     stats.update();
     rendererStats.update(renderer);
     render();
@@ -301,6 +301,10 @@ function onKeyDown ( event ) {
         case 32: // stop rotate
            // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
             slot.stopStartRotateSymb();
+            totalScore -= 10.;
+            var stringIn = totalScore.toString();
+            totalScore2D.setString(stringIn);
+            boolStopScore = true;
             break;
     }
 }
@@ -319,6 +323,10 @@ function onDocumentMouseDown( event ) {
         if (intersects[0].object.name == "button") {
                 button.start();
                 slot.stopStartRotateSymb();
+                totalScore -= 10.;
+                var stringIn = totalScore.toString();
+                totalScore2D.setString(stringIn);
+                boolStopScore = true;
         }
       /*  if (intersects[0].object.parent.name == "startStopButton") {
 
