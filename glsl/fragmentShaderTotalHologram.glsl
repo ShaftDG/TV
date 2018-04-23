@@ -134,7 +134,8 @@ gl_FragColor = colorMain;
 
           col *= vec3(0.95,1.05,0.95);
 
-          col *= 0.9+0.01*( sin(10.0*time+uv.y*100.0) - cos(10.0*time+uv.y*100.0) );
+          col *= 0.9+0.01*( sin(sin(10.0*time)+uv.y*100.0) - cos(cos(10.0*time)+uv.y*100.0) );
+          //col *= 0.9+0.01*( sin(10.0*time+uv.y*100.0) - cos(10.0*time+uv.y*100.0) );
 
           col *= 0.99+0.01*sin(11.0*time);
 

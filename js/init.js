@@ -44,6 +44,9 @@ shaders.shaderSetLoaded = function(){
 shaders.load( 'vertexShaderWideScreen' , 'vertexShWideScreen' , 'vertex' );
 shaders.load( 'fragmentShaderWideScreen' , 'fragmentShWideScreen' , 'fragment' );
 
+shaders.load( 'vertexShaderProjector' , 'vertexShProjector' , 'vertex' );
+shaders.load( 'fragmentShaderProjector' , 'fragmentShProjector' , 'fragment' );
+
 shaders.load( 'vertexShaderTotalHologram' , 'vertexShTotalHologram' , 'vertex' );
 shaders.load( 'fragmentShaderTotalHologram' , 'fragmentShTotalHologram' , 'fragment' );
 
@@ -170,9 +173,10 @@ function init() {
     var stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 15, 15, -0.75);
-    totalScore2D.position.y = 44;
-    totalScore2D.position.z = 0;
+    totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
+    totalScore2D.position.y = 37;
+    totalScore2D.position.z = 25;
+    totalScore2D.rotation.x = 0.5;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();

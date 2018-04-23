@@ -96,7 +96,41 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
     }
     this.add( this.groupNumbers );
     this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
-};
+////////////////////////////////////////////
+    var geometry = new THREE.CylinderBufferGeometry(2, 7, 17, 8, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(-Math.PI / 2.0);
+
+    var vertexShader = shaders.vertexShaders.vertexShProjector;
+    var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
+    this.material =	new THREE.ShaderMaterial({
+        uniforms: {
+            rayColor:           { value: new THREE.Color( "#00fff2" ) },
+            time:               { value: 0.0 },
+            rayAngleSpread:     { value: 0.0 },
+            rayDistanceSpread:  { value: 20.0 },
+            rayBrightness:      { value: 11.0 }
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        transparent: true,
+        // blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.x = 35;
+    this.add(mesh);
+
+    var geometry = new THREE.CylinderBufferGeometry(2, 7, 17, 8, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.x = -35;
+    this.add(mesh);
+////////////////////////////////////////////
+
+}
 
 function parseString(stringIn, stringPattern) {
     var str = stringIn;
@@ -116,7 +150,7 @@ function parseString(stringIn, stringPattern) {
         }
     }
     return array;
-};
+}
 
 function arraySymbs(col, row) {
     /* var arraySymb = [
@@ -213,7 +247,7 @@ function arraySymbs(col, row) {
         }
     }
     return arraySymb;
-};
+}
 
 MessagePartsTexture.prototype = Object.create(THREE.Object3D.prototype);
 MessagePartsTexture.prototype.constructor = MessagePartsTexture;
@@ -252,7 +286,7 @@ MessagePartsTexture.prototype.start = function() {
 };
 
 MessagePartsTexture.prototype.update = function(deltaTime) {
-
+    this.material.uniforms.time.value += deltaTime;
         if (this.StartStopSwitch) {
             this.dt = this.dt + deltaTime;
             this.dt1 = this.dt1+ deltaTime*0.3;
