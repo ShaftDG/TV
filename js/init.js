@@ -44,6 +44,9 @@ shaders.shaderSetLoaded = function(){
 shaders.load( 'vertexShaderWideScreen' , 'vertexShWideScreen' , 'vertex' );
 shaders.load( 'fragmentShaderWideScreen' , 'fragmentShWideScreen' , 'fragment' );
 
+shaders.load( 'vertexShaderTotalHologram' , 'vertexShTotalHologram' , 'vertex' );
+shaders.load( 'fragmentShaderTotalHologram' , 'fragmentShTotalHologram' , 'fragment' );
+
 shaders.load( 'vertexShaderHologram' , 'vertexShHologram' , 'vertex' );
 shaders.load( 'fragmentShaderHologram' , 'fragmentShHologram' , 'fragment' );
 

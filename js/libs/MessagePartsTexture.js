@@ -33,6 +33,9 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
 
     this.distanceBetweenCharacters = distanceBetweenCharacters;
 
+    var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
+    var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
+
     for (var j = 0; j < this.arrayNumbers.length; j++ ) {
         var uv = new Float32Array( 8 );
         for (var i = 0; i < uv.length; i++) {
@@ -42,7 +45,33 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
         geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
         geometry.attributes.uv.needsUpdate = true;
 
-        var material = new THREE.MeshBasicMaterial({
+        var materialHolo =	new THREE.ShaderMaterial({
+            defines         : {
+                USE_HOLO      : true,
+                USE_OFF_SYMB  : false,
+                USE_SCANLINE  : true
+            },
+            uniforms: {
+                colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
+                //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
+                s_texture:   { value: textureLoader.load("textures/background/display.png") },
+                f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
+                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                time: { value: 0.0 },
+                rateFactor:   { value: 1.0 }
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: true,
+            // blending:       THREE.AdditiveBlending,
+            //depthTest:      false,
+            //depthWrite:      false,
+        } );
+
+        materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+        materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+
+      /*  var material = new THREE.MeshBasicMaterial({
             color: "#f9eba0",
             map: textureLoader.load('textures/winplane/numbers1.png'),
             //normalMap: textureLoader.load('textures/winplane/numbers1_normal.jpg'),
@@ -59,8 +88,8 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
        // if (!isMobile) {
          //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
           //  material.normalScale = new THREE.Vector2(0.4, 0.4);
-      //  }
-        var mesh = new THREE.Mesh(geometry, material);
+      //  }*/
+        var mesh = new THREE.Mesh(geometry, materialHolo);
         //mesh.visible = false;
         mesh.name = "meshPlane";
         this.groupNumbers.add(mesh);
@@ -269,6 +298,7 @@ MessagePartsTexture.prototype.update = function(deltaTime) {
                       //  }
                     }
                     this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
                 }
             }
 

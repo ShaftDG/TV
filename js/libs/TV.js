@@ -118,7 +118,6 @@ function TV(textureLoader, align, isMobile)
         defines         : {
             USE_HOLO      : false,
             USE_ROTATE    : false,
-          //  USE_3D        : false,
          //   USE_OFF       : false,
             USE_OFF_SYMB  : false,
          //   USE_GLITCH    : false,
@@ -127,11 +126,9 @@ function TV(textureLoader, align, isMobile)
             INDEX_TEXTURE : 3,
         },
         uniforms: {
-            resolution: { value: new THREE.Vector2( 4096.0, 2160.0 ) },
             colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
           //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
             arrayTexture: { value: this.arrayTexturesSymb },
-            indexTexture: { value: 0 },
             f_texture:   { value: textureLoader.load("textures/background/display.png") },
             s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
             noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
@@ -142,7 +139,7 @@ function TV(textureLoader, align, isMobile)
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
-     //   transparent: true,
+        transparent: true,
         // blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,
