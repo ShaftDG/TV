@@ -257,8 +257,8 @@ gl_FragColor = colorFrag;
        vec2 uvFlicker = uv;
        
        //flicker
-       uvFlicker.x += randHolo(vec2(0,uv.y+time*0.5)*(time)) * 0.001;
-       uvFlicker.y += randHolo(vec2(0,uv.x+time*0.5)*(time)) * 0.001;
+      // uvFlicker.x += randHolo(vec2(0,uv.y+time*0.5)*(time)) * 0.001;
+      // uvFlicker.y += randHolo(vec2(0,uv.x+time*0.5)*(time)) * 0.001;
         
        vec3 c = vec3(0.0);
        

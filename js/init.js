@@ -1,4 +1,4 @@
-var container, stats;
+var container;
 
 var camera, scene, renderer, controls;
 
@@ -6,7 +6,7 @@ var sunlight, tv, slot;
 
 var boolStartStop = false;
 var button;
-var startStopButton, buttonFullScreen, button3D, buttonDayNight;
+//var startStopButton, buttonFullScreen, button3D, buttonDayNight;
 var groupButton = new THREE.Object3D;
 
 var clock = new THREE.Clock();
@@ -22,7 +22,7 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2(), INTERSECTED;
+var mouse = new THREE.Vector2()/*, INTERSECTED*/;
 //GUI
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
@@ -30,7 +30,7 @@ var totalScore2D;
 var totalRound = 0;
 var totalScore = 261485;
 var boolStopScore = false;
-var checkStartStop = false;
+//var checkStartStop = false;
 
 var textureLoader;
 var loadingManager = null;
@@ -237,7 +237,7 @@ function animate() {
 
     TWEEN.update();
 
-    var time = Date.now() * 0.01 ;
+   // var time = Date.now() * 0.01 ;
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
@@ -246,12 +246,8 @@ function animate() {
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
         totalScore2D.setString(stringInTotalScore);
-        // var stringInTotalRound = totalRound.toString();
-        // totalScore3D.setString(stringInTotalRound);
-        // totalScore3D.start();
-        //totalScore3D.visible = true;
-        // totalScore3D.restart();
         boolStopScore = false;
+        boolStartStop = false;
         console.log("totalScore", totalScore);
         totalRound = 0;
     }
@@ -323,10 +319,15 @@ function onDocumentMouseDown( event ) {
         if (intersects[0].object.name == "button") {
                 button.start();
                 slot.stopStartRotateSymb();
+            if (!boolStartStop) {
                 totalScore -= 10.;
                 var stringIn = totalScore.toString();
                 totalScore2D.setString(stringIn);
                 boolStopScore = true;
+                boolStartStop = true;
+            } else {
+                boolStartStop = false;
+            }
         }
       /*  if (intersects[0].object.parent.name == "startStopButton") {
 
