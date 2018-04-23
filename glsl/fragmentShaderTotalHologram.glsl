@@ -310,13 +310,10 @@ gl_FragColor = colorFrag;
           gl_FragColor = vec4(col,1.0);
 
 #endif
-/*#ifdef USE_3D
-
-#endif*/
 
    // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
    //clamp border
-    /*  vec2 qq = vUv;
+      vec2 qq = vUv;
 
                    	 qq = ( qq-0.5 ) * vec2(0.25, 0.25);
                                float glow = 0.85;
@@ -326,11 +323,11 @@ gl_FragColor = colorFrag;
                                float clamped = 1.0 - clamp(
                                    ( force - weight.y ) / ( weight.x - weight.y ), 0.0, 1.0
                                );
-                               vec4 clampCircle = (vec4( vec3(1.1) * clamped, 0.0 ))*2.0;*/
+                               vec4 clampCircle = (vec4( vec3(1.1) * clamped, 0.0 ))*2.0;
 
     gl_FragColor = mix(
                             gl_FragColor,
                             vec4(colorBorderDisplay, 1.0),
                             alpha
-                          ) /** clampCircle*/;
+                          ) * clampCircle;
 }

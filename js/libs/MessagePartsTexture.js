@@ -57,8 +57,8 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
            // alphaTest: 0.5
         });
        // if (!isMobile) {
-            material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
-            material.normalScale = new THREE.Vector2(0.4, 0.4);
+         //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
+          //  material.normalScale = new THREE.Vector2(0.4, 0.4);
       //  }
         var mesh = new THREE.Mesh(geometry, material);
         //mesh.visible = false;
