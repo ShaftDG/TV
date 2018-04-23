@@ -56,10 +56,10 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
            // depthTest:       false,
            // alphaTest: 0.5
         });
-        if (!isMobile) {
+       // if (!isMobile) {
             material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
             material.normalScale = new THREE.Vector2(0.4, 0.4);
-        }
+      //  }
         var mesh = new THREE.Mesh(geometry, material);
         //mesh.visible = false;
         mesh.name = "meshPlane";
