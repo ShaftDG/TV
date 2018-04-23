@@ -26,6 +26,12 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 //GUI
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
+var totalScore2D;
+var totalRound = 0;
+var totalScore = 261485;
+var boolStopScore = false;
+var checkStartStop = false;
+
 var textureLoader;
 var loadingManager = null;
 var RESOURCES_LOADED = false;
@@ -153,6 +159,21 @@ function init() {
     groupButton.add(button);
     scene.add(groupButton);
   //  scene.add(button);
+///////////////////////////////////////////////
+    var stringIn = totalScore.toString();
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    var stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
+    totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 20, 20, -0.75);
+    totalScore2D.position.y = 100;
+    totalScore2D.position.z = 20;
+    // totalScore2D.rotation.x = -60 * Math.PI / 180;
+    totalScore2D.setString(stringIn);
+    totalScore2D.start();
+    scene.add(totalScore2D);
 ////////////////////////////////////////////
     renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
     renderer.sortObjects = false;
@@ -220,6 +241,21 @@ function animate() {
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
+    if (slot.getTotalSum() > totalRound /*&& boolStopScore */&& slot.getBoolEndAnimation()) {
+        totalRound = slot.getTotalSum();
+        totalScore += totalRound;
+        var stringInTotalScore = totalScore.toString();
+        totalScore2D.setString(stringInTotalScore);
+        // var stringInTotalRound = totalRound.toString();
+        // totalScore3D.setString(stringInTotalRound);
+        // totalScore3D.start();
+        //totalScore3D.visible = true;
+        // totalScore3D.restart();
+        boolStopScore = false;
+        boolStartStop = false;
+        console.log("totalScore", totalScore);
+        totalRound = 0;
+    }
 ////////////////////////////////////////////////////////////
    // sunlight.updateWithTime( deltaTimeElapsed );
 ////////////////////////////////////////////////////////////

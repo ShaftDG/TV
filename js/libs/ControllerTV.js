@@ -246,14 +246,13 @@ ControllerTV.prototype.getInfoWinLine = function() {
     return infoWinLine;
 };
 
-ControllerTV.prototype.getTotalSum = function() {
-    return this.totalSum;
-};
-
 ControllerTV.prototype.getBoolShowLine = function() {
     return this.boolShowLine;
 };
 */
+ControllerTV.prototype.getTotalSum = function() {
+    return this.totalSum;
+};
 
 ControllerTV.prototype.addAnimation = function() {
 
