@@ -139,7 +139,7 @@ function TV(textureLoader, align, isMobile)
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
-        transparent: true,
+        //transparent: true,
         // blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,

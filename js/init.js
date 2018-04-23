@@ -1,6 +1,7 @@
 var container;
 
 var camera, scene, renderer, controls;
+var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
 
@@ -30,6 +31,7 @@ var totalScore2D;
 var totalRound = 0;
 var totalScore = 261485;
 var boolStopScore = false;
+var boolMoveCamera = false;
 //var checkStartStop = false;
 
 var textureLoader;
@@ -114,10 +116,14 @@ function init() {
   //  camera.position.x = 20;
    // camera.position.y = 2.0;
     camera.position.z = 135.0;
+    camera.position.y = 10.0;
+    cameraParent.add(camera);
+    cameraParent.position.y = -10;
   //  camera.position.x = 1.5;
     // scene
     scene = new THREE.Scene();
     //scene.fog = new THREE.FogExp2( "#e8ede5", 0.1 );
+    scene.add(cameraParent);
 ////////////////////////////////////////////
     sunlight = new SunLight(loadingManager, false);
     scene.add(sunlight);
@@ -174,12 +180,13 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
-    totalScore2D.position.y = 37;
+    totalScore2D.position.y = 37 /*+ 10*/;
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = 0.5;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();
+    //cameraParent.add(totalScore2D);
     scene.add(totalScore2D);
 ////////////////////////////////////////////
     renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
@@ -196,12 +203,12 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-   controls = new THREE.OrbitControls( camera, renderer.domElement );
-   controls.addEventListener( 'change', render ); // remove when using animation loop
+  // controls = new THREE.OrbitControls( camera, renderer.domElement );
+  // controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
+   // controls.enableZoom = true;
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -249,6 +256,7 @@ function animate() {
     var deltaTimeElapsed = clock.getElapsedTime();
 
     if (slot.getTotalSum() > totalRound && boolStopScore && slot.getBoolEndAnimation()) {
+        boolMoveCamera = true;
         totalRound = slot.getTotalSum();
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
@@ -275,8 +283,78 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTime);
 ////////////////////////////////////////////////////////////
+    if (boolMoveCamera) {
+        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
-    controls.update();
+
+        // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
+        // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
+      /*  if (totalScore2D.position.y  <= 40.0) {
+            totalScore2D.position.y = 40.0;
+            //boolMoveCamera = false;
+        } else {
+            totalScore2D.position.y -= deltaTime*5.25;
+        }
+        if (totalScore2D.position.z  >= 45.0) {
+            totalScore2D.position.z = 45.0;
+            //boolMoveCamera = false;
+        } else {
+            totalScore2D.position.z += deltaTime*15.0;
+        }
+*/
+        if (camera.position.z  >= 145.0) {
+            camera.position.z = 145.0;
+            //boolMoveCamera = false;
+        } else {
+            camera.position.z += deltaTime*10.0;
+        }
+
+        if (cameraParent.rotation.x  >= 0.5) {
+            cameraParent.rotation.x = 0.5;
+            //boolMoveCamera = false;
+        } else {
+            cameraParent.rotation.x += deltaTime * 0.5;
+        }
+        if (cameraParent.rotation.y  <= -0.6) {
+            cameraParent.rotation.y = -0.6;
+            //boolMoveCamera = false;
+        } else {
+            cameraParent.rotation.y -= deltaTime * 0.6;
+        }
+    } else {
+       /* if (totalScore2D.position.y  >= 47.0) {
+            totalScore2D.position.y = 47.0;
+            //boolMoveCamera = false;
+        } else {
+            totalScore2D.position.y += deltaTime*5.25;
+        }
+        if (totalScore2D.position.z  <= 25.0) {
+            totalScore2D.position.z = 25.0;
+            //boolMoveCamera = false;
+        } else {
+            totalScore2D.position.z -= deltaTime*15.0;
+        }*/
+        if (camera.position.z  <= 135.0) {
+            camera.position.z = 135.0;
+            //boolMoveCamera = false;
+        } else {
+            camera.position.z -= deltaTime*9.3;
+        }
+
+        if (cameraParent.rotation.x  <= 0.0) {
+            cameraParent.rotation.x = 0.0;
+        } else {
+            cameraParent.rotation.x -= deltaTime * 0.5;
+        }
+        if (cameraParent.rotation.y  >= 0.0) {
+            cameraParent.rotation.y = 0.0;
+        } else {
+            cameraParent.rotation.y += deltaTime * 0.6;
+        }
+    }
+////////////////////////////////////////////////////////////
+  //  controls.update();
     stats.update();
     rendererStats.update(renderer);
     render();
@@ -303,6 +381,7 @@ function onKeyDown ( event ) {
             break;
         case 32: // stop rotate
            // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
+            boolMoveCamera = false;
             slot.stopStartRotateSymb();
             totalScore -= 10.;
             var stringIn = totalScore.toString();
@@ -324,6 +403,7 @@ function onDocumentMouseDown( event ) {
     var intersects = raycaster.intersectObjects( groupButton.children, true );
     if ( intersects.length > 0 ) {
         if (intersects[0].object.name == "button") {
+                boolMoveCamera = false;
                 button.start();
                 slot.stopStartRotateSymb();
             if (!boolStartStop) {

@@ -97,7 +97,7 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
     this.add( this.groupNumbers );
     this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
 ////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 17, 8, 1.0, true);
+    var geometry = new THREE.CylinderBufferGeometry(2, 8, 20, 16, 1.0, true);
     //geometry.rotateX(-Math.PI / 2.0);
     geometry.rotateZ(-Math.PI / 2.0);
 
@@ -122,7 +122,7 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
     mesh.position.x = 35;
     this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 17, 8, 1.0, true);
+    var geometry = new THREE.CylinderBufferGeometry(2, 8, 20, 16, 1.0, true);
     //geometry.rotateX(-Math.PI / 2.0);
     geometry.rotateZ(Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
