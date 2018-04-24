@@ -129,7 +129,7 @@ function init() {
     scene.add(sunlight);
 ////////////////////////////////////////////
     slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
-    slot.position.y = -3.0;
+    slot.position.y = -5.0;
    // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////

@@ -18,14 +18,6 @@ varying vec2 vUv;
 varying vec3 fNormal;
 varying vec3 fPosition;
 
-#ifdef USE_GLITCH
-
-#endif
-
-#ifdef USE_HOLO
-
-#endif
-
 void main() {
  /*if(!gl_FrontFacing) {
        discard;
@@ -100,23 +92,10 @@ void main() {
 
 #endif
 
-#ifdef USE_GLITCH
-
-#endif
-
 #ifdef USE_OFF
-       gl_FragColor *= 0.9;
+       gl_FragColor *= 1.9;
       // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
 #endif
-
-#ifdef USE_HOLO
-
-#endif
-
-#ifdef USE_3D
-
-#endif
-
    // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
    /* gl_FragColor = mix(
                             gl_FragColor,
