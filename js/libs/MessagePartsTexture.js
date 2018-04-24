@@ -63,7 +63,7 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
             transparent: true,
-            // blending:       THREE.AdditiveBlending,
+            blending:       THREE.AdditiveBlending,
             //depthTest:      false,
             //depthWrite:      false,
         } );
@@ -96,8 +96,96 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
     }
     this.add( this.groupNumbers );
     this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
-////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 17, 8, 1.0, true);
+
+///////////////////////////////////////////
+    var materialCorps = new THREE.MeshStandardMaterial({
+        color: new THREE.Color("#a5a5a5"),
+        map: textureLoader.load("textures/holoProj/holoProj_corps_BaseColor.png"),
+        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Metallic.png"),
+        metalness: 0.5,
+        roughnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Roughness.png"),
+        roughness: 0.5,
+        normalMap: textureLoader.load("textures/holoProj/holoProj_corps_Normal.png"),
+    });
+    var materialCorpsLinz = new THREE.MeshStandardMaterial({
+        color: new THREE.Color("#a5a5a5"),
+        map: textureLoader.load("textures/holoProj/holoProj_corpsLinz_BaseColor.png"),
+        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Metallic.png"),
+        metalness: 0.5,
+        roughnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Roughness.png"),
+        roughness: 0.5,
+        normalMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Normal.png"),
+    });
+    ///////////////////////////////////////////////////////
+    var  vertexShader = shaders.vertexShaders.vertexShHologram;
+    var  fragmentShader = shaders.fragmentShaders.fragmentShHologram;
+    this.materialHolo =	new THREE.ShaderMaterial({
+        defines         : {
+            USE_OFF       : true,
+            USE_SCANLINE  : false
+        },
+        uniforms: {
+            color: { value : new THREE.Color("#02e9ff") },
+            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            time: { value: 0.0 },
+            speedFactor:   { value: 10.0 },
+
+            start:   { value: 0.001 },
+            end:   { value: 0.75 },
+            alpha:   { value: 1.0 },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        //side: THREE.DoubleSide,
+        transparent: true,
+        // blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+
+    this.materialHolo.uniforms.f_texture.value.wrapS = this.materialHolo.uniforms.f_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+    this.materialHolo.uniforms.s_texture.value.wrapS = this.materialHolo.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+    this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
+    var materialHolo = this.materialHolo;
+    var OBJobject = "holoProj.obj";
+    var holoParent = new THREE.Object3D;
+    var loaderOBJ = new THREE.OBJLoader( loadingManager );
+    loaderOBJ.load("obj/" + OBJobject, function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                if (child.name == "corps") {
+                    child.material = materialCorps;
+                    //  child.material.color = new THREE.Color("#485675");
+                } else if (child.name == "linz") {
+                    child.material = materialHolo;
+                   //   child.material.color = new THREE.Color("#027500");
+                } else if (child.name == "corpsLinz") {
+                    child.material = materialCorpsLinz;
+                    //  child.material.color = new THREE.Color("#750f00");
+                } else {
+                      child.material.color = new THREE.Color("#ff0100");
+                }
+                /*    mesh.castShadow = true;
+                    //mesh.receiveShadow = true;
+                    var distanceMaterial = new THREE.MeshDistanceMaterial( {
+                        alphaMap: material.alphaMap,
+                        alphaTest: material.alphaTest
+                    } );
+                    mesh.customDistanceMaterial = distanceMaterial;*/
+                // console.log(object);
+                holoParent.add(object);
+            }
+        });
+    });
+      holoParent.scale.set(1.025, 1.0, 1.0);
+      holoParent.position.z = -3.75;
+  //  this.holoParent = holoParent;
+    this.add(holoParent);
+///////////////////////////////////////////
+
+    var geometry = new THREE.CylinderBufferGeometry(2, 8, 20, 16, 1.0, true);
     //geometry.rotateX(-Math.PI / 2.0);
     geometry.rotateZ(-Math.PI / 2.0);
 
@@ -105,7 +193,7 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
     var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
     this.material =	new THREE.ShaderMaterial({
         uniforms: {
-            rayColor:           { value: new THREE.Color( "#00fff2" ) },
+            rayColor:           { value: new THREE.Color( "#02e9ff" ) },
             time:               { value: 0.0 },
             rayAngleSpread:     { value: 0.0 },
             rayDistanceSpread:  { value: 20.0 },
@@ -114,7 +202,8 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
         transparent: true,
-        // blending:       THREE.AdditiveBlending,
+       // side: THREE.DoubleSide,
+        blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,
     } );
@@ -122,13 +211,12 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
     mesh.position.x = 35;
     this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 17, 8, 1.0, true);
+    var geometry = new THREE.CylinderBufferGeometry(2, 8, 20, 16, 1.0, true);
     //geometry.rotateX(-Math.PI / 2.0);
     geometry.rotateZ(Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.x = -35;
     this.add(mesh);
-////////////////////////////////////////////
 
 }
 
@@ -287,6 +375,7 @@ MessagePartsTexture.prototype.start = function() {
 
 MessagePartsTexture.prototype.update = function(deltaTime) {
     this.material.uniforms.time.value += deltaTime;
+    this.materialHolo.uniforms.time.value += deltaTime;
         if (this.StartStopSwitch) {
             this.dt = this.dt + deltaTime;
             this.dt1 = this.dt1+ deltaTime*0.3;
