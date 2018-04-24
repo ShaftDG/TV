@@ -70,7 +70,7 @@ varying vec2 vUv;
 
     vec3 makeBlue(vec3 i)
     {
-        return vec3((i.r + i.g + i.b)/10.0, (i.r + i.g + i.b)/3.0, (i.r + i.g + i.b)/2.75);
+        return vec3((i.r + i.g + i.b)/10.0, (i.r + i.g + i.b)/3.0, (i.r + i.g + i.b)/3.0);
     }
 
     vec3 edgeSample(vec2 uv)
