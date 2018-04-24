@@ -1,6 +1,7 @@
 var container;
 
 var camera, scene, renderer, controls;
+var Parent, bufferTexture, bufferScene, displayScene, composer;
 var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
@@ -105,6 +106,10 @@ function init() {
         slot.addAnimation();
         button.addAnimation();
        // tv.addAnimation();
+        var array = slot.getDisplay();
+        for (var i = 0; i < array.length; i++) {
+            displayScene.add(array[i]);
+        }
     };
 
     textureLoader = new THREE.TextureLoader(loadingManager);
@@ -120,8 +125,30 @@ function init() {
     cameraParent.add(camera);
     cameraParent.position.y = -10;
   //  camera.position.x = 1.5;
+
+
     // scene
+    bufferScene = new THREE.Scene();
+    var parameters = {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        //magFilter: THREE.NearestFilter,
+        format: THREE.RGBFormat,
+       // stencilBuffer: true
+    };
+    bufferTexture = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
+
+    //Let's create a red box
+    Parent = new THREE.Object3D;
+    var redMaterial = new THREE.MeshBasicMaterial({color: new THREE.Color("#ff0004")});
+    var planeGeometry = new THREE.PlaneBufferGeometry( 40, 40, 40);
+    var planeObject = new THREE.Mesh( planeGeometry, redMaterial );
+    planeObject.position.z = 70;
+    Parent.add(planeObject);
+    bufferScene.add(Parent);
+
     scene = new THREE.Scene();
+    displayScene = new THREE.Scene();
     //scene.fog = new THREE.FogExp2( "#e8ede5", 0.1 );
     scene.add(cameraParent);
 ////////////////////////////////////////////
@@ -203,12 +230,35 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-  // controls = new THREE.OrbitControls( camera, renderer.domElement );
-  // controls.addEventListener( 'change', render ); // remove when using animation loop
+   controls = new THREE.OrbitControls( camera, renderer.domElement );
+   controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-   // controls.enableZoom = true;
+    controls.enableZoom = true;
+
+    var clearMaskPass = new THREE.ClearMaskPass();
+    var maskPass1 = new THREE.MaskPass( displayScene, camera );
+    var texture1 = bufferTexture;
+    var texturePass1 = new THREE.TexturePass( texture1 );
+    var outputPass = new THREE.ShaderPass( THREE.CopyShader );
+    outputPass.renderToScreen = true;
+    var renderPass = new THREE.RenderPass( scene, camera );
+  //  renderPass.renderToScreen = true;
+    var parameters = {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBFormat,
+        stencilBuffer: true
+    };
+    var renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
+
+    composer = new THREE.EffectComposer( renderer, renderTarget );
+    composer.addPass( renderPass );
+    composer.addPass( maskPass1 );
+    composer.addPass( texturePass1 );
+    composer.addPass( clearMaskPass );
+    composer.addPass( outputPass );
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -354,14 +404,20 @@ function animate() {
         }
     }
 ////////////////////////////////////////////////////////////
-  //  controls.update();
+    Parent.rotation.x += 0.1;
+    controls.update();
     stats.update();
     rendererStats.update(renderer);
     render();
 }
 
 function render() {
-    renderer.render( scene, camera );
+    //Render onto our off screen texture
+    renderer.render(bufferScene,camera,bufferTexture);
+
+    //Finally, draw to the screen
+    composer.render();
+    //renderer.render( scene, camera );
 }
 
 function onKeyDown ( event ) {
