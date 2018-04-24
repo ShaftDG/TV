@@ -1,6 +1,7 @@
 var container;
 
 var camera, scene, renderer, controls;
+var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
 
@@ -30,6 +31,7 @@ var totalScore2D;
 var totalRound = 0;
 var totalScore = 261485;
 var boolStopScore = false;
+var boolMoveCamera = false;
 //var checkStartStop = false;
 
 var textureLoader;
@@ -102,7 +104,7 @@ function init() {
 
         slot.addAnimation();
         button.addAnimation();
-       // tv.addAnimation();
+        // tv.addAnimation();
     };
 
     textureLoader = new THREE.TextureLoader(loadingManager);
@@ -111,51 +113,55 @@ function init() {
     document.body.appendChild( container );
 
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20000 );
-  //  camera.position.x = 20;
-   // camera.position.y = 2.0;
+    //  camera.position.x = 20;
+    // camera.position.y = 2.0;
     camera.position.z = 135.0;
-  //  camera.position.x = 1.5;
+    camera.position.y = 10.0;
+    cameraParent.add(camera);
+    cameraParent.position.y = -10;
+    //  camera.position.x = 1.5;
     // scene
     scene = new THREE.Scene();
     //scene.fog = new THREE.FogExp2( "#e8ede5", 0.1 );
+    scene.add(cameraParent);
 ////////////////////////////////////////////
     sunlight = new SunLight(loadingManager, false);
     scene.add(sunlight);
 ////////////////////////////////////////////
     slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
     slot.position.y = -3.0;
-   // slot.scale.set(2.1, 2.1, 2.1);
+    // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
     var geometry = new THREE.PlaneBufferGeometry(512, 256);
     geometry.rotateX(-Math.PI*2.0);
     var material = new THREE.MeshPhongMaterial({
-       map: textureLoader.load("textures/background/back2.jpg")
+        map: textureLoader.load("textures/background/back2.jpg")
     });
     var mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = -170;
     scene.add(mesh);
 ////////////////////////////////////////////
-  /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
-    startStopButton.name = "startStopButton";
-    startStopButton.scale.set(0.4, 0.4, 0.4);
-    groupButton.add(startStopButton);
+    /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
+      startStopButton.name = "startStopButton";
+      startStopButton.scale.set(0.4, 0.4, 0.4);
+      groupButton.add(startStopButton);
 
-    buttonFullScreen = new ButtonKey(140, 45, 10, "fullscreen", textureLoader, false);
-    buttonFullScreen.name = "buttonFullScreen";
-    buttonFullScreen.scale.set(0.4, 0.4, 0.4);
-    groupButton.add(buttonFullScreen);*/
+      buttonFullScreen = new ButtonKey(140, 45, 10, "fullscreen", textureLoader, false);
+      buttonFullScreen.name = "buttonFullScreen";
+      buttonFullScreen.scale.set(0.4, 0.4, 0.4);
+      groupButton.add(buttonFullScreen);*/
 
-   /* buttonDayNight = new ButtonKey(180, 207.5, 0, "daynight", textureProvider.getButtonTextures(), isMobile);
-    buttonDayNight.name = "buttonDayNight";
-    buttonDayNight.scale.set(0.5, 0.5, 0.5);
-    groupButton.add(buttonDayNight);
+    /* buttonDayNight = new ButtonKey(180, 207.5, 0, "daynight", textureProvider.getButtonTextures(), isMobile);
+     buttonDayNight.name = "buttonDayNight";
+     buttonDayNight.scale.set(0.5, 0.5, 0.5);
+     groupButton.add(buttonDayNight);
 
-    button3D = new ButtonKey(-150, 50, 0, "3d", textureProvider.getButtonTextures(), isMobile);
-    button3D.name = "button3D";
-    buttonFullScreen.scale.set(0.8, 0.8, 0.8);
-    groupButton.add(button3D);
-    groupButton.name = "groupButton"; */
+     button3D = new ButtonKey(-150, 50, 0, "3d", textureProvider.getButtonTextures(), isMobile);
+     button3D.name = "button3D";
+     buttonFullScreen.scale.set(0.8, 0.8, 0.8);
+     groupButton.add(button3D);
+     groupButton.name = "groupButton"; */
 ////////////////////////////////////////////
     button = new Button3D(textureLoader, false);
     button.name = "button";
@@ -164,7 +170,7 @@ function init() {
     button.rotation.set(-0.4, -0.8, 0.0);
     groupButton.add(button);
     scene.add(groupButton);
-  //  scene.add(button);
+    //  scene.add(button);
 ///////////////////////////////////////////////
     var stringIn = totalScore.toString();
     //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -174,12 +180,13 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
-    totalScore2D.position.y = 37;
+    totalScore2D.position.y = 37 /*+ 10*/;
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = 0.5;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();
+    //cameraParent.add(totalScore2D);
     scene.add(totalScore2D);
 ////////////////////////////////////////////
     renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
@@ -190,18 +197,18 @@ function init() {
     renderer.shadowMap.shadowMapSoft = true;
     renderer.physicallyBasedShading = true;
     renderer.setPixelRatio( window.devicePixelRatio );
-   // renderer.setClearColor("#dcf6ff");
+    // renderer.setClearColor("#dcf6ff");
     renderer.physicallyBasedShading = true;
 
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-   controls = new THREE.OrbitControls( camera, renderer.domElement );
-   controls.addEventListener( 'change', render ); // remove when using animation loop
+    // controls = new THREE.OrbitControls( camera, renderer.domElement );
+    // controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
+    // controls.enableZoom = true;
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -244,11 +251,12 @@ function animate() {
 
     TWEEN.update();
 
-   // var time = Date.now() * 0.01 ;
+    // var time = Date.now() * 0.01 ;
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
     if (slot.getTotalSum() > totalRound && boolStopScore && slot.getBoolEndAnimation()) {
+        boolMoveCamera = true;
         totalRound = slot.getTotalSum();
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
@@ -259,15 +267,15 @@ function animate() {
         totalRound = 0;
     }
 ////////////////////////////////////////////////////////////
-   // sunlight.updateWithTime( deltaTimeElapsed );
+    // sunlight.updateWithTime( deltaTimeElapsed );
 ////////////////////////////////////////////////////////////
     slot.updateWithTime(deltaTimeElapsed, deltaTime);
     totalScore2D.update(deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
-   /* if (slot.getBoolEndAnimation()) {
-        boolStartStop = false;
-        startStopButton.setTexture("start");
-    }*/
+    /* if (slot.getBoolEndAnimation()) {
+         boolStartStop = false;
+         startStopButton.setTexture("start");
+     }*/
     //startStopButton.update(deltaTime * 4.);
     //buttonFullScreen.update(deltaTime * 4.);
     //buttonDayNight.update(deltaTime * 4.);
@@ -275,8 +283,78 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTime);
 ////////////////////////////////////////////////////////////
+    if (boolMoveCamera) {
+        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
-    controls.update();
+
+        // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
+        // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
+        /*  if (totalScore2D.position.y  <= 40.0) {
+              totalScore2D.position.y = 40.0;
+              //boolMoveCamera = false;
+          } else {
+              totalScore2D.position.y -= deltaTime*5.25;
+          }
+          if (totalScore2D.position.z  >= 45.0) {
+              totalScore2D.position.z = 45.0;
+              //boolMoveCamera = false;
+          } else {
+              totalScore2D.position.z += deltaTime*15.0;
+          }
+  */
+        if (camera.position.z  >= 145.0) {
+            camera.position.z = 145.0;
+            //boolMoveCamera = false;
+        } else {
+            camera.position.z += deltaTime*10.0;
+        }
+
+        if (cameraParent.rotation.x  >= 0.5) {
+            cameraParent.rotation.x = 0.5;
+            //boolMoveCamera = false;
+        } else {
+            cameraParent.rotation.x += deltaTime * 0.5;
+        }
+        if (cameraParent.rotation.y  <= -0.6) {
+            cameraParent.rotation.y = -0.6;
+            //boolMoveCamera = false;
+        } else {
+            cameraParent.rotation.y -= deltaTime * 0.6;
+        }
+    } else {
+        /* if (totalScore2D.position.y  >= 47.0) {
+             totalScore2D.position.y = 47.0;
+             //boolMoveCamera = false;
+         } else {
+             totalScore2D.position.y += deltaTime*5.25;
+         }
+         if (totalScore2D.position.z  <= 25.0) {
+             totalScore2D.position.z = 25.0;
+             //boolMoveCamera = false;
+         } else {
+             totalScore2D.position.z -= deltaTime*15.0;
+         }*/
+        if (camera.position.z  <= 135.0) {
+            camera.position.z = 135.0;
+            //boolMoveCamera = false;
+        } else {
+            camera.position.z -= deltaTime*9.3;
+        }
+
+        if (cameraParent.rotation.x  <= 0.0) {
+            cameraParent.rotation.x = 0.0;
+        } else {
+            cameraParent.rotation.x -= deltaTime * 0.5;
+        }
+        if (cameraParent.rotation.y  >= 0.0) {
+            cameraParent.rotation.y = 0.0;
+        } else {
+            cameraParent.rotation.y += deltaTime * 0.6;
+        }
+    }
+////////////////////////////////////////////////////////////
+    //  controls.update();
     stats.update();
     rendererStats.update(renderer);
     render();
@@ -290,19 +368,20 @@ function onKeyDown ( event ) {
     switch ( event.keyCode ) {
         case 82: // r - refresh
             //tv.startAnimation();
-          //  slot.startAnimation();
+            //  slot.startAnimation();
             break;
         case 83: // s - stop
             //tv.stopAnimation();
-          //  slot.stopAnimation();
+            //  slot.stopAnimation();
             break;
         case 84: // t - paused
-           // tv.pausedAnimation();
+            // tv.pausedAnimation();
             //tv.pausedToTimeAnimation();
-           // slot.pausedToTimeAnimation();
+            // slot.pausedToTimeAnimation();
             break;
         case 32: // stop rotate
-           // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
+            // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
+            boolMoveCamera = false;
             slot.stopStartRotateSymb();
             totalScore -= 10.;
             var stringIn = totalScore.toString();
@@ -324,8 +403,9 @@ function onDocumentMouseDown( event ) {
     var intersects = raycaster.intersectObjects( groupButton.children, true );
     if ( intersects.length > 0 ) {
         if (intersects[0].object.name == "button") {
-                button.start();
-                slot.stopStartRotateSymb();
+            boolMoveCamera = false;
+            button.start();
+            slot.stopStartRotateSymb();
             if (!boolStartStop) {
                 totalScore -= 10.;
                 var stringIn = totalScore.toString();
@@ -336,71 +416,71 @@ function onDocumentMouseDown( event ) {
                 boolStartStop = false;
             }
         }
-      /*  if (intersects[0].object.parent.name == "startStopButton") {
+        /*  if (intersects[0].object.parent.name == "startStopButton") {
 
-          //  if (!boolStartStop) {
-            //    if (slot.getBoolEndAnimation()) {
-            //        startStopButton.start();
-             //       slot.stopRotateSymb();
-             //       startStopButton.setTexture("stop");
-                 //   boolStopScore = true;
-                 //   boolStartStop = true;
-                 //   totalScore -= 10.;
-                 //   var stringIn = totalScore.toString();
-                  //  totalScore2D.setString(stringIn);
-                //    boolCoinAnimate = false;
-                 //   boolCoinAnimateEnd = true;
-                  //  boolLeftFishAnimate = false;
-                  //  boolLeftFishAnimateEnd = true;
-                  //  boolRightFishAnimate = false;
-                  //  boolRightFishAnimateEnd = true;
-                  //  boolDownFishAnimate = false;
-                   // boolDownFishAnimateEnd = true;
-                    //  totalScore3D.stop();
-            //    }
-        //    } else {
-                startStopButton.start();
-                slot.stopStartRotateSymb();
-         //       boolStartStop = false;
-          //  }
-        }
-        if (intersects[0].object.parent.name == "buttonFullScreen") {
-            if( THREEx.FullScreen.activated() ){
-                THREEx.FullScreen.cancel();
-                buttonFullScreen.setTexture("fullscreen");
-                // buttonFullScreen.children[0].material.map = fullScreenButton;
-                // buttonFullScreen.children[0].material.map.needsUpdate = true;
-            }else{
-                THREEx.FullScreen.request();
-                buttonFullScreen.setTexture("fullscreencancel");
-                // buttonFullScreen.children[0].material.map = fullScreenButtonCancel;
-                // buttonFullScreen.children[0].material.map.needsUpdate = true;
-            }
-            buttonFullScreen.start();
-        }*/
-       /* if (intersects[0].object.parent.name == "button3D") {
-            if(bool3D){
-                button3D.setTexture("3d");
-                bool3D = false;
-            } else{
-                button3D.setTexture("3dcancel");
-                bool3D = true;
-            }
-            button3D.start();
-        }*/
-       /* if (intersects[0].object.parent.name == "buttonDayNight") {
-            if(boolNight){
-                flameBonfireLeft.stop();
-                flameBonfireRight.stop();
-                sunlight.stop();
-                boolNight = false;
-            } else{
-                sunlight.start();
-                flameBonfireLeft.start();
-                flameBonfireRight.start();
-                boolNight = true;
-            }
-            buttonDayNight.start();
-        }*/
+            //  if (!boolStartStop) {
+              //    if (slot.getBoolEndAnimation()) {
+              //        startStopButton.start();
+               //       slot.stopRotateSymb();
+               //       startStopButton.setTexture("stop");
+                   //   boolStopScore = true;
+                   //   boolStartStop = true;
+                   //   totalScore -= 10.;
+                   //   var stringIn = totalScore.toString();
+                    //  totalScore2D.setString(stringIn);
+                  //    boolCoinAnimate = false;
+                   //   boolCoinAnimateEnd = true;
+                    //  boolLeftFishAnimate = false;
+                    //  boolLeftFishAnimateEnd = true;
+                    //  boolRightFishAnimate = false;
+                    //  boolRightFishAnimateEnd = true;
+                    //  boolDownFishAnimate = false;
+                     // boolDownFishAnimateEnd = true;
+                      //  totalScore3D.stop();
+              //    }
+          //    } else {
+                  startStopButton.start();
+                  slot.stopStartRotateSymb();
+           //       boolStartStop = false;
+            //  }
+          }
+          if (intersects[0].object.parent.name == "buttonFullScreen") {
+              if( THREEx.FullScreen.activated() ){
+                  THREEx.FullScreen.cancel();
+                  buttonFullScreen.setTexture("fullscreen");
+                  // buttonFullScreen.children[0].material.map = fullScreenButton;
+                  // buttonFullScreen.children[0].material.map.needsUpdate = true;
+              }else{
+                  THREEx.FullScreen.request();
+                  buttonFullScreen.setTexture("fullscreencancel");
+                  // buttonFullScreen.children[0].material.map = fullScreenButtonCancel;
+                  // buttonFullScreen.children[0].material.map.needsUpdate = true;
+              }
+              buttonFullScreen.start();
+          }*/
+        /* if (intersects[0].object.parent.name == "button3D") {
+             if(bool3D){
+                 button3D.setTexture("3d");
+                 bool3D = false;
+             } else{
+                 button3D.setTexture("3dcancel");
+                 bool3D = true;
+             }
+             button3D.start();
+         }*/
+        /* if (intersects[0].object.parent.name == "buttonDayNight") {
+             if(boolNight){
+                 flameBonfireLeft.stop();
+                 flameBonfireRight.stop();
+                 sunlight.stop();
+                 boolNight = false;
+             } else{
+                 sunlight.start();
+                 flameBonfireLeft.start();
+                 flameBonfireRight.start();
+                 boolNight = true;
+             }
+             buttonDayNight.start();
+         }*/
     }
 }
