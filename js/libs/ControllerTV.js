@@ -82,8 +82,6 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
         this.tvArray[j]=[];
     }
 
-    this.displayArray = [];
-
     var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
     var lengthY = (this.numTVperLine - 1) * (this.distanceBetweenTVY);
     for (var i = 0; i < this.numLineTV; i++) {
@@ -147,17 +145,6 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
             }
             tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
             this.tvArray[i][j] = tv;
-
-/*
-            var geometry = new THREE.PlaneGeometry( 25, 25 );
-            //geometry.rotateX(Math.PI / 4.0);
-            var mesh = new THREE.Mesh( geometry );
-            mesh.position.z = 50;
-            mesh.position.y = (lengthY / 2) - this.distanceBetweenTVY * i;
-            mesh.position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j;
-
-            this.displayArray.push(mesh);*/
-
         }
     }
 
@@ -174,27 +161,6 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 }
 ControllerTV.prototype = Object.create(THREE.Object3D.prototype);
 ControllerTV.prototype.constructor = ControllerTV;
-
-ControllerTV.prototype.getDisplay =  function()
-{
-    for (var i = 0; i < this.numLineTV; i++) {
-        for (var j = 0; j < this.numTVperLine; j++) {
-            this.tvArray[i][j].children[1].children[0].children[2].scale.set(0.1, 0.1, 0.1);
-            this.tvArray[i][j].children[1].children[0].children[2].position.x = this.tvArray[i][j].position.x;
-            this.tvArray[i][j].children[1].children[0].children[2].position.y = this.tvArray[i][j].position.y - 2.6634;
-            this.tvArray[i][j].children[1].children[0].children[2].position.z = this.tvArray[i][j].position.z + 8.5596;
-
-            this.tvArray[i][j].children[1].children[0].children[2].rotation.x = this.tvArray[i][j].rotation.x;
-            this.tvArray[i][j].children[1].children[0].children[2].rotation.y = this.tvArray[i][j].rotation.y;
-            this.tvArray[i][j].children[1].children[0].children[2].rotation.z = this.tvArray[i][j].rotation.z;
-
-            this.displayArray.push(this.tvArray[i][j].children[1].children[0].children[2]);
-        }
-    }
-
-console.log(this.displayArray);
-    return this.displayArray;
-};
 
 ControllerTV.prototype.setBeginSettings = function() {
     this.boolStart = true;

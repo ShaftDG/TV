@@ -207,9 +207,7 @@ function TV(textureLoader, align, isMobile)
         object.traverse(function (child) {
             if (child.isMesh) {
                 if (child.name == "display") {
-                   // child.material = materialDisplay;
-                  //  child.material.map = bufferTexture;
-                    //displayScene.add(child);
+                    child.material = materialDisplay;
                   //  child.material.color = new THREE.Color("#485675");
              //   } else if (child.name == "panel") {
                 } else if (child.name == "monitor") {
