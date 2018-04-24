@@ -1,8 +1,6 @@
 var container;
 
 var camera, scene, renderer, controls;
-var Parent, bufferTexture, bufferScene, displayScene, composer;
-var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
 
@@ -32,7 +30,6 @@ var totalScore2D;
 var totalRound = 0;
 var totalScore = 261485;
 var boolStopScore = false;
-var boolMoveCamera = false;
 //var checkStartStop = false;
 
 var textureLoader;
@@ -106,10 +103,6 @@ function init() {
         slot.addAnimation();
         button.addAnimation();
        // tv.addAnimation();
-        var array = slot.getDisplay();
-        for (var i = 0; i < array.length; i++) {
-            displayScene.add(array[i]);
-        }
     };
 
     textureLoader = new THREE.TextureLoader(loadingManager);
@@ -121,42 +114,16 @@ function init() {
   //  camera.position.x = 20;
    // camera.position.y = 2.0;
     camera.position.z = 135.0;
-    camera.position.y = 10.0;
-    cameraParent.add(camera);
-    cameraParent.position.y = -10;
   //  camera.position.x = 1.5;
-
-
     // scene
-    bufferScene = new THREE.Scene();
-    var parameters = {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearFilter,
-        //magFilter: THREE.NearestFilter,
-        format: THREE.RGBFormat,
-       // stencilBuffer: true
-    };
-    bufferTexture = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
-
-    //Let's create a red box
-    Parent = new THREE.Object3D;
-    var redMaterial = new THREE.MeshBasicMaterial({color: new THREE.Color("#ff0004")});
-    var planeGeometry = new THREE.PlaneBufferGeometry( 40, 40, 40);
-    var planeObject = new THREE.Mesh( planeGeometry, redMaterial );
-    planeObject.position.z = 70;
-    Parent.add(planeObject);
-    bufferScene.add(Parent);
-
     scene = new THREE.Scene();
-    displayScene = new THREE.Scene();
     //scene.fog = new THREE.FogExp2( "#e8ede5", 0.1 );
-    scene.add(cameraParent);
 ////////////////////////////////////////////
     sunlight = new SunLight(loadingManager, false);
     scene.add(sunlight);
 ////////////////////////////////////////////
     slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
-    slot.position.y = -5.0;
+    slot.position.y = -3.0;
    // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
@@ -207,13 +174,12 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
-    totalScore2D.position.y = 37 /*+ 10*/;
+    totalScore2D.position.y = 37;
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = 0.5;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();
-    //cameraParent.add(totalScore2D);
     scene.add(totalScore2D);
 ////////////////////////////////////////////
     renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
@@ -236,29 +202,6 @@ function init() {
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
     controls.enableZoom = true;
-
-    var clearMaskPass = new THREE.ClearMaskPass();
-    var maskPass1 = new THREE.MaskPass( displayScene, camera );
-    var texture1 = bufferTexture;
-    var texturePass1 = new THREE.TexturePass( texture1 );
-    var outputPass = new THREE.ShaderPass( THREE.CopyShader );
-    outputPass.renderToScreen = true;
-    var renderPass = new THREE.RenderPass( scene, camera );
-  //  renderPass.renderToScreen = true;
-    var parameters = {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearFilter,
-        format: THREE.RGBFormat,
-        stencilBuffer: true
-    };
-    var renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
-
-    composer = new THREE.EffectComposer( renderer, renderTarget );
-    composer.addPass( renderPass );
-    composer.addPass( maskPass1 );
-    composer.addPass( texturePass1 );
-    composer.addPass( clearMaskPass );
-    composer.addPass( outputPass );
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -306,7 +249,6 @@ function animate() {
     var deltaTimeElapsed = clock.getElapsedTime();
 
     if (slot.getTotalSum() > totalRound && boolStopScore && slot.getBoolEndAnimation()) {
-        boolMoveCamera = true;
         totalRound = slot.getTotalSum();
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
@@ -333,78 +275,7 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTime);
 ////////////////////////////////////////////////////////////
-    if (boolMoveCamera) {
-        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
-
-        // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
-        // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
-      /*  if (totalScore2D.position.y  <= 40.0) {
-            totalScore2D.position.y = 40.0;
-            //boolMoveCamera = false;
-        } else {
-            totalScore2D.position.y -= deltaTime*5.25;
-        }
-        if (totalScore2D.position.z  >= 45.0) {
-            totalScore2D.position.z = 45.0;
-            //boolMoveCamera = false;
-        } else {
-            totalScore2D.position.z += deltaTime*15.0;
-        }
-*/
-        if (camera.position.z  >= 145.0) {
-            camera.position.z = 145.0;
-            //boolMoveCamera = false;
-        } else {
-            camera.position.z += deltaTime*10.0;
-        }
-
-        if (cameraParent.rotation.x  >= 0.5) {
-            cameraParent.rotation.x = 0.5;
-            //boolMoveCamera = false;
-        } else {
-            cameraParent.rotation.x += deltaTime * 0.5;
-        }
-        if (cameraParent.rotation.y  <= -0.6) {
-            cameraParent.rotation.y = -0.6;
-            //boolMoveCamera = false;
-        } else {
-            cameraParent.rotation.y -= deltaTime * 0.6;
-        }
-    } else {
-       /* if (totalScore2D.position.y  >= 47.0) {
-            totalScore2D.position.y = 47.0;
-            //boolMoveCamera = false;
-        } else {
-            totalScore2D.position.y += deltaTime*5.25;
-        }
-        if (totalScore2D.position.z  <= 25.0) {
-            totalScore2D.position.z = 25.0;
-            //boolMoveCamera = false;
-        } else {
-            totalScore2D.position.z -= deltaTime*15.0;
-        }*/
-        if (camera.position.z  <= 135.0) {
-            camera.position.z = 135.0;
-            //boolMoveCamera = false;
-        } else {
-            camera.position.z -= deltaTime*9.3;
-        }
-
-        if (cameraParent.rotation.x  <= 0.0) {
-            cameraParent.rotation.x = 0.0;
-        } else {
-            cameraParent.rotation.x -= deltaTime * 0.5;
-        }
-        if (cameraParent.rotation.y  >= 0.0) {
-            cameraParent.rotation.y = 0.0;
-        } else {
-            cameraParent.rotation.y += deltaTime * 0.6;
-        }
-    }
-////////////////////////////////////////////////////////////
-    Parent.rotation.x += 0.1;
     controls.update();
     stats.update();
     rendererStats.update(renderer);
@@ -412,12 +283,7 @@ function animate() {
 }
 
 function render() {
-    //Render onto our off screen texture
-    renderer.render(bufferScene,camera,bufferTexture);
-
-    //Finally, draw to the screen
-    composer.render();
-    //renderer.render( scene, camera );
+    renderer.render( scene, camera );
 }
 
 function onKeyDown ( event ) {
@@ -437,7 +303,6 @@ function onKeyDown ( event ) {
             break;
         case 32: // stop rotate
            // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
-            boolMoveCamera = false;
             slot.stopStartRotateSymb();
             totalScore -= 10.;
             var stringIn = totalScore.toString();
@@ -459,7 +324,6 @@ function onDocumentMouseDown( event ) {
     var intersects = raycaster.intersectObjects( groupButton.children, true );
     if ( intersects.length > 0 ) {
         if (intersects[0].object.name == "button") {
-                boolMoveCamera = false;
                 button.start();
                 slot.stopStartRotateSymb();
             if (!boolStartStop) {
