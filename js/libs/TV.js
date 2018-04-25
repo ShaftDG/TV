@@ -116,10 +116,7 @@ function TV(textureLoader, align, isMobile)
 
     this.materialDisplay =	new THREE.ShaderMaterial({
         defines         : {
-          //  USE_HOLO      : false,
-         //   USE_ROTATE    : false,
          //   USE_OFF       : false,
-          //  USE_OFF_SYMB  : false,
          //   USE_GLITCH    : false,
             USE_SCANLINE  : true,
             NUMSYMB       : 8,
@@ -193,16 +190,7 @@ function TV(textureLoader, align, isMobile)
         normalMap: textureLoader.load("textures/tv/tv_root_Normal.png"),
     });
     var tvParent = new THREE.Object3D;
-/*    var FBXobject;
-    if (align == "up") {
-        FBXobject = "tvUp.fbx";
-    } else if (align == "middle") {
-        FBXobject = "tvMiddle.fbx";
-    } else if (align == "down") {
-        FBXobject = "tvDown.fbx";
-    } else {
-        FBXobject = "tvUp.fbx";
-    }*/
+
     var FBXobject = "tvCRT.fbx";
 
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
@@ -213,13 +201,10 @@ function TV(textureLoader, align, isMobile)
                 if (child.name == "display") {
                     child.material = materialDisplay;
                   //  child.material.color = new THREE.Color("#485675");
-             //   } else if (child.name == "panel") {
                 } else if (child.name == "monitor") {
                     child.material = materialPanel;
-             //   } else if (child.name == "hand1") {
                 } else if (child.name == "bracket") {
                     child.material = materialHand1;
-               // } else if (child.name == "hand2") {
               //      child.material = materialHand2;
                 } else {
                     child.material = materialRoot;
@@ -351,20 +336,7 @@ TV.prototype.pausedToTimeAnimation = function () {
 };
 
 TV.prototype.rotateSymb = function ( time, deltaTime ) {
-    /*this.dt += deltaTime * this.speedFactor;
-
-    if (this.dt >= 1.0/this.speedFactor) {
-        this.i++;
-        this.dt = 0.0;
-        if (this.i > 7) {
-            this.i = 0;
-        }
-    }*/
-
-  //  this.materialDisplay.defines.INDEX_TEXTURE = this.i;
-   // this.materialDisplay.defines.INDEX_TEXTURE = Math.round(Math.random() * 7.0);
     this.materialDisplay.uniforms.timeRotate.value += deltaTime;
-   // this.materialDisplay.needsUpdate = true;
 };
 
 TV.prototype.stopRotateSymb = function ( indexStopSymb ) {
@@ -374,11 +346,6 @@ TV.prototype.stopRotateSymb = function ( indexStopSymb ) {
     this.materialDisplay.uniforms.timeRotate.value = 0.0;
     this.tween.start();
     this.materialDisplay.uniforms.boolRotate.value = false;
-   // this.materialDisplay.defines.USE_GLITCH = false;
-   // this.materialDisplay.defines.USE_ROTATE = false;
-  //  this.materialDisplay.defines.USE_OFF = false;
-   // this.materialDisplay.defines.INDEX_TEXTURE = this.indexStopSymb;
-   // this.materialDisplay.needsUpdate = true;
     this.materialDisplay.uniforms.textureIndex.value = this.indexStopSymb;
 };
 
@@ -389,11 +356,6 @@ TV.prototype.startRotateSymb = function () {
     this.tween.stop();
     this.materialDisplay.uniforms.timeRotate.value = 0;
     this.materialDisplay.uniforms.boolRotate.value = true;
- //   this.materialDisplay.defines.INDEX_TEXTURE = Math.round(Math.random() * 7.0);
-   // this.materialDisplay.defines.USE_GLITCH = true;
-   // this.materialDisplay.defines.USE_ROTATE = true;
-   // this.materialDisplay.defines.USE_OFF = false;
-   // this.materialDisplay.needsUpdate = true;
 };
 
 TV.prototype.updateWithTime = function ( time, deltaTime ) {

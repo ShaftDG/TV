@@ -204,7 +204,6 @@ ControllerTV.prototype.start = function() {
 
 ControllerTV.prototype.stop = function() {
     if (this.arrayStop.length != 0 && this.isStopped) {
-        console.log("fggggg");
         this.isStopped = false;
      //   this.boolRotate = false;
         this.boolForceStop = true;
@@ -299,7 +298,7 @@ ControllerTV.prototype.pausedToTimeAnimation = function () {
 };
 
 ControllerTV.prototype.stopStartRotateSymb = function () {
-    console.log(this.boolRotate);
+
     if ( this.boolRotate ) {
         this.stop();
     } else {
@@ -308,7 +307,6 @@ ControllerTV.prototype.stopStartRotateSymb = function () {
                 for (var j = 0; j < this.numTVperLine; j++) {
                     this.tvArray[j][i].stopAnimation();
                     this.tvArray[i][j].startRotateSymb();
-                    //this.tvArray[j][i].materialDisplay.defines.USE_HOLO = false;
                     this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
                     this.tvArray[j][i].materialDisplay.needsUpdate = true;
                 }
@@ -418,29 +416,13 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
               for (var i = 0; i < this.tvArray.length; i++) {
                   for (var j = 0; j < this.tvArray[0].length; j++) {
                       if (this.moveArray[this.k][i][j] == 1) {
-                          // this.tvArray[j][i].materialDisplay.defines.USE_GLITCH = false;
-                         // this.tvArray[j][i].materialDisplay.defines.USE_OFF = false;
-                          //this.tvArray[j][i].materialDisplay.defines.USE_HOLO = true;
                           this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
                           this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
-                          //this.tvArray[j][i].materialDisplay.defines.USE_OFF_SYMB = true;
-                          //this.tvArray[j][i].materialDisplay.needsUpdate = true;
                           this.tvArray[j][i].symbsParent.visible = true;
                           this.tvArray[j][i].startAnimation();
                           this.boolMoveFront = false;
-                          //console.log(this.tvArray[j][i].actionSymbs[this.arrayStop[this.f][j]].time);
-                      /*     if ( this.tvArray[j][i].actionSymbs[this.arrayStop[this.f][j]].time >= 1 ) {
-                                this.tvArray[j][i].actionSymbs[this.arrayStop[this.f][j]].paused = true;
-                           } else {
-                                this.tvArray[j][i].actionSymbs[this.arrayStop[this.f][j]].paused = false;
-                               // this.boolMoveFront = false;
-                           }*/
                       } else {
-                          // this.tvArray[j][i].materialDisplay.defines.USE_GLITCH = true;
-                        //  this.tvArray[j][i].materialDisplay.defines.USE_OFF = true;
-                          //this.tvArray[j][i].materialDisplay.defines.USE_HOLO = false;
                           this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                          //this.tvArray[j][i].materialDisplay.needsUpdate = true;
                       }
                   }
               }
@@ -451,11 +433,8 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
 
                           if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
                               this.tvArray[j][i].stopAnimation();
-                              //this.tvArray[j][i].materialDisplay.defines.USE_OFF_SYMB = false;
-                              //this.tvArray[j][i].materialDisplay.defines.USE_HOLO = false;
                               this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
                               this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                             // this.tvArray[j][i].materialDisplay.needsUpdate = true;
                               this.tvArray[j][i].symbsParent.visible = false;
                               this.boolMoveFront = true;
                            }
@@ -471,7 +450,6 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
 
             if ( this.switchK ) {
                 this.k++;
-                //console.log(this.k);
                 if (this.k > this.moveArray.length - 1) {
                     this.k = 0;
                 }
