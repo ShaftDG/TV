@@ -12,6 +12,12 @@ uniform sampler2D f_texture;
 uniform sampler2D s_texture;
 uniform sampler2D noise_texture;
 
+uniform int textureIndex;
+
+uniform bool boolRotate;
+uniform bool boolHolo;
+uniform bool boolOffSymb;
+
 varying vec2 vUv;
 
 /*#ifdef USE_GLITCH
@@ -33,7 +39,31 @@ varying vec2 vUv;
    }
 #endif*/
 
-#ifdef USE_HOLO
+vec4 getSampleFromArray(sampler2D arrayTexture[NUMSYMB], int ndx, vec2 uv) {
+    vec4 color;
+    if (ndx == 0) {
+      color = texture2D(arrayTexture[0], uv);
+    } else if (ndx == 1) {
+      color = texture2D(arrayTexture[1], uv);
+    } else if (ndx == 2) {
+      color = texture2D(arrayTexture[2], uv);
+    } else if (ndx == 3) {
+      color = texture2D(arrayTexture[3], uv);
+    } else if (ndx == 4) {
+      color = texture2D(arrayTexture[4], uv);
+    } else if (ndx == 5) {
+      color = texture2D(arrayTexture[5], uv);
+    } else if (ndx == 6) {
+      color = texture2D(arrayTexture[6], uv);
+    } else if (ndx == 7) {
+      color = texture2D(arrayTexture[7], uv);
+    } else {
+      color = texture2D(arrayTexture[0], uv);
+    }
+    return color;
+}
+
+//#ifdef USE_HOLO
     vec3 rgb2hsv(vec3 rgb)
     {
     	float Cmax = max(rgb.r, max(rgb.g, rgb.b));
@@ -86,9 +116,11 @@ varying vec2 vUv;
     vec3 edgeSample(vec2 uv)
     {
       vec3 c = texture2D( arrayTexture[INDEX_TEXTURE], vec2(uv.x, 1.0-uv.y) ).rgb;
-      #ifdef USE_OFF_SYMB
+      //#ifdef USE_OFF_SYMB
+      if (boolOffSymb) {
          c = vec3(0.0);
-      #endif
+      }
+      //#endif
       vec4 newcolor = texture2D(f_texture, vec2(uv.x, uv.y - time)  );
 
       float incrustation = chromaKey(c);
@@ -96,7 +128,7 @@ varying vec2 vUv;
       return c;
     }
 
-#endif
+//#endif
 
 void main() {
     
@@ -119,40 +151,44 @@ float sharpness = 100.0;
 
 //gl_FragColor
 vec4 colorBack = vec4(1.0);
-vec4 colorMain = texture2D(arrayTexture[INDEX_TEXTURE], vec2(vUv.x, vUv.y + t));
-vec4 colorSecond = texture2D(arrayTexture[INDEX_TEXTURE >= 7 ? 0 : INDEX_TEXTURE + 1], vec2(vUv.x, vUv.y + t));
+vec4 colorMain = getSampleFromArray(arrayTexture, int(textureIndex), vec2(vUv.x, vUv.y + t));
+vec4 colorSecond = getSampleFromArray(arrayTexture, int(textureIndex) >= 7 ? 0 : int(textureIndex) + 1, vec2(vUv.x, vUv.y + t));
+//vec4 colorMain = texture2D(arrayTexture[INDEX_TEXTURE], vec2(vUv.x, vUv.y + t));
+//vec4 colorSecond = texture2D(arrayTexture[INDEX_TEXTURE >= 7 ? 0 : INDEX_TEXTURE + 1], vec2(vUv.x, vUv.y + t));
 
-#ifdef USE_ROTATE
-float f = sin(t*2.0);
-if (f >= -1.0 && f <= -0.75) {
-        colorMain = texture2D(arrayTexture[7], vec2(vUv.x, vUv.y + t));
-        colorSecond = texture2D(arrayTexture[0], vec2(vUv.x, vUv.y + t));
-} else if (f >= -0.75 && f < -0.5) {
-    colorMain = texture2D(arrayTexture[6], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[1], vec2(vUv.x, vUv.y + t));
-} else if (f >= -0.5 && f < -0.25) {
-    colorMain = texture2D(arrayTexture[5], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[2], vec2(vUv.x, vUv.y + t));
-} else if (f >= -0.25 && f < 0.0) {
-    colorMain = texture2D(arrayTexture[4], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[3], vec2(vUv.x, vUv.y + t));
-} else if (f >= 0.0 && f < 0.25) {
-    colorMain = texture2D(arrayTexture[3], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[4], vec2(vUv.x, vUv.y + t));
-} else if (f >= 0.25 && f < 0.5) {
-    colorMain = texture2D(arrayTexture[2], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[5], vec2(vUv.x, vUv.y + t));
-} else if (f >= 0.5 && f < 0.75) {
-    colorMain = texture2D(arrayTexture[1], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[6], vec2(vUv.x, vUv.y + t));
-} else if (f >= 0.75 && f <= 1.0) {
-    colorMain = texture2D(arrayTexture[0], vec2(vUv.x, vUv.y + t));
-    colorSecond = texture2D(arrayTexture[7], vec2(vUv.x, vUv.y + t));
-} else {
-       colorMain = texture2D(arrayTexture[7], vec2(vUv.x, vUv.y + t));
-       colorSecond = texture2D(arrayTexture[0], vec2(vUv.x, vUv.y + t));
-}
-#endif
+//#ifdef USE_ROTATE
+    if (boolRotate) {
+        float f = sin(t*2.0);
+        if (f >= -1.0 && f <= -0.75) {
+                colorMain = texture2D(arrayTexture[7], vec2(vUv.x, vUv.y + t));
+                colorSecond = texture2D(arrayTexture[0], vec2(vUv.x, vUv.y + t));
+        } else if (f >= -0.75 && f < -0.5) {
+            colorMain = texture2D(arrayTexture[6], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[1], vec2(vUv.x, vUv.y + t));
+        } else if (f >= -0.5 && f < -0.25) {
+            colorMain = texture2D(arrayTexture[5], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[2], vec2(vUv.x, vUv.y + t));
+        } else if (f >= -0.25 && f < 0.0) {
+            colorMain = texture2D(arrayTexture[4], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[3], vec2(vUv.x, vUv.y + t));
+        } else if (f >= 0.0 && f < 0.25) {
+            colorMain = texture2D(arrayTexture[3], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[4], vec2(vUv.x, vUv.y + t));
+        } else if (f >= 0.25 && f < 0.5) {
+            colorMain = texture2D(arrayTexture[2], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[5], vec2(vUv.x, vUv.y + t));
+        } else if (f >= 0.5 && f < 0.75) {
+            colorMain = texture2D(arrayTexture[1], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[6], vec2(vUv.x, vUv.y + t));
+        } else if (f >= 0.75 && f <= 1.0) {
+            colorMain = texture2D(arrayTexture[0], vec2(vUv.x, vUv.y + t));
+            colorSecond = texture2D(arrayTexture[7], vec2(vUv.x, vUv.y + t));
+        } else {
+               colorMain = texture2D(arrayTexture[7], vec2(vUv.x, vUv.y + t));
+               colorSecond = texture2D(arrayTexture[0], vec2(vUv.x, vUv.y + t));
+        }
+    }
+//#endif
 
 vec4 colorTotal =  mix( colorMain,
                         colorSecond,
@@ -182,7 +218,8 @@ gl_FragColor = mixBack;
       // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
 #endif*/
 
-#ifdef USE_HOLO
+//#ifdef USE_HOLO
+    if (boolHolo) {
        uv = vec2(vUv.x, vUv.y);
         
        //Invert for video
@@ -197,8 +234,8 @@ gl_FragColor = mixBack;
        colorHolo.a = max(colorHolo.r, max(colorHolo.g, colorHolo.b));
 
        gl_FragColor = mix(mixBack*(3.0 - clamp(rateFactor*2.0/colorHolo.a, 0.0, 1.0)), colorHolo, clamp(rateFactor/colorHolo.a, 0.0, 1.0));
-
-#endif
+    }
+//#endif
 
 #ifdef USE_SCANLINE
 

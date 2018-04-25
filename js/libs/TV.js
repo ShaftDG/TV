@@ -116,10 +116,10 @@ function TV(textureLoader, align, isMobile)
 
     this.materialDisplay =	new THREE.ShaderMaterial({
         defines         : {
-            USE_HOLO      : false,
-            USE_ROTATE    : false,
+          //  USE_HOLO      : false,
+         //   USE_ROTATE    : false,
          //   USE_OFF       : false,
-            USE_OFF_SYMB  : false,
+          //  USE_OFF_SYMB  : false,
          //   USE_GLITCH    : false,
             USE_SCANLINE  : true,
             NUMSYMB       : 8,
@@ -135,11 +135,15 @@ function TV(textureLoader, align, isMobile)
             time: { value: 0.0 },
             timeRotate: { value: 1.0 },
             rateFactor:   { value: 0.0 },
-            speedFactor:   { value: this.speedFactor }
+            speedFactor:   { value: this.speedFactor },
+            boolRotate: { value: false },
+            boolHolo: { value: false },
+            boolOffSymb: { value: false },
+            textureIndex: { value: 1.0 },
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
-        transparent: true,
+       // transparent: true,
         // blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,
@@ -238,7 +242,7 @@ function TV(textureLoader, align, isMobile)
     this.tvParent = tvParent;
     this.add(tvParent);
 
-    this.setupTween ( { value: 0.0 }, 0.25, 350 );
+    this.setupTween ( { value: 0.0 }, 0.25, 275 );
 
   /*  var geometry = new THREE.PlaneBufferGeometry(200, 160);
     geometry.rotateX(-Math.PI*2.0);
@@ -369,11 +373,13 @@ TV.prototype.stopRotateSymb = function ( indexStopSymb ) {
     this.boolRotate = false;
     this.materialDisplay.uniforms.timeRotate.value = 0.0;
     this.tween.start();
+    this.materialDisplay.uniforms.boolRotate.value = false;
    // this.materialDisplay.defines.USE_GLITCH = false;
-    this.materialDisplay.defines.USE_ROTATE = false;
+   // this.materialDisplay.defines.USE_ROTATE = false;
   //  this.materialDisplay.defines.USE_OFF = false;
-    this.materialDisplay.defines.INDEX_TEXTURE = this.indexStopSymb;
-    this.materialDisplay.needsUpdate = true;
+   // this.materialDisplay.defines.INDEX_TEXTURE = this.indexStopSymb;
+   // this.materialDisplay.needsUpdate = true;
+    this.materialDisplay.uniforms.textureIndex.value = this.indexStopSymb;
 };
 
 TV.prototype.startRotateSymb = function () {
@@ -382,11 +388,12 @@ TV.prototype.startRotateSymb = function () {
     this.boolRotate = true;
     this.tween.stop();
     this.materialDisplay.uniforms.timeRotate.value = 0;
+    this.materialDisplay.uniforms.boolRotate.value = true;
  //   this.materialDisplay.defines.INDEX_TEXTURE = Math.round(Math.random() * 7.0);
    // this.materialDisplay.defines.USE_GLITCH = true;
-    this.materialDisplay.defines.USE_ROTATE = true;
+   // this.materialDisplay.defines.USE_ROTATE = true;
    // this.materialDisplay.defines.USE_OFF = false;
-    this.materialDisplay.needsUpdate = true;
+   // this.materialDisplay.needsUpdate = true;
 };
 
 TV.prototype.updateWithTime = function ( time, deltaTime ) {
@@ -411,40 +418,41 @@ TV.prototype.updateWithTime = function ( time, deltaTime ) {
         }
     }  
 
-    if (this.boolRate) {
-        this.materialDisplay.uniforms.rateFactor.value += deltaTime*(1.0 - Math.sin(time*5.0) * Math.cos(time*5.0))*2.0;
+    if (this.arraySymbObjects[this.indexStopSymb].children[0].visible) {
+        if (this.boolRate) {
+            this.materialDisplay.uniforms.rateFactor.value += deltaTime * (1.0 - Math.sin(time * 5.0) * Math.cos(time * 5.0)) * 2.0;
+        }
+
+        if (this.actionSymbs[this.indexStopSymb].time < 1.0) {
+
+            this.symbsParent.rotation.x = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.05  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+            this.symbsParent.rotation.y = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1;
+            this.symbsParent.rotation.z = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.x = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.25  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.y = this.actionSymbs[this.indexStopSymb].time * Math.sin(time * 8.0);
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.z = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+
+        } else if (this.actionSymbs[this.indexStopSymb].time >= 1.0) {
+
+            this.symbsParent.rotation.x = (2.0 - this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.05 /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+            this.symbsParent.rotation.y = (2.0 - this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1;
+            this.symbsParent.rotation.z = (2.0 - this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.x = (2.0 - this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.25  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.y = (2.0 - this.actionSymbs[this.indexStopSymb].time) * Math.sin(time * 8.0);
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.z = (2.0 - this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+
+        } else if (this.actionSymbs[this.indexStopSymb].time >= 2.0) {
+
+            this.symbsParent.rotation.x = 0;
+            this.symbsParent.rotation.y = 0;
+            this.symbsParent.rotation.z = 0;
+
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.x = 0;
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.y = 0;
+            this.arraySymbObjects[this.indexStopSymb].children[0].rotation.z = 0;
+        }
     }
-
-    if (this.actionSymbs[this.indexStopSymb].time < 1.0 ) {
-
-        this.symbsParent.rotation.x = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.05  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        this.symbsParent.rotation.y = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1;
-        this.symbsParent.rotation.z = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.x = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.25  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.y = this.actionSymbs[this.indexStopSymb].time * Math.sin(time * 8.0);
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.z = this.actionSymbs[this.indexStopSymb].time * (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-
-    } else if (this.actionSymbs[this.indexStopSymb].time >= 1.0 ) {
-
-        this.symbsParent.rotation.x = (2.0-this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.05 /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        this.symbsParent.rotation.y = (2.0-this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1;
-        this.symbsParent.rotation.z = (2.0-this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 8.0) - Math.cos(time * 8.0)) * 0.1  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.x = (2.0-this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 4.0) - Math.cos(time * 4.0)) * 0.25  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.y = (2.0-this.actionSymbs[this.indexStopSymb].time) * Math.sin(time * 8.0);
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.z = (2.0-this.actionSymbs[this.indexStopSymb].time) * (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-
-    } else if (this.actionSymbs[this.indexStopSymb].time >= 2.0 ) {
-
-        this.symbsParent.rotation.x = 0;
-        this.symbsParent.rotation.y = 0;
-        this.symbsParent.rotation.z = 0;
-
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.x = 0;
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.y = 0;
-        this.arraySymbObjects[this.indexStopSymb].children[0].rotation.z = 0;
-    }
-
 
 };

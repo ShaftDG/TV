@@ -283,14 +283,14 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTime);
 ////////////////////////////////////////////////////////////
-    if (boolMoveCamera) {
-        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
+    /*if (boolMoveCamera) {
+        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /!*+ Math.random() * (0.22 - 0.2) + 0.2*!/;
+        // cameraParent.rotation.y =/!* Math.abs*!/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
 
         // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
         // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
-        /*  if (totalScore2D.position.y  <= 40.0) {
+        /!*  if (totalScore2D.position.y  <= 40.0) {
               totalScore2D.position.y = 40.0;
               //boolMoveCamera = false;
           } else {
@@ -302,7 +302,7 @@ function animate() {
           } else {
               totalScore2D.position.z += deltaTime*15.0;
           }
-  */
+  *!/
         if (camera.position.z  >= 145.0) {
             camera.position.z = 145.0;
             //boolMoveCamera = false;
@@ -323,7 +323,7 @@ function animate() {
             cameraParent.rotation.y -= deltaTime * 0.6;
         }
     } else {
-        /* if (totalScore2D.position.y  >= 47.0) {
+        /!* if (totalScore2D.position.y  >= 47.0) {
              totalScore2D.position.y = 47.0;
              //boolMoveCamera = false;
          } else {
@@ -334,7 +334,7 @@ function animate() {
              //boolMoveCamera = false;
          } else {
              totalScore2D.position.z -= deltaTime*15.0;
-         }*/
+         }*!/
         if (camera.position.z  <= 135.0) {
             camera.position.z = 135.0;
             //boolMoveCamera = false;
@@ -352,7 +352,7 @@ function animate() {
         } else {
             cameraParent.rotation.y += deltaTime * 0.6;
         }
-    }
+    }*/
 ////////////////////////////////////////////////////////////
     //  controls.update();
     stats.update();
