@@ -13,17 +13,17 @@ var groupButton = new THREE.Object3D;
 var clock = new THREE.Clock();
 var mouseX = 0, mouseY = 0;
 var stats;
-var rendererStats	= new THREEx.RendererStats();
+/*var rendererStats	= new THREEx.RendererStats();
 rendererStats.domElement.style.position	= 'absolute';
 rendererStats.domElement.style.right	= '0px';
 rendererStats.domElement.style.bottom	= '0px';
-document.body.appendChild( rendererStats.domElement );
+document.body.appendChild( rendererStats.domElement );*/
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2()/*, INTERSECTED*/;
+var mouse = new THREE.Vector2(), INTERSECTED;
 //GUI
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
@@ -33,6 +33,7 @@ var totalScore = 261485;
 var boolStopScore = false;
 var boolMoveCamera = false;
 //var checkStartStop = false;
+var isMobile;
 
 var textureLoader;
 var loadingManager = null;
@@ -59,6 +60,8 @@ shaders.load( 'vertexShaderLoader' , 'vertexShLoader' , 'vertex' );
 shaders.load( 'fragmentShaderLoader' , 'fragmentShLoader' , 'fragment' );
 
 function init() {
+    isMobile = new DetectedMobile().getIsMobile();
+
     loadingScreen = {
         scene: new THREE.Scene(),
         camera: new THREE.PerspectiveCamera(90, 1280/720, 0.1, 100),
@@ -103,7 +106,7 @@ function init() {
         RESOURCES_LOADED = true;
 
         slot.addAnimation();
-        button.addAnimation();
+      //  button.addAnimation();
         // tv.addAnimation();
     };
 
@@ -165,10 +168,11 @@ function init() {
 ////////////////////////////////////////////
     button = new Button3D(textureLoader, false);
     button.name = "button";
-    button.position.set(55, -20.0, 25.0);
-    button.scale.set(0.15, 0.15, 0.15);
-    button.rotation.set(-0.4, -0.8, 0.0);
+    button.position.set(60, -30.0, 20.0);
+    button.scale.set(0.2, 0.2, 0.2);
+    button.rotation.set(0.5, 0.0, 0.3);
     groupButton.add(button);
+    groupButton.name = "groupButton";
     scene.add(groupButton);
     //  scene.add(button);
 ///////////////////////////////////////////////
@@ -187,6 +191,7 @@ function init() {
     totalScore2D.setString(stringIn);
     totalScore2D.start();
     //cameraParent.add(totalScore2D);
+    totalScore2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalScore2D);
 ////////////////////////////////////////////
     renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
@@ -214,7 +219,11 @@ function init() {
     container.appendChild( stats.dom );
 
     document.addEventListener( 'mouseup', onDocumentMouseDown, false );
-    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+    if (!isMobile) {
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+    }
+
     document.addEventListener( 'keydown', onKeyDown, false );
     window.addEventListener( 'resize', onWindowResize, false );
     animate();
@@ -266,6 +275,9 @@ function animate() {
         console.log("totalScore", totalScore);
         totalRound = 0;
     }
+    if (slot.boolChangeStopToStart) {
+       button.startColor();
+    }
 ////////////////////////////////////////////////////////////
     // sunlight.updateWithTime( deltaTimeElapsed );
 ////////////////////////////////////////////////////////////
@@ -281,7 +293,7 @@ function animate() {
     //buttonDayNight.update(deltaTime * 4.);
     //button3D.update(deltaTime * 4.);
 ////////////////////////////////////////////////////////////
-    button.updateWithTime(deltaTime);
+    button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
     if (boolMoveCamera) {
         // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
@@ -354,9 +366,9 @@ function animate() {
         }
     }
 ////////////////////////////////////////////////////////////
-    //  controls.update();
+   // controls.update();
     stats.update();
-    rendererStats.update(renderer);
+  //  rendererStats.update(renderer);
     render();
 }
 
@@ -383,12 +395,37 @@ function onKeyDown ( event ) {
             // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
             boolMoveCamera = false;
             slot.stopStartRotateSymb();
-            totalScore -= 10.;
-            var stringIn = totalScore.toString();
-            totalScore2D.setString(stringIn);
-            boolStopScore = true;
+            if (!boolStartStop) {
+                button.stopColor();
+                totalScore -= 10.;
+                var stringIn = totalScore.toString();
+                totalScore2D.setString(stringIn);
+                boolStopScore = true;
+                boolStartStop = true;
+            } else {
+                button.startColor();
+                boolStartStop = false;
+            }
             break;
     }
+}
+
+function onDocumentMouseMove( event ) {
+    event.preventDefault();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    // find intersections
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObjects( button.children );
+
+    if (intersects.length > 0) {
+        if (intersects[0].object.parent.name == "button") {
+            document.body.style.cursor = 'pointer';
+        }
+    } else {
+        document.body.style.cursor = 'auto';
+    }
+
 }
 
 function onDocumentMouseDown( event ) {
@@ -402,17 +439,18 @@ function onDocumentMouseDown( event ) {
     raycaster.setFromCamera( mouse, camera );
     var intersects = raycaster.intersectObjects( groupButton.children, true );
     if ( intersects.length > 0 ) {
-        if (intersects[0].object.name == "button") {
+        if (intersects[0].object.parent.name == "button") {
             boolMoveCamera = false;
-            button.start();
             slot.stopStartRotateSymb();
             if (!boolStartStop) {
+                button.stopColor();
                 totalScore -= 10.;
                 var stringIn = totalScore.toString();
                 totalScore2D.setString(stringIn);
                 boolStopScore = true;
                 boolStartStop = true;
             } else {
+                button.startColor();
                 boolStartStop = false;
             }
         }

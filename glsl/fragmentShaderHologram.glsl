@@ -18,13 +18,13 @@ varying vec2 vUv;
 varying vec3 fNormal;
 varying vec3 fPosition;
 
-#ifdef USE_GLITCH
+/*#ifdef USE_GLITCH
 
 #endif
 
 #ifdef USE_HOLO
 
-#endif
+#endif*/
 
 void main() {
  /*if(!gl_FrontFacing) {
@@ -62,7 +62,7 @@ void main() {
                                        (texNoise.r + texNoise.g + texNoise.b)/3.0,
                                        (texNoise.r + texNoise.g + texNoise.b)/3.0
                                       );
-                gl_FragColor = max(vec4( color * value, value ), vec4(max(colorNoise, colorTotal), value));
+                gl_FragColor = max(vec4( value ), vec4(max(colorNoise, colorTotal), value))*vec4(color, 1.0);
                /*  vec4 texNumbers = texture2D(t_texture,vec2(gl_FragCoord.x*0.003, gl_FragCoord.y * 0.003 + time*speedFactor));
                  vec3 colorNumbers = vec3(
                                          (texNumbers.r + texNumbers.g + texNumbers.b)/5.0,
@@ -100,22 +100,22 @@ void main() {
 
 #endif
 
-#ifdef USE_GLITCH
+/*#ifdef USE_GLITCH
 
-#endif
+#endif*/
 
 #ifdef USE_OFF
-       gl_FragColor *= 0.9;
+       gl_FragColor *= 1.2;
       // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
 #endif
 
-#ifdef USE_HOLO
+/*#ifdef USE_HOLO
 
 #endif
 
 #ifdef USE_3D
 
-#endif
+#endif*/
 
    // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
    /* gl_FragColor = mix(

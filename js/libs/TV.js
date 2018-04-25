@@ -56,10 +56,10 @@ function TV(textureLoader, align, isMobile)
     var  fragmentShader = shaders.fragmentShaders.fragmentShHologram;
     this.materialHolo =	new THREE.ShaderMaterial({
         defines         : {
-            USE_HOLO      : false,
-            USE_3D        : false,
+        //    USE_HOLO      : false,
+         //   USE_3D        : false,
             USE_OFF       : false,
-            USE_GLITCH    : false,
+        //    USE_GLITCH    : false,
             USE_SCANLINE  : false
         },
         uniforms: {

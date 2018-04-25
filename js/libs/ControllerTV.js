@@ -62,6 +62,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.boolForceStop = false;
     this.boolShowLine = false;
     this.isStopped = true;
+    this.boolChangeStopToStart = true;
 
     this.switchK = false;
 
@@ -187,6 +188,7 @@ ControllerTV.prototype.setBeginSettings = function() {
 
 ControllerTV.prototype.start = function() {
   //  this.boolRotate = true;
+    this.boolChangeStopToStart = false;
     this.arrayStop = [];
     this.genArraySymb.setTotalScore(0);
     this.arrayStop = this.genArraySymb.generate();
@@ -370,6 +372,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
             this.boolEndAnimation = true;
             this.boolMoveFront = true;
            // this.isStopped = true;
+            this.boolChangeStopToStart = true;
         }
     }
 
@@ -401,6 +404,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
             this.boolEndAnimation = true;
             this.boolMoveFront = true;
             // this.isStopped = true;
+            this.boolChangeStopToStart = true;
         }
     }
 

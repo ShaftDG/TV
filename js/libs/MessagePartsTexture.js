@@ -125,7 +125,7 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
             USE_SCANLINE  : false
         },
         uniforms: {
-            color: { value : new THREE.Color("#02e9ff") },
+            color: { value : new THREE.Color("#7373ff") },
             f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
             s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
             t_texture:   { value: textureLoader.load("textures/background/display.png") },
@@ -184,11 +184,6 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
   //  this.holoParent = holoParent;
     this.add(holoParent);
 ///////////////////////////////////////////
-
-    var geometry = new THREE.CylinderBufferGeometry(2, 8, 20, 16, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(-Math.PI / 2.0);
-
     var vertexShader = shaders.vertexShaders.vertexShProjector;
     var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
     this.material =	new THREE.ShaderMaterial({
@@ -197,7 +192,7 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
             time:               { value: 0.0 },
             rayAngleSpread:     { value: 0.0 },
             rayDistanceSpread:  { value: 20.0 },
-            rayBrightness:      { value: 11.0 }
+            rayBrightness:      { value: 7.0 }
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -207,17 +202,48 @@ function MessagePartsTexture(posX, posY, posZ, textureLoader, stringPattern, col
         //depthTest:      false,
         //depthWrite:      false,
     } );
+    ////////////////////////////////////////////
+    var geometry = new THREE.CylinderBufferGeometry(2, 6, 45, 10, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(-Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.x = 35-12.5;
+    this.add(mesh);
+
+    var geometry = new THREE.CylinderBufferGeometry(2, 6, 45, 10, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.x = -35+12.5;
+    this.add(mesh);
+    ////////////////////////////////////////////
+    var geometry = new THREE.CylinderBufferGeometry(2, 7, 40, 10, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(-Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.x = 35-10;
+    this.add(mesh);
+
+    var geometry = new THREE.CylinderBufferGeometry(2, 7, 40, 10, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.x = -35+10;
+    this.add(mesh);
+    ///////////////////////////////////////////////
+    var geometry = new THREE.CylinderBufferGeometry(2, 8, 25, 10, 1.0, true);
+    //geometry.rotateX(-Math.PI / 2.0);
+    geometry.rotateZ(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.x = 35;
     this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 8, 20, 16, 1.0, true);
+    var geometry = new THREE.CylinderBufferGeometry(2, 8, 25, 14, 1.0, true);
     //geometry.rotateX(-Math.PI / 2.0);
     geometry.rotateZ(Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.x = -35;
     this.add(mesh);
-
 }
 
 function parseString(stringIn, stringPattern) {

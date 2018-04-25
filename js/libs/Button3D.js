@@ -4,6 +4,50 @@ function Button3D(textureLoader, isMobile) {
     this.textureLoader = textureLoader;
 
     this.mixers = [];
+
+    var materialCorps = new THREE.MeshStandardMaterial({
+        color: new THREE.Color("#b8b5b8"),
+        map: textureLoader.load("textures/button/button_corps_BaseColor.png"),
+        metalnessMap: textureLoader.load("textures/button/button_corps_Metallic.png"),
+        metalness: 0.5,
+        roughnessMap: textureLoader.load("textures/button/button_corps_Roughness.png"),
+        roughness: 0.5,
+        normalMap: textureLoader.load("textures/button/button_corps_Normal.png"),
+    });
+    ///////////////////////////////////////////////////////
+    var  vertexShader = shaders.vertexShaders.vertexShHologram;
+    var  fragmentShader = shaders.fragmentShaders.fragmentShHologram;
+    this.materialHolo =	new THREE.ShaderMaterial({
+        defines         : {
+            USE_OFF       : true,
+            USE_SCANLINE  : false
+        },
+        uniforms: {
+            color: { value : new THREE.Color("#97ff85") },
+            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            time: { value: 0.0 },
+            speedFactor:   { value: 10.0 },
+
+            start:   { value: 0.001 },
+            end:   { value: 0.75 },
+            alpha:   { value: 1.0 },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        //side: THREE.DoubleSide,
+        transparent: true,
+        // blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+
+    this.materialHolo.uniforms.f_texture.value.wrapS = this.materialHolo.uniforms.f_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+    this.materialHolo.uniforms.s_texture.value.wrapS = this.materialHolo.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+    this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
+    var materialHolo = this.materialHolo;
+    ////////////////////////////////////////
     var buttonParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
     loaderOBJ.load("obj/button.fbx", function (object) {
@@ -11,19 +55,69 @@ function Button3D(textureLoader, isMobile) {
         object.traverse(function (child) {
             if (child.isMesh) {
                 if (child.name == "corps") {
-                    child.material.color = new THREE.Color("#000000");
-                } else if (child.name == "button") {
-                    child.material.color = new THREE.Color("#00830d");
+                    child.material = materialCorps;
+                  //  child.material.color = new THREE.Color("#000000");
+                } else if (child.name == "linz") {
+                    child.material = materialHolo;
+                    //child.material.color = new THREE.Color("#00830d");
+                } else if (child.name == "start") {
+                    child.material = materialHolo;
+                    //child.material.color = new THREE.Color("#00830d");
+                   // child.visible = false;
+                } else if (child.name == "stop") {
+                    child.material = materialHolo;
+                    //child.material.color = new THREE.Color("#00830d");
+                    child.visible = false;
                 } else {
-                    child.material.color = new THREE.Color("#ff1309");
+                    child.material = materialHolo;
+                  //  child.material.color = new THREE.Color("#ff1309");
                 }
                 buttonParent.add(object);
+                object.name = "button";
             }
         });
     });
+
+    buttonParent.name = "button";
     //  tvParent.position.y = -0.3;
     this.buttonParent = buttonParent;
+    this.buttonParent.name = "button";
     this.add(buttonParent);
+
+    var vertexShader = shaders.vertexShaders.vertexShProjector;
+    var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
+    this.material =	new THREE.ShaderMaterial({
+        uniforms: {
+            rayColor:           { value: new THREE.Color( "#97ff85" ) },
+            time:               { value: 0.0 },
+            rayAngleSpread:     { value: 0.0 },
+            rayDistanceSpread:  { value: 20.0 },
+            rayBrightness:      { value: 11.0 }
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        transparent: true,
+        side: THREE.DoubleSide,
+        blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        depthWrite:      false,
+    } );
+    ////////////////////////////////////////////
+    var geometry = new THREE.CylinderBufferGeometry(20, 50, 50, 16, 1.0, true);
+    geometry.rotateX( -Math.PI );
+    //geometry.rotateZ(-Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+  //  mesh.position.x = 35-12.5;
+    mesh.position.y = 42;
+    this.add(mesh);
+
+    var geometry = new THREE.CylinderBufferGeometry(15, 40, 60, 16, 1.0, true);
+    geometry.rotateX( -Math.PI );
+    //geometry.rotateZ(-Math.PI / 2.0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    //  mesh.position.x = 35-12.5;
+    mesh.position.y = 45;
+    this.add(mesh);
 }
 
 Button3D.prototype = Object.create(THREE.Object3D.prototype);
@@ -42,10 +136,15 @@ Button3D.prototype.addAnimation = function() {
     //  this.action.loop = THREE.LoopPingPong;    
 };
 
-Button3D.prototype.start = function()
+Button3D.prototype.stopColor = function()
 {
-    this.action.stop();
-    this.action.play();
+    this.material.uniforms.rayColor.value = new THREE.Color( "#ff6a5d" );
+    this.materialHolo.uniforms.color.value =  new THREE.Color( "#ff6a5d" );
+    this.buttonParent.children[0].children[1].visible = false;
+    this.buttonParent.children[0].children[0].visible = true;
+
+  //  this.action.stop();
+  //  this.action.play();
 };
 
 Button3D.prototype.setTexture = function(button)
@@ -53,13 +152,31 @@ Button3D.prototype.setTexture = function(button)
 
 };
 
-Button3D.prototype.stop = function()
+Button3D.prototype.startColor = function()
 {
-    this.action.stop();
+    this.material.uniforms.rayColor.value = new THREE.Color( "#97ff85" );
+    this.materialHolo.uniforms.color.value =  new THREE.Color( "#97ff85" );
+    this.buttonParent.children[0].children[1].visible = true;
+    this.buttonParent.children[0].children[0].visible = false;
+    //this.action.stop();
 };
 
-Button3D.prototype.updateWithTime = function(deltaTime)
+Button3D.prototype.updateWithTime = function(time, deltaTime)
 {
+    this.material.uniforms.time.value = time * 2.0;
+    this.materialHolo.uniforms.time.value = time;
+
+    if (this.buttonParent.children[0].children[1].visible) {
+        this.buttonParent.children[0].children[1].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        this.buttonParent.children[0].children[1].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
+        this.buttonParent.children[0].children[1].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+    }
+    if (this.buttonParent.children[0].children[0].visible) {
+        this.buttonParent.children[0].children[0].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        this.buttonParent.children[0].children[0].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
+        this.buttonParent.children[0].children[0].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+    }
+
 
     if ( this.mixers.length > 0 ) {
         for ( var i = 0; i < this.mixers.length; i ++ ) {
