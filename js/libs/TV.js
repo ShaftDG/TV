@@ -206,6 +206,8 @@ function TV(textureLoader, align, isMobile)
                 } else if (child.name == "bracket") {
                     child.material = materialHand1;
               //      child.material = materialHand2;
+                } else if (child.name == "cron") {
+                    child.material = materialHand1;
                 } else {
                     child.material = materialRoot;
                    // child.material.color = new THREE.Color("#535353");

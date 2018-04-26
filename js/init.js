@@ -6,7 +6,7 @@ var cameraParent = new THREE.Object3D;
 var sunlight, tv, slot;
 
 var boolStartStop = false;
-var button;
+var button, terminal;
 //var startStopButton, buttonFullScreen, button3D, buttonDayNight;
 var groupButton = new THREE.Object3D;
 
@@ -118,7 +118,7 @@ function init() {
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20000 );
     //  camera.position.x = 20;
     // camera.position.y = 2.0;
-    camera.position.z = 135.0;
+    camera.position.z = 160.0;
     camera.position.y = 10.0;
     cameraParent.add(camera);
     cameraParent.position.y = -10;
@@ -132,7 +132,7 @@ function init() {
     scene.add(sunlight);
 ////////////////////////////////////////////
     slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
-    slot.position.y = -3.0;
+    slot.position.y = 11.0;
     // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
@@ -168,9 +168,12 @@ function init() {
 ////////////////////////////////////////////
     button = new Button3D(textureLoader, false);
     button.name = "button";
-    button.position.set(60, -30.0, 20.0);
+    button.position.set(60, -32, 14.0);
     button.scale.set(0.2, 0.2, 0.2);
-    button.rotation.set(0.5, 0.0, 0.3);
+  //  button.rotation.set(0.5, 0.0, 0.3);
+    button.rotation.x = Math.PI/10;
+   // button.rotation.y = Math.PI/6;
+  //  button.rotation.z = Math.PI/6;
     groupButton.add(button);
     groupButton.name = "groupButton";
     scene.add(groupButton);
@@ -184,7 +187,7 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
-    totalScore2D.position.y = 37 /*+ 10*/;
+    totalScore2D.position.y = 45 /*+ 10*/;
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = 0.5;
     // totalScore2D.rotation.x = -60 * Math.PI / 180;
@@ -194,6 +197,17 @@ function init() {
     totalScore2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalScore2D);
 ////////////////////////////////////////////
+    terminal = new Terminal(textureLoader, false);
+    terminal.name = "terminal";
+    terminal.position.set(0, -42.0, 5.0);
+    terminal.scale.set(0.2, 0.2, 0.2);
+    //  terminal.rotation.set(0.5, 0.0, 0.3);
+    //terminal.rotation.x = Math.PI/9;
+    // terminal.rotation.y = Math.PI/6;
+    //  terminal.rotation.z = Math.PI/6;
+    scene.add(terminal);
+///////////////////////////////////////////////
+
     renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
     renderer.sortObjects = false;
     renderer.shadowMap.enabled = true;
@@ -208,12 +222,12 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-    // controls = new THREE.OrbitControls( camera, renderer.domElement );
-    // controls.addEventListener( 'change', render ); // remove when using animation loop
+   //  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  //   controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-    // controls.enableZoom = true;
+  //   controls.enableZoom = true;
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -295,14 +309,14 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
-    if (boolMoveCamera) {
-        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
+   /* if (boolMoveCamera) {
+        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /!*+ Math.random() * (0.22 - 0.2) + 0.2*!/;
+        // cameraParent.rotation.y =/!* Math.abs*!/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
 
         // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
         // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
-        /*  if (totalScore2D.position.y  <= 40.0) {
+        /!*  if (totalScore2D.position.y  <= 40.0) {
               totalScore2D.position.y = 40.0;
               //boolMoveCamera = false;
           } else {
@@ -314,7 +328,7 @@ function animate() {
           } else {
               totalScore2D.position.z += deltaTime*15.0;
           }
-  */
+  *!/
         if (camera.position.z  >= 145.0) {
             camera.position.z = 145.0;
             //boolMoveCamera = false;
@@ -335,7 +349,7 @@ function animate() {
             cameraParent.rotation.y -= deltaTime * 0.6;
         }
     } else {
-        /* if (totalScore2D.position.y  >= 47.0) {
+        /!* if (totalScore2D.position.y  >= 47.0) {
              totalScore2D.position.y = 47.0;
              //boolMoveCamera = false;
          } else {
@@ -346,7 +360,7 @@ function animate() {
              //boolMoveCamera = false;
          } else {
              totalScore2D.position.z -= deltaTime*15.0;
-         }*/
+         }*!/
         if (camera.position.z  <= 135.0) {
             camera.position.z = 135.0;
             //boolMoveCamera = false;
@@ -364,9 +378,9 @@ function animate() {
         } else {
             cameraParent.rotation.y += deltaTime * 0.6;
         }
-    }
+    }*/
 ////////////////////////////////////////////////////////////
-   // controls.update();
+  //  controls.update();
     stats.update();
   //  rendererStats.update(renderer);
     render();

@@ -1,18 +1,18 @@
-function Button3D(textureLoader, isMobile) {
+function Terminal(textureLoader, isMobile) {
     THREE.Object3D.apply(this);
-    this.name = "Button3D";
+    this.name = "Terminal";
     this.textureLoader = textureLoader;
 
     this.mixers = [];
 
-    var materialCorps = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#b8b5b8"),
-        map: textureLoader.load("textures/button/button_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/button/button_corps_Metallic.png"),
+    var materialTerminal = new THREE.MeshStandardMaterial({
+        color: new THREE.Color("#858385"),
+        map: textureLoader.load("textures/terminal/terminal_terminal_BaseColor.png"),
+        metalnessMap: textureLoader.load("textures/terminal/terminal_terminal_Metallic.png"),
         metalness: 0.5,
-        roughnessMap: textureLoader.load("textures/button/button_corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/terminal/terminal_terminal_Roughness.png"),
         roughness: 0.5,
-        normalMap: textureLoader.load("textures/button/button_corps_Normal.png"),
+        normalMap: textureLoader.load("textures/terminal/terminal_terminal_Normal.png"),
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -48,44 +48,44 @@ function Button3D(textureLoader, isMobile) {
     this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHolo = this.materialHolo;
     ////////////////////////////////////////
-    var buttonParent = new THREE.Object3D;
+    var terminalParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
-    loaderOBJ.load("obj/button.fbx", function (object) {
+    loaderOBJ.load("obj/terminal.fbx", function (object) {
 
         object.traverse(function (child) {
             if (child.isMesh) {
-                if (child.name == "corps") {
-                    child.material = materialCorps;
-                    child.material.side = THREE.DoubleSide;
-                  //  child.material.color = new THREE.Color("#000000");
-                } else if (child.name == "linz") {
+                if (child.name == "terminal") {
+                    child.material = materialTerminal;
+                  //  child.material.side = THREE.DoubleSide;
+               //       child.material.color = new THREE.Color("#0a2b12");
+            /*    } else if (child.name == "linz") {
                     child.material = materialHolo;
                     //child.material.color = new THREE.Color("#00830d");
                 } else if (child.name == "start") {
                     child.material = materialHolo;
                     //child.material.color = new THREE.Color("#00830d");
-                   // child.visible = false;
+                    // child.visible = false;
                 } else if (child.name == "stop") {
                     child.material = materialHolo;
                     //child.material.color = new THREE.Color("#00830d");
-                    child.visible = false;
+                    child.visible = false;*/
                 } else {
-                    child.material = materialHolo;
-                  //  child.material.color = new THREE.Color("#ff1309");
+                   // child.material = materialHolo;
+                      child.material.color = new THREE.Color("#ff1309");
                 }
-                buttonParent.add(object);
-                object.name = "button";
+                terminalParent.add(object);
+                object.name = "terminal";
             }
         });
     });
 
-    buttonParent.name = "button";
+    terminalParent.name = "terminal";
     //  tvParent.position.y = -0.3;
-    this.buttonParent = buttonParent;
-    this.buttonParent.name = "button";
-    this.add(buttonParent);
+    this.terminalParent = terminalParent;
+    this.terminalParent.name = "terminal";
+    this.add(terminalParent);
 
-    var vertexShader = shaders.vertexShaders.vertexShProjector;
+/*    var vertexShader = shaders.vertexShaders.vertexShProjector;
     var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
     this.material =	new THREE.ShaderMaterial({
         uniforms: {
@@ -108,7 +108,7 @@ function Button3D(textureLoader, isMobile) {
     geometry.rotateX( -Math.PI );
     //geometry.rotateZ(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-  //  mesh.position.x = 35-12.5;
+    //  mesh.position.x = 35-12.5;
     mesh.position.y = 42;
     this.add(mesh);
 
@@ -118,15 +118,15 @@ function Button3D(textureLoader, isMobile) {
     var mesh = new THREE.Mesh(geometry, this.material);
     //  mesh.position.x = 35-12.5;
     mesh.position.y = 45;
-    this.add(mesh);
+    this.add(mesh);*/
 }
 
-Button3D.prototype = Object.create(THREE.Object3D.prototype);
-Button3D.prototype.constructor = Button3D;
+Terminal.prototype = Object.create(THREE.Object3D.prototype);
+Terminal.prototype.constructor = Terminal;
 
-Button3D.prototype.addAnimation = function() {
+Terminal.prototype.addAnimation = function() {
 
-    var child = this.buttonParent.children[0];
+    var child = this.terminalParent.children[0];
     child.mixer = new THREE.AnimationMixer(child);
     this.mixers.push(child.mixer);
     this.action = child.mixer.clipAction(child.animations[0]);
@@ -137,45 +137,45 @@ Button3D.prototype.addAnimation = function() {
     //  this.action.loop = THREE.LoopPingPong;    
 };
 
-Button3D.prototype.stopColor = function()
+Terminal.prototype.stopColor = function()
 {
     this.material.uniforms.rayColor.value = new THREE.Color( "#ff6a5d" );
     this.materialHolo.uniforms.color.value =  new THREE.Color( "#ff6a5d" );
-    this.buttonParent.children[0].children[1].visible = false;
-    this.buttonParent.children[0].children[0].visible = true;
+    this.terminalParent.children[0].children[1].visible = false;
+    this.terminalParent.children[0].children[0].visible = true;
 
-  //  this.action.stop();
-  //  this.action.play();
+    //  this.action.stop();
+    //  this.action.play();
 };
 
-Button3D.prototype.setTexture = function(button)
+Terminal.prototype.setTexture = function(terminal)
 {
 
 };
 
-Button3D.prototype.startColor = function()
+Terminal.prototype.startColor = function()
 {
     this.material.uniforms.rayColor.value = new THREE.Color( "#97ff85" );
     this.materialHolo.uniforms.color.value =  new THREE.Color( "#97ff85" );
-    this.buttonParent.children[0].children[1].visible = true;
-    this.buttonParent.children[0].children[0].visible = false;
+    this.terminalParent.children[0].children[1].visible = true;
+    this.terminalParent.children[0].children[0].visible = false;
     //this.action.stop();
 };
 
-Button3D.prototype.updateWithTime = function(time, deltaTime)
+Terminal.prototype.updateWithTime = function(time, deltaTime)
 {
     this.material.uniforms.time.value = time * 2.0;
     this.materialHolo.uniforms.time.value = time;
 
-    if (this.buttonParent.children[0].children[1].visible) {
-        this.buttonParent.children[0].children[1].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        this.buttonParent.children[0].children[1].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
-        this.buttonParent.children[0].children[1].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+    if (this.terminalParent.children[0].children[1].visible) {
+        this.terminalParent.children[0].children[1].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        this.terminalParent.children[0].children[1].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
+        this.terminalParent.children[0].children[1].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
     }
-    if (this.buttonParent.children[0].children[0].visible) {
-        this.buttonParent.children[0].children[0].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        this.buttonParent.children[0].children[0].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
-        this.buttonParent.children[0].children[0].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+    if (this.terminalParent.children[0].children[0].visible) {
+        this.terminalParent.children[0].children[0].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        this.terminalParent.children[0].children[0].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
+        this.terminalParent.children[0].children[0].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
     }
 
 

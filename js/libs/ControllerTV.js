@@ -69,7 +69,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.boolOne = false;
 
     this.distanceBetweenTVX = 33;
-    this.distanceBetweenTVY = 28;
+    this.distanceBetweenTVY = 26;
 
   /*  var length = this.numTVperLine * (this.widthTV + this.distanceBetweenTV) - this.distanceBetweenTV;
     for (var i = 0; i < this.numTVperLine; i++) {
@@ -89,9 +89,9 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
         for (var j = 0; j < this.numTVperLine; j++) {
             if ( i == 0 ) {
                 var tv = new TV(textureLoader, "up", isMobile);
-                tv.position.y = (lengthY / 2) - this.distanceBetweenTVY * i;
+                tv.position.y = (lengthY / 2) - this.distanceBetweenTVY * i - 1.0;
                 tv.position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j;
-                tv.position.z += 6;
+                tv.position.z += 8;
                 tv.rotation.x = 0.35;
 
                 if ( j == 0 ) {
@@ -128,6 +128,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
                 var tv = new TV(textureLoader, "down", isMobile);
                 tv.position.y = (lengthY / 2) - this.distanceBetweenTVY * i;
                 tv.position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j;
+                tv.position.z += 2;
                 tv.rotation.x = -0.35;
                 if ( j == 0 ) {
                     tv.rotation.y = 0.35;
