@@ -1,6 +1,7 @@
 precision highp float;
 precision highp int;
 
+uniform vec3 color;
 uniform float time;
 uniform float rateFactor;
 uniform vec3 colorBorderDisplay;
@@ -70,7 +71,7 @@ varying vec2 vUv;
 
     vec3 makeBlue(vec3 i)
     {
-        return vec3((i.r + i.g + i.b)/10.0, (i.r + i.g + i.b)/3.0, (i.r + i.g + i.b)/3.0);
+        return vec3((i.r + i.g + i.b)/color.x, (i.r + i.g + i.b)/color.y, (i.r + i.g + i.b)/color.z);
     }
 
     vec3 edgeSample(vec2 uv)

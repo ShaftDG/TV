@@ -168,7 +168,7 @@ function init() {
 ////////////////////////////////////////////
     button = new Button3D(textureLoader, false);
     button.name = "button";
-    button.position.set(60, -32, 14.0);
+    button.position.set(60, -30, 14.0);
     button.scale.set(0.2, 0.2, 0.2);
   //  button.rotation.set(0.5, 0.0, 0.3);
     button.rotation.x = Math.PI/10;
@@ -206,9 +206,9 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
-    totalScore2D.position.y = -45 /*+ 10*/;
-    totalScore2D.position.z = 30;
-   // totalScore2D.rotation.x = 0.5;
+    totalScore2D.position.y = -42 /*+ 10*/;
+    totalScore2D.position.z = 25;
+    totalScore2D.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();
@@ -218,7 +218,7 @@ function init() {
 ////////////////////////////////////////////
     terminal = new Terminal(textureLoader, false);
     terminal.name = "terminal";
-    terminal.position.set(0, -42.0, 5.0);
+    terminal.position.set(0, -40.0, 5.0);
     terminal.scale.set(0.2, 0.2, 0.2);
     //  terminal.rotation.set(0.5, 0.0, 0.3);
     //terminal.rotation.x = Math.PI/9;
@@ -241,12 +241,12 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-     controls = new THREE.OrbitControls( camera, renderer.domElement );
-     controls.addEventListener( 'change', render ); // remove when using animation loop
+   //  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  //   controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-     controls.enableZoom = true;
+  //   controls.enableZoom = true;
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -303,6 +303,7 @@ function animate() {
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
         totalScore2D.setString(stringInTotalScore);
+        totalRound2D.nameSlot.visible = false;
         var stringInTotalRound = totalRound.toString();
         totalRound2D.setString(stringInTotalRound);
         boolStopScore = false;
@@ -331,14 +332,14 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
-    if (boolMoveCamera) {
-        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
-        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
+  /*  if (boolMoveCamera) {
+        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /!*+ Math.random() * (0.22 - 0.2) + 0.2*!/;
+        // cameraParent.rotation.y =/!* Math.abs*!/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
 
         // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
         // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
-        /*  if (totalRound2D.position.y  <= 40.0) {
+        /!*  if (totalRound2D.position.y  <= 40.0) {
               totalRound2D.position.y = 40.0;
               //boolMoveCamera = false;
           } else {
@@ -350,7 +351,7 @@ function animate() {
           } else {
               totalRound2D.position.z += deltaTime*15.0;
           }
-  */
+  *!/
         if (camera.position.z  >= 170.0) {
             camera.position.z = 170.0;
             //boolMoveCamera = false;
@@ -358,12 +359,12 @@ function animate() {
             camera.position.z += deltaTime*10.0;
         }
 
-      /*  if (cameraParent.rotation.x  >= 0.5) {
+      /!*  if (cameraParent.rotation.x  >= 0.5) {
             cameraParent.rotation.x = 0.5;
             //boolMoveCamera = false;
         } else {
             cameraParent.rotation.x += deltaTime * 0.5;
-        }*/
+        }*!/
         if (cameraParent.rotation.y  >= 0.6) {
             cameraParent.rotation.y = 0.6;
             //boolMoveCamera = false;
@@ -378,19 +379,19 @@ function animate() {
             camera.position.z -= deltaTime*9.3;
         }
 
-       /* if (cameraParent.rotation.x  <= 0.0) {
+       /!* if (cameraParent.rotation.x  <= 0.0) {
             cameraParent.rotation.x = 0.0;
         } else {
             cameraParent.rotation.x -= deltaTime * 0.5;
-        }*/
+        }*!/
         if (cameraParent.rotation.y  <= 0.0) {
             cameraParent.rotation.y = 0.0;
         } else {
             cameraParent.rotation.y -= deltaTime * 0.6;
         }
-    }
+    }*/
 ////////////////////////////////////////////////////////////
-    controls.update();
+  //  controls.update();
     stats.update();
   //  rendererStats.update(renderer);
     render();
@@ -426,6 +427,7 @@ function onKeyDown ( event ) {
                 totalScore2D.setString(stringIn);
                 var stringIn = "";
                 totalRound2D.setString(stringIn);
+                totalRound2D.nameSlot.visible = true;
                 boolStopScore = true;
                 boolStartStop = true;
             } else {
@@ -475,6 +477,7 @@ function onDocumentMouseDown( event ) {
                 totalScore2D.setString(stringIn);
                 var stringIn = "";
                 totalRound2D.setString(stringIn);
+                totalRound2D.nameSlot.visible = true;
                 boolStopScore = true;
                 boolStartStop = true;
             } else {
