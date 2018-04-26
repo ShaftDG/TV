@@ -27,7 +27,7 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 //GUI
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
-var totalScore2D;
+var totalRound2D, totalScore2D;
 var totalRound = 0;
 var totalScore = 261485;
 var boolStopScore = false;
@@ -179,6 +179,25 @@ function init() {
     scene.add(groupButton);
     //  scene.add(button);
 ///////////////////////////////////////////////
+    //var stringIn = totalScore.toString();
+    var stringIn = "000000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    var stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
+    totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
+    totalRound2D.position.y = 45 /*+ 10*/;
+    totalRound2D.position.z = 25;
+    totalRound2D.rotation.x = 0.5;
+    // totalRound2D.rotation.x = -60 * Math.PI / 180;
+    totalRound2D.setString(stringIn);
+    totalRound2D.start();
+    //cameraParent.add(totalRound2D);
+    totalRound2D.scale.set(0.7, 0.7, 0.7);
+    scene.add(totalRound2D);
+////////////////////////////////////////////
     var stringIn = totalScore.toString();
     //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
@@ -186,14 +205,14 @@ function init() {
     var stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalScore2D = new MessagePartsTexture(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
-    totalScore2D.position.y = 45 /*+ 10*/;
-    totalScore2D.position.z = 25;
-    totalScore2D.rotation.x = 0.5;
-    // totalScore2D.rotation.x = -60 * Math.PI / 180;
+    totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
+    totalScore2D.position.y = -45 /*+ 10*/;
+    totalScore2D.position.z = 30;
+   // totalScore2D.rotation.x = 0.5;
+    // totalRound2D.rotation.x = -60 * Math.PI / 180;
     totalScore2D.setString(stringIn);
     totalScore2D.start();
-    //cameraParent.add(totalScore2D);
+    //cameraParent.add(totalRound2D);
     totalScore2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalScore2D);
 ////////////////////////////////////////////
@@ -222,12 +241,12 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-   //  controls = new THREE.OrbitControls( camera, renderer.domElement );
-  //   controls.addEventListener( 'change', render ); // remove when using animation loop
+     controls = new THREE.OrbitControls( camera, renderer.domElement );
+     controls.addEventListener( 'change', render ); // remove when using animation loop
     // enable animation loop when using damping or autorotation
     //controls.enableDamping = true;
     //controls.dampingFactor = 0.25;
-  //   controls.enableZoom = true;
+     controls.enableZoom = true;
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -284,6 +303,8 @@ function animate() {
         totalScore += totalRound;
         var stringInTotalScore = totalScore.toString();
         totalScore2D.setString(stringInTotalScore);
+        var stringInTotalRound = totalRound.toString();
+        totalRound2D.setString(stringInTotalRound);
         boolStopScore = false;
         boolStartStop = false;
         console.log("totalScore", totalScore);
@@ -296,6 +317,7 @@ function animate() {
     // sunlight.updateWithTime( deltaTimeElapsed );
 ////////////////////////////////////////////////////////////
     slot.updateWithTime(deltaTimeElapsed, deltaTime);
+    totalRound2D.update(deltaTime * 1.2);
     totalScore2D.update(deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
     /* if (slot.getBoolEndAnimation()) {
@@ -309,78 +331,66 @@ function animate() {
 ////////////////////////////////////////////////////////////
     button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
-   /* if (boolMoveCamera) {
-        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /!*+ Math.random() * (0.22 - 0.2) + 0.2*!/;
-        // cameraParent.rotation.y =/!* Math.abs*!/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
+    if (boolMoveCamera) {
+        // cameraParent.position.x = (Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        // cameraParent.rotation.y =/* Math.abs*/(Math.sin(deltaTimeElapsed * 4.0) - Math.cos(deltaTimeElapsed * 4.0)) * 0.02;
 
 
         // cameraParent.rotation.y = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.1;
         // cameraParent.rotation.z = (Math.sin(deltaTimeElapsed * 8.0) - Math.cos(deltaTimeElapsed * 8.0)) * 0.01;
-        /!*  if (totalScore2D.position.y  <= 40.0) {
-              totalScore2D.position.y = 40.0;
+        /*  if (totalRound2D.position.y  <= 40.0) {
+              totalRound2D.position.y = 40.0;
               //boolMoveCamera = false;
           } else {
-              totalScore2D.position.y -= deltaTime*5.25;
+              totalRound2D.position.y -= deltaTime*5.25;
           }
-          if (totalScore2D.position.z  >= 45.0) {
-              totalScore2D.position.z = 45.0;
+          if (totalRound2D.position.z  >= 45.0) {
+              totalRound2D.position.z = 45.0;
               //boolMoveCamera = false;
           } else {
-              totalScore2D.position.z += deltaTime*15.0;
+              totalRound2D.position.z += deltaTime*15.0;
           }
-  *!/
-        if (camera.position.z  >= 145.0) {
-            camera.position.z = 145.0;
+  */
+        if (camera.position.z  >= 170.0) {
+            camera.position.z = 170.0;
             //boolMoveCamera = false;
         } else {
             camera.position.z += deltaTime*10.0;
         }
 
-        if (cameraParent.rotation.x  >= 0.5) {
+      /*  if (cameraParent.rotation.x  >= 0.5) {
             cameraParent.rotation.x = 0.5;
             //boolMoveCamera = false;
         } else {
             cameraParent.rotation.x += deltaTime * 0.5;
-        }
-        if (cameraParent.rotation.y  <= -0.6) {
-            cameraParent.rotation.y = -0.6;
+        }*/
+        if (cameraParent.rotation.y  >= 0.6) {
+            cameraParent.rotation.y = 0.6;
             //boolMoveCamera = false;
         } else {
-            cameraParent.rotation.y -= deltaTime * 0.6;
+            cameraParent.rotation.y += deltaTime * 0.6;
         }
     } else {
-        /!* if (totalScore2D.position.y  >= 47.0) {
-             totalScore2D.position.y = 47.0;
-             //boolMoveCamera = false;
-         } else {
-             totalScore2D.position.y += deltaTime*5.25;
-         }
-         if (totalScore2D.position.z  <= 25.0) {
-             totalScore2D.position.z = 25.0;
-             //boolMoveCamera = false;
-         } else {
-             totalScore2D.position.z -= deltaTime*15.0;
-         }*!/
-        if (camera.position.z  <= 135.0) {
-            camera.position.z = 135.0;
+        if (camera.position.z  <= 160.0) {
+            camera.position.z = 160.0;
             //boolMoveCamera = false;
         } else {
             camera.position.z -= deltaTime*9.3;
         }
 
-        if (cameraParent.rotation.x  <= 0.0) {
+       /* if (cameraParent.rotation.x  <= 0.0) {
             cameraParent.rotation.x = 0.0;
         } else {
             cameraParent.rotation.x -= deltaTime * 0.5;
-        }
-        if (cameraParent.rotation.y  >= 0.0) {
+        }*/
+        if (cameraParent.rotation.y  <= 0.0) {
             cameraParent.rotation.y = 0.0;
         } else {
-            cameraParent.rotation.y += deltaTime * 0.6;
+            cameraParent.rotation.y -= deltaTime * 0.6;
         }
-    }*/
+    }
 ////////////////////////////////////////////////////////////
-  //  controls.update();
+    controls.update();
     stats.update();
   //  rendererStats.update(renderer);
     render();
@@ -414,6 +424,8 @@ function onKeyDown ( event ) {
                 totalScore -= 10.;
                 var stringIn = totalScore.toString();
                 totalScore2D.setString(stringIn);
+                var stringIn = "";
+                totalRound2D.setString(stringIn);
                 boolStopScore = true;
                 boolStartStop = true;
             } else {
@@ -461,6 +473,8 @@ function onDocumentMouseDown( event ) {
                 totalScore -= 10.;
                 var stringIn = totalScore.toString();
                 totalScore2D.setString(stringIn);
+                var stringIn = "";
+                totalRound2D.setString(stringIn);
                 boolStopScore = true;
                 boolStartStop = true;
             } else {
@@ -479,7 +493,7 @@ function onDocumentMouseDown( event ) {
                    //   boolStartStop = true;
                    //   totalScore -= 10.;
                    //   var stringIn = totalScore.toString();
-                    //  totalScore2D.setString(stringIn);
+                    //  totalRound2D.setString(stringIn);
                   //    boolCoinAnimate = false;
                    //   boolCoinAnimateEnd = true;
                     //  boolLeftFishAnimate = false;
