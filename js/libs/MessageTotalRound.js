@@ -61,7 +61,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
 
     materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
     materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
-
+    materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
     var geometry = new THREE.PlaneBufferGeometry(80, 40);
     //geometry.rotateX(-Math.PI / 2.0);
     this.nameSlot = new THREE.Mesh(geometry, materialHolo);
@@ -106,6 +106,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
 
         materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
         materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+        materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
 
       /*  var material = new THREE.MeshBasicMaterial({
             color: "#f9eba0",

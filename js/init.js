@@ -1,12 +1,15 @@
 var container;
 
+var boolControls = false;
+
 var camera, scene, renderer, controls;
 var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
 
 var boolStartStop = false;
-var button, terminal;
+var button, terminal, buttonHoloFullScreen;
+var textureFullScreen, textureFullScreenCancel;
 //var startStopButton, buttonFullScreen, button3D, buttonDayNight;
 var groupButton = new THREE.Object3D;
 
@@ -166,6 +169,21 @@ function init() {
      groupButton.add(button3D);
      groupButton.name = "groupButton"; */
 ////////////////////////////////////////////
+    textureFullScreen = textureLoader.load("textures/button/buttonFullScreen.png");
+    textureFullScreenCancel = textureLoader.load("textures/button/buttonFullScreenCancel.png");
+    buttonHoloFullScreen = new ButtonHolo(textureFullScreen, textureLoader, false);
+    buttonHoloFullScreen.name = "buttonHolo";
+    buttonHoloFullScreen.position.set(48, 45, 28);
+    buttonHoloFullScreen.scale.set(0.1, 0.1, 0.1);
+    //  button.rotation.set(0.5, 0.0, 0.3);
+ //   buttonHoloFullScreen.rotation.x = Math.PI/10;
+    // button.rotation.y = Math.PI/6;
+    //  button.rotation.z = Math.PI/6;
+    groupButton.add(buttonHoloFullScreen);
+    //scene.add(buttonHoloFullScreen);
+///////////////////////////////////////////////
+
+////////////////////////////////////////////
     button = new Button3D(textureLoader, false);
     button.name = "button";
     button.position.set(60, -30, 14.0);
@@ -244,12 +262,14 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-   //  controls = new THREE.OrbitControls( camera, renderer.domElement );
-  //   controls.addEventListener( 'change', render ); // remove when using animation loop
-    // enable animation loop when using damping or autorotation
-    //controls.enableDamping = true;
-    //controls.dampingFactor = 0.25;
-  //   controls.enableZoom = true;
+    if (boolControls) {
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.addEventListener('change', render); // remove when using animation loop
+        // enable animation loop when using damping or autorotation
+        //controls.enableDamping = true;
+        //controls.dampingFactor = 0.25;
+        controls.enableZoom = true;
+    }
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -328,6 +348,7 @@ function animate() {
     //buttonDayNight.update(deltaTime * 4.);
     //button3D.update(deltaTime * 4.);
 ////////////////////////////////////////////////////////////
+    buttonHoloFullScreen.updateWithTime(deltaTimeElapsed, deltaTime);
     button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
   /*  if (boolMoveCamera) {
@@ -389,7 +410,9 @@ function animate() {
         }
     }*/
 ////////////////////////////////////////////////////////////
-  //  controls.update();
+    if (boolControls) {
+        controls.update();
+    }
     stats.update();
   //  rendererStats.update(renderer);
     render();
@@ -449,6 +472,9 @@ function onDocumentMouseMove( event ) {
         if (intersects[0].object.parent.name == "button") {
             document.body.style.cursor = 'pointer';
         }
+        if (intersects[0].object.parent.name == "buttonHolo") {
+            document.body.style.cursor = 'pointer';
+        }
     } else {
         document.body.style.cursor = 'auto';
     }
@@ -466,6 +492,7 @@ function onDocumentMouseDown( event ) {
     raycaster.setFromCamera( mouse, camera );
     var intersects = raycaster.intersectObjects( groupButton.children, true );
     if ( intersects.length > 0 ) {
+       // console.log(intersects[0].object.parent.name);
         if (intersects[0].object.parent.name == "button") {
             boolMoveCamera = false;
             slot.stopStartRotateSymb();
@@ -484,6 +511,20 @@ function onDocumentMouseDown( event ) {
                 button.startColor();
                 boolStartStop = false;
             }
+        }
+        if (intersects[0].object.parent.name == "buttonHolo") {
+            if( THREEx.FullScreen.activated() ){
+                THREEx.FullScreen.cancel();
+                buttonHoloFullScreen.setTexture( textureFullScreen );
+                // buttonFullScreen.children[0].material.map = fullScreenButton;
+                // buttonFullScreen.children[0].material.map.needsUpdate = true;
+            }else{
+                THREEx.FullScreen.request();
+                buttonHoloFullScreen.setTexture( textureFullScreenCancel );
+                // buttonFullScreen.children[0].material.map = fullScreenButtonCancel;
+                // buttonFullScreen.children[0].material.map.needsUpdate = true;
+            }
+            //   buttonHoloFullScreen.start();
         }
         /*  if (intersects[0].object.parent.name == "startStopButton") {
 
@@ -513,20 +554,7 @@ function onDocumentMouseDown( event ) {
            //       boolStartStop = false;
             //  }
           }
-          if (intersects[0].object.parent.name == "buttonFullScreen") {
-              if( THREEx.FullScreen.activated() ){
-                  THREEx.FullScreen.cancel();
-                  buttonFullScreen.setTexture("fullscreen");
-                  // buttonFullScreen.children[0].material.map = fullScreenButton;
-                  // buttonFullScreen.children[0].material.map.needsUpdate = true;
-              }else{
-                  THREEx.FullScreen.request();
-                  buttonFullScreen.setTexture("fullscreencancel");
-                  // buttonFullScreen.children[0].material.map = fullScreenButtonCancel;
-                  // buttonFullScreen.children[0].material.map.needsUpdate = true;
-              }
-              buttonFullScreen.start();
-          }*/
+         */
         /* if (intersects[0].object.parent.name == "button3D") {
              if(bool3D){
                  button3D.setTexture("3d");
