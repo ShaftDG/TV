@@ -16,11 +16,12 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.arraySymb = arraySymbs(this.col, this.row);
     this.arrayNumbers = parseString(this.stringIn, this.stringPattern);
     this.arrayNumbersBuff = parseString(this.stringBuff, this.stringPattern);
+
     this.groupNumbers = new THREE.Object3D;
 
+    this.number = 0;
+    this.k = 0;
     this.dt = 0.0;
-    this.dt1 = 0.0;
-    this.RandElement = 0;
 
     this.posX = posX;
     this.posY = posY;
@@ -401,32 +402,36 @@ function arraySymbs(col, row) {
 MessageTotalRound.prototype = Object.create(THREE.Object3D.prototype);
 MessageTotalRound.prototype.constructor = MessageTotalRound;
 
-MessageTotalRound.prototype.setString = function(stringIn) {
-    this.StartStopSwitch = true;
+MessageTotalRound.prototype.setNumber = function(number) {
+   this.number = number;
+};
 
-    if (stringIn.length > this.groupNumbers.children.length)
-    {
-         this.stringIn = stringIn.substr(0, stringIn.length - (stringIn.length - this.groupNumbers.children.length));
-    } else if (stringIn.length < this.groupNumbers.children.length) {
-        this.stringIn = "";
-        this.deltaLenthString = this.groupNumbers.children.length - stringIn.length;
-        for (var i = 0; i < this.deltaLenthString; i++) {
-            this.stringIn += "0";
+MessageTotalRound.prototype.setString = function(number) {
+    if (number > -1) {
+        var stringIn = number.toString();
+        if (stringIn.length > this.groupNumbers.children.length) {
+            this.stringIn = stringIn.substr(0, stringIn.length - (stringIn.length - this.groupNumbers.children.length));
+        } else if (stringIn.length < this.groupNumbers.children.length) {
+            this.stringIn = "";
+            this.deltaLenthString = this.groupNumbers.children.length - stringIn.length;
+            for (var i = 0; i < this.deltaLenthString; i++) {
+                this.stringIn += "0";
+            }
+            this.stringIn += stringIn;
+
+        } else {
+            this.stringIn = stringIn;
         }
-        this.stringIn += stringIn;
 
-    } else {
-        this.stringIn = stringIn;
-    }
-
-    this.arrayNumbers = parseString(this.stringIn, this.stringPattern);
-    this.dt = 0.0;
-    for (var j = 0; j < this.arrayNumbers.length; j++) {
-        var lengthPlaneX = (this.arrayNumbers.length) * this.widthCharacter + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters;
-        this.groupNumbers.children[j].position.z = this.posZ;
-        this.groupNumbers.children[j].position.y = this.posY;
-        this.groupNumbers.children[j].position.x = this.posX - lengthPlaneX + this.widthCharacter + (this.widthCharacter + this.distanceBetweenCharacters) * j;
-        this.groupNumbers.children[j].visible = false;
+        this.arrayNumbers = parseString(this.stringIn, this.stringPattern);
+        this.dt = 0.0;
+        for (var j = 0; j < this.arrayNumbers.length; j++) {
+            var lengthPlaneX = (this.arrayNumbers.length) * this.widthCharacter + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters;
+            this.groupNumbers.children[j].position.z = this.posZ;
+            this.groupNumbers.children[j].position.y = this.posY;
+            this.groupNumbers.children[j].position.x = this.posX - lengthPlaneX + this.widthCharacter + (this.widthCharacter + this.distanceBetweenCharacters) * j;
+            this.groupNumbers.children[j].visible = false;
+        }
     }
 };
 
@@ -448,62 +453,38 @@ MessageTotalRound.prototype.update = function(deltaTime) {
     this.materialHolo.uniforms.time.value += deltaTime;
     this.nameSlot.material.uniforms.time.value += deltaTime;
         if (this.StartStopSwitch) {
-            this.dt += deltaTime;
-            this.dt1 += deltaTime;
 
-            if (Math.round(this.dt1*100000) % 4 == 0) {
-                if (this.RandElement > this.arraySymb.length-2) {
-                    this.RandElement = 0;
-                } else {
-                    this.RandElement += 1;
-                }
-            }
-
+            this.setString(this.k.toString());
             for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
-             //   if (this.arrayNumbers[this.arrayNumbers.length - 1 - j] != this.arrayNumbersBuff[this.arrayNumbers.length - 1 - j]) {
-
-                    this.arrayNumbersBuff[this.arrayNumbers.length - 1 - j] = this.arrayNumbers[this.arrayNumbers.length - 1 - j];
-                    this.groupNumbers.children[this.arrayNumbers.length - 1 - j].visible = true;
-                   //  if (this.dt >= j) {
-                         if (this.alignment == "centre") {
-                             ///CENTRE
-                             this.groupNumbers.position.x = this.posX + j * this.widthCharacter * 0.5 + (j) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between characters
-                         } else if (this.alignment == "left") {
-                             ///LEFT
-                             this.groupNumbers.position.x = this.posX + j * this.widthCharacter + (j) * this.distanceBetweenCharacters;//12.8 character width; 0,7 distance between characters
-                         } else if (this.alignment == "right") {
-                             ///RIGHT
-                             this.groupNumbers.position.x = this.posX;//12.8 character width; 0,7 distance between characters
-                         }
-               //      }
-
-                    var uv = this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.array;
-
-                    if (this.dt < j + 1.0) {
-                        // console.log("", this.RandElement);
-                        for (var i = 0; i < uv.length; i++) {
-                            uv[uv.length - 1 - i] = this.arraySymb[this.RandElement] [uv.length - 1 - i];
-                        }
-                    }
-                    else if (this.dt >= j) {
-                        for (var i = 0; i < uv.length; i++) {
-                            uv[uv.length - 1 - i] = this.arraySymb[this.arrayNumbers[this.arrayNumbers.length - 1 - j]] [uv.length - 1 - i];
-                        }
-                    }
-
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].visible = true;
+                if (this.alignment == "centre") {
+                    ///CENTRE
+                    this.groupNumbers.position.x = this.posX + j * this.widthCharacter * 0.5 + (j) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between characters
+                } else if (this.alignment == "left") {
+                    ///LEFT
+                    this.groupNumbers.position.x = this.posX + j * this.widthCharacter + (j) * this.distanceBetweenCharacters;//12.8 character width; 0,7 distance between characters
+                } else if (this.alignment == "right") {
+                    ///RIGHT
+                    this.groupNumbers.position.x = this.posX;//12.8 character width; 0,7 distance between characters
+                }
+                var uv = this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.array;
+                for (var i = 0; i < uv.length; i++) {
+                    uv[uv.length - 1 - i] = this.arraySymb[this.arrayNumbers[this.arrayNumbers.length - 1 - j]] [uv.length - 1 - i];
+                }
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
-                }
             }
 
-            //by time
-           /* if (this.dt >= this.groupNumbers.children.length+ 1.5) {
-                this.stop();
-            }*/
+            this.dt += deltaTime;
 
-            //on switching
-         //   if (!this.OnOffSwitch) {
-           //    this.stop();
-          //  }
-       // }
+            if (this.dt > 0.01) {
+                this.k++;
+                this.dt = 0;
+                if (this.k > this.number) {
+                    this.k = 0;
+                    this.number = 0;
+                    this.StartStopSwitch = false;
+                }
+            }
+        }
 };

@@ -192,17 +192,19 @@ function init() {
     totalRound2D.position.z = 25;
     totalRound2D.rotation.x = 0.5;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
-    totalRound2D.setString(stringIn);
-    totalRound2D.start();
+  //  totalRound2D.setString(stringIn);
+    totalRound2D.setNumber(0);
+    totalRound2D.stop();
+   // totalRound2D.start();
     //cameraParent.add(totalRound2D);
     totalRound2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalRound2D);
 ////////////////////////////////////////////
-    var stringIn = totalScore.toString();
+    stringIn = totalScore.toString();
     //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
     //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    var stringPattern = "0123456789";
+    stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
@@ -210,7 +212,8 @@ function init() {
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
-    totalScore2D.setString(stringIn);
+    totalScore2D.setBeginNumber(totalScore);
+    totalScore2D.setNumber(totalScore);
     totalScore2D.start();
     //cameraParent.add(totalRound2D);
     totalScore2D.scale.set(0.7, 0.7, 0.7);
@@ -274,18 +277,11 @@ function onWindowResize() {
 
 }
 
-function onDocumentMouseMove( event ) {
-
-    mouseX = ( event.clientX - windowHalfX ) / 2;
-    mouseY = ( event.clientY - windowHalfY ) / 2;
-
-}
-
 function animate() {
     if( RESOURCES_LOADED == false ){
         requestAnimationFrame(animate);
-        var deltaTime = clock.getDelta();
-        loadingScreen.planeLoader.material.uniforms.time.value += deltaTime;
+        var deltaTimeLoader = clock.getDelta();
+        loadingScreen.planeLoader.material.uniforms.time.value += deltaTimeLoader;
         renderer.render(loadingScreen.scene, loadingScreen.camera);
         return; // Stop the function here.
     }
@@ -301,11 +297,13 @@ function animate() {
         boolMoveCamera = true;
         totalRound = slot.getTotalSum();
         totalScore += totalRound;
-        var stringInTotalScore = totalScore.toString();
-        totalScore2D.setString(stringInTotalScore);
+
+        totalScore2D.setNumber(totalScore);
+        totalScore2D.start();
+
         totalRound2D.nameSlot.visible = false;
-        var stringInTotalRound = totalRound.toString();
-        totalRound2D.setString(stringInTotalRound);
+        totalRound2D.setNumber(totalRound);
+        totalRound2D.start();
         boolStopScore = false;
         boolStartStop = false;
         console.log("totalScore", totalScore);
@@ -422,11 +420,12 @@ function onKeyDown ( event ) {
             slot.stopStartRotateSymb();
             if (!boolStartStop) {
                 button.stopColor();
+
                 totalScore -= 10.;
-                var stringIn = totalScore.toString();
-                totalScore2D.setString(stringIn);
-                var stringIn = "";
-                totalRound2D.setString(stringIn);
+                totalScore2D.setNumber(totalScore);
+                totalScore2D.start();
+
+                totalRound2D.stop();
                 totalRound2D.nameSlot.visible = true;
                 boolStopScore = true;
                 boolStartStop = true;
@@ -472,11 +471,12 @@ function onDocumentMouseDown( event ) {
             slot.stopStartRotateSymb();
             if (!boolStartStop) {
                 button.stopColor();
+
                 totalScore -= 10.;
-                var stringIn = totalScore.toString();
-                totalScore2D.setString(stringIn);
-                var stringIn = "";
-                totalRound2D.setString(stringIn);
+                totalScore2D.setNumber(totalScore);
+                totalScore2D.start();
+
+                totalRound2D.stop();
                 totalRound2D.nameSlot.visible = true;
                 boolStopScore = true;
                 boolStartStop = true;
