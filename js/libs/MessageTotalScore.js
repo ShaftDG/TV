@@ -424,6 +424,7 @@ MessageTotalScore.prototype.setString = function(number) {
             }
             this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 +
                 (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
+
         } else if (stringIn.length < this.groupNumbers.children.length) {
             this.stringIn = "";
             this.deltaLenthString = this.groupNumbers.children.length - stringIn.length;

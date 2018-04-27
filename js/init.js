@@ -8,8 +8,10 @@ var cameraParent = new THREE.Object3D;
 var sunlight, tv, slot;
 
 var boolStartStop = false;
-var button, terminal, buttonHoloFullScreen;
+var boolStartStopAutoPlay = false;
+var button, terminal, buttonHoloFullScreen, buttonHoloAutoPlay, buttonHoloBet;
 var textureFullScreen, textureFullScreenCancel;
+
 //var startStopButton, buttonFullScreen, button3D, buttonDayNight;
 var groupButton = new THREE.Object3D;
 
@@ -172,7 +174,7 @@ function init() {
     textureFullScreen = textureLoader.load("textures/button/buttonFullScreen.png");
     textureFullScreenCancel = textureLoader.load("textures/button/buttonFullScreenCancel.png");
     buttonHoloFullScreen = new ButtonHolo(textureFullScreen, textureLoader, false);
-    buttonHoloFullScreen.name = "buttonHolo";
+    buttonHoloFullScreen.name = "buttonHoloFullScreen";
     buttonHoloFullScreen.position.set(48, 45, 28);
     buttonHoloFullScreen.scale.set(0.1, 0.1, 0.1);
     //  button.rotation.set(0.5, 0.0, 0.3);
@@ -182,10 +184,32 @@ function init() {
     groupButton.add(buttonHoloFullScreen);
     //scene.add(buttonHoloFullScreen);
 ///////////////////////////////////////////////
-
+    var textureAutoPlay = textureLoader.load("textures/button/buttonAutoPlay.png");
+    buttonHoloAutoPlay = new ButtonHolo(textureAutoPlay, textureLoader, false);
+    buttonHoloAutoPlay.name = "buttonHoloAutoPlay";
+    buttonHoloAutoPlay.position.set(60, -46, 27);
+    buttonHoloAutoPlay.scale.set(0.15, 0.15, 0.15);
+    //  button.rotation.set(0.5, 0.0, 0.3);
+    //   buttonHoloFullScreen.rotation.x = Math.PI/10;
+    // button.rotation.y = Math.PI/6;
+    //  button.rotation.z = Math.PI/6;
+    groupButton.add(buttonHoloAutoPlay);
+    //scene.add(buttonHoloFullScreen);
+////////////////////////////////////////////
+    var textureBet = textureLoader.load("textures/button/buttonBet.png");
+    buttonHoloBet = new ButtonHolo(textureBet, textureLoader, false);
+    buttonHoloBet.name = "buttonHoloBet";
+    buttonHoloBet.position.set(-60, -46, 19);
+    buttonHoloBet.scale.set(0.2, 0.2, 0.2);
+    //  button.rotation.set(0.5, 0.0, 0.3);
+    //   buttonHoloFullScreen.rotation.x = Math.PI/10;
+    // button.rotation.y = Math.PI/6;
+    //  button.rotation.z = Math.PI/6;
+    groupButton.add(buttonHoloBet);
+    //scene.add(buttonHoloFullScreen);
 ////////////////////////////////////////////
     button = new Button3D(textureLoader, false);
-    button.name = "button";
+    button.name = "buttonStartStop";
     button.position.set(60, -30, 14.0);
     button.scale.set(0.2, 0.2, 0.2);
   //  button.rotation.set(0.5, 0.0, 0.3);
@@ -349,6 +373,8 @@ function animate() {
     //button3D.update(deltaTime * 4.);
 ////////////////////////////////////////////////////////////
     buttonHoloFullScreen.updateWithTime(deltaTimeElapsed, deltaTime);
+    buttonHoloAutoPlay.updateWithTime(deltaTimeElapsed, deltaTime);
+    buttonHoloBet.updateWithTime(deltaTimeElapsed, deltaTime);
     button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
   /*  if (boolMoveCamera) {
@@ -466,13 +492,19 @@ function onDocumentMouseMove( event ) {
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     // find intersections
     raycaster.setFromCamera( mouse, camera );
-    var intersects = raycaster.intersectObjects( button.children );
+    var intersects = raycaster.intersectObjects( groupButton.children, true );
 
     if (intersects.length > 0) {
-        if (intersects[0].object.parent.name == "button") {
+        if (intersects[0].object.parent.parent.parent.name == "buttonStartStop") {
             document.body.style.cursor = 'pointer';
         }
-        if (intersects[0].object.parent.name == "buttonHolo") {
+        if (intersects[0].object.parent.parent.parent.name == "buttonHoloFullScreen") {
+            document.body.style.cursor = 'pointer';
+        }
+        if (intersects[0].object.parent.parent.parent.name == "buttonHoloAutoPlay") {
+            document.body.style.cursor = 'pointer';
+        }
+        if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
             document.body.style.cursor = 'pointer';
         }
     } else {
@@ -512,7 +544,7 @@ function onDocumentMouseDown( event ) {
                 boolStartStop = false;
             }
         }
-        if (intersects[0].object.parent.name == "buttonHolo") {
+        if (intersects[0].object.parent.parent.parent.name == "buttonHoloFullScreen") {
             if( THREEx.FullScreen.activated() ){
                 THREEx.FullScreen.cancel();
                 buttonHoloFullScreen.setTexture( textureFullScreen );
@@ -526,6 +558,19 @@ function onDocumentMouseDown( event ) {
             }
             //   buttonHoloFullScreen.start();
         }
+        if (intersects[0].object.parent.parent.parent.name == "buttonHoloAutoPlay") {
+            if (!boolStartStopAutoPlay) {
+                console.log("AutoPlay = Start");
+                boolStartStopAutoPlay = true;
+            } else {
+                console.log("AutoPlay = Stop");
+                boolStartStopAutoPlay = false;
+            }
+        }
+        if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
+                console.log("Bet");
+        }
+
         /*  if (intersects[0].object.parent.name == "startStopButton") {
 
             //  if (!boolStartStop) {
