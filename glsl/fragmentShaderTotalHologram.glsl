@@ -4,12 +4,33 @@ precision highp int;
 uniform vec3 color;
 uniform float time;
 uniform float rateFactor;
-uniform vec3 colorBorderDisplay;
+//uniform vec3 colorBorderDisplay;
+uniform bool boolGlitch;
+uniform bool boolOn;
 uniform sampler2D f_texture;
 uniform sampler2D s_texture;
 uniform sampler2D noise_texture;
 
 varying vec2 vUv;
+
+//#ifdef USE_GLITCH
+   // uniform sampler2D noise_texture;
+   float rand(vec2 co){
+      //return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453) * 2.0 - 1.0;
+       float r =1.0- max(
+                        texture2D(noise_texture,  vec2(co.x + time, co.y + time)).r,
+                        max(
+                                texture2D(noise_texture, vec2(co.x + time, co.y + time)).g,
+                                texture2D(noise_texture, vec2(co.x + time, co.y + time)).b
+                            )
+                     );
+       return r;
+   }
+
+   float offset(float blocks, vec2 uv) {
+   	return rand(vec2(floor(uv.y * blocks), floor(uv.x * blocks)));
+   }
+//#endif
 
 #ifdef USE_HOLO
     vec3 rgb2hsv(vec3 rgb)
@@ -146,6 +167,28 @@ gl_FragColor = colorMain;
 
 #endif
 gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
+//#ifdef USE_GLITCH
+
+if (boolGlitch) {
+        uv = vUv;
+       	gl_FragColor.r = max(gl_FragColor.r, 2.5*offset(1.0, vec2(uv.x + sin(time*2.), normalize(uv.y) + time*5.)));
+       	gl_FragColor.g = max(gl_FragColor.g, 5.5*offset(1.0, vec2(uv.x + sin(time*2.), uv.y + time*20.)));
+       	gl_FragColor.b = max(gl_FragColor.b, 2.5*offset(1.0, vec2(uv.x + sin(time*2.), normalize(uv.y) + time*5.)));
+
+     //  	gl_FragColor.rgb *=  2.5*offset(10.0, vec2(normalize(uv.x) + time, normalize(uv.y) + time));
+}
+
+
+if (boolOn) {
+       	gl_FragColor.r *= 7.0;
+      // 	gl_FragColor.g = max(gl_FragColor.g, 5.5*offset(1.0, vec2(uv.x + sin(time*2.), uv.y + time*20.)));
+      // 	gl_FragColor.b = max(gl_FragColor.b, 2.5*offset(1.0, vec2(uv.x + sin(time*2.), normalize(uv.y) + time*5.)));
+
+
+}
+//#endif
+
+
 /*    gl_FragColor = mix(
                             gl_FragColor,
                             vec4(colorBorderDisplay, 1.0),

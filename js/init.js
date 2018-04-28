@@ -33,8 +33,8 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
 var totalRound2D, totalScore2D;
-var totalRound = 0;
-var totalScore = 261485;
+//var totalRound = 0;
+//var totalScore = 261485;
 var boolStopScore = false;
 var boolMoveCamera = false;
 //var checkStartStop = false;
@@ -242,7 +242,7 @@ function init() {
     totalRound2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalRound2D);
 ////////////////////////////////////////////
-    stringIn = totalScore.toString();
+    stringIn = "000000";
     //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
     //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
@@ -254,6 +254,7 @@ function init() {
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
+    var totalScore = slot.getTotalScore();
     totalScore2D.setBeginNumber(totalScore);
     totalScore2D.setNumber(totalScore);
     totalScore2D.start();
@@ -337,24 +338,39 @@ function animate() {
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
-    if (slot.getTotalSum() > totalRound && boolStopScore && slot.getBoolEndAnimation()) {
+    if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
         boolMoveCamera = true;
-        totalRound = slot.getTotalSum();
+        var totalRound = slot.getTotalSum();
+        var totalScore = slot.getTotalScore();
         totalScore += totalRound;
-
+        slot.setTotalScore(totalScore);
         totalScore2D.setNumber(totalScore);
-        totalScore2D.start();
-
         totalRound2D.nameSlot.visible = false;
         totalRound2D.setNumber(totalRound);
-        totalRound2D.start();
         boolStopScore = false;
-        boolStartStop = false;
         console.log("totalScore", totalScore);
-        totalRound = 0;
     }
-    if (slot.boolChangeStopToStart) {
+    if (slot.autoPlay) {
+        if (slot.autoPlayStart) {
+            totalScore2D.setNumber(slot.getTotalScore());
+            slot.autoPlayStart = false;
+            if (!totalRound2D.nameSlot.visible) {
+                totalRound2D.visibleSlotName();
+            }
+            totalRound2D.stop();
+            button.stopColor();
+        }
+        if (slot.autoPlayStop) {
+            totalRound2D.nameSlot.visible = false;
+            totalRound2D.setNumber(slot.getTotalSum());
+            totalScore2D.setNumber(slot.getTotalScore());
+            slot.autoPlayStop = false;
+            button.startColor();
+        }
+    }
+    if (slot.boolChangeStopToStart && boolStartStop) {
        button.startColor();
+       boolStartStop = false;
     }
 ////////////////////////////////////////////////////////////
     // sunlight.updateWithTime( deltaTimeElapsed );
@@ -467,18 +483,17 @@ function onKeyDown ( event ) {
             // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
             boolMoveCamera = false;
             slot.stopStartRotateSymb();
+            var totalScore = slot.getTotalScore();
+            totalScore2D.setNumber(totalScore);
             if (!boolStartStop) {
                 button.stopColor();
-
-                totalScore -= 10.;
-                totalScore2D.setNumber(totalScore);
-                totalScore2D.start();
-
                 totalRound2D.stop();
-                totalRound2D.nameSlot.visible = true;
+                if (!totalRound2D.nameSlot.visible) {
+                    totalRound2D.visibleSlotName();
+                }
                 boolStopScore = true;
                 boolStartStop = true;
-            } else {
+            } else if (slot.boolChangeStopToStart) {
                 button.startColor();
                 boolStartStop = false;
             }
@@ -528,15 +543,14 @@ function onDocumentMouseDown( event ) {
         if (intersects[0].object.parent.name == "button") {
             boolMoveCamera = false;
             slot.stopStartRotateSymb();
+            var totalScore = slot.getTotalScore();
+            totalScore2D.setNumber(totalScore);
             if (!boolStartStop) {
                 button.stopColor();
-
-                totalScore -= 10.;
-                totalScore2D.setNumber(totalScore);
-                totalScore2D.start();
-
                 totalRound2D.stop();
-                totalRound2D.nameSlot.visible = true;
+                if (!totalRound2D.nameSlot.visible) {
+                    totalRound2D.visibleSlotName();
+                }
                 boolStopScore = true;
                 boolStartStop = true;
             } else {
@@ -556,19 +570,28 @@ function onDocumentMouseDown( event ) {
                 // buttonFullScreen.children[0].material.map = fullScreenButtonCancel;
                 // buttonFullScreen.children[0].material.map.needsUpdate = true;
             }
-            //   buttonHoloFullScreen.start();
+            buttonHoloFullScreen.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloAutoPlay") {
             if (!boolStartStopAutoPlay) {
                 console.log("AutoPlay = Start");
                 boolStartStopAutoPlay = true;
+                slot.autoPlay = true;
+                buttonHoloAutoPlay.OnOff();
+                slot.stopStartRotateSymb();
             } else {
                 console.log("AutoPlay = Stop");
                 boolStartStopAutoPlay = false;
+                slot.autoPlay = false;
+                buttonHoloAutoPlay.OnOff();
+              //  slot.stopStartRotateSymb();
+                boolStartStop = true;
             }
+            buttonHoloAutoPlay.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
                 console.log("Bet");
+            buttonHoloBet.startGlitch();
         }
 
         /*  if (intersects[0].object.parent.name == "startStopButton") {

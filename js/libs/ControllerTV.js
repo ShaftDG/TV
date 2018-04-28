@@ -18,7 +18,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 
     this.totalSum = 0;
 
-    this.speedSwitchStop = 1.0;
+    this.speedSwitchStop = 0.25;
     this.speedSwitchMoveBack = 2.0;
     this.speedSwitchWinLine = 3.0;
 
@@ -61,8 +61,12 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.boolStartTimer = false;
     this.boolForceStop = false;
     this.boolShowLine = false;
-    this.isStopped = true;
+    this.canStop = true;
     this.boolChangeStopToStart = true;
+
+    this.autoPlay = false;
+    this.autoPlayStart = false;
+    this.autoPlayStop = false;
 
     this.switchK = false;
 
@@ -191,10 +195,10 @@ ControllerTV.prototype.start = function() {
   //  this.boolRotate = true;
     this.boolChangeStopToStart = false;
     this.arrayStop = [];
-    this.genArraySymb.setTotalScore(0);
+    this.genArraySymb.setTotalRound(0);
     this.arrayStop = this.genArraySymb.generate();
     this.moveArray = this.genArraySymb.getMoveArray();
-    this.totalSum = this.genArraySymb.getTotalScore();
+    this.totalSum = this.genArraySymb.getTotalRound();
 
     console.log("this.totalSum", this.totalSum);
     if (this.arrayStop.length != 0) {
@@ -206,8 +210,8 @@ ControllerTV.prototype.start = function() {
 };
 
 ControllerTV.prototype.stop = function() {
-    if (this.arrayStop.length != 0 && this.isStopped) {
-        this.isStopped = false;
+    if (this.arrayStop.length != 0 && this.canStop) {
+        this.canStop = false;
      //   this.boolRotate = false;
         this.boolForceStop = true;
         this.boolMoveFront = false;
@@ -254,6 +258,14 @@ ControllerTV.prototype.getBoolShowLine = function() {
 */
 ControllerTV.prototype.getTotalSum = function() {
     return this.totalSum;
+};
+
+ControllerTV.prototype.getTotalScore = function() {
+    return this.genArraySymb.getTotalScore();
+};
+
+ControllerTV.prototype.setTotalScore = function(num) {
+    this.genArraySymb.setTotalScore(num);
 };
 
 ControllerTV.prototype.addAnimation = function() {
@@ -316,7 +328,13 @@ ControllerTV.prototype.stopStartRotateSymb = function () {
             }
             this.start();
             this.boolRotate = true;
-            this.isStopped = true;
+            this.canStop = true;
+
+            var totalScore = this.getTotalScore();
+            totalScore -= 10.;
+            this.setTotalScore(totalScore);
+            this.autoPlayStart = true;
+            this.autoPlayStop = false;
         }
     }
 };
@@ -325,10 +343,10 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
     //update request arrayStop
     if (this.boolUpdateArraySymb) {
         this.arrayStop = [];
-        this.genArraySymb.setTotalScore(0);
+        this.genArraySymb.setTotalRound(0);
         this.arrayStop = this.genArraySymb.generate();
         this.moveArray = this.genArraySymb.getMoveArray();
-        this.totalSum = this.genArraySymb.getTotalScore();
+        this.totalSum = this.genArraySymb.getTotalRound();
 
         if (this.arrayStop.length != 0) {
             this.boolUpdateArraySymb = false;
@@ -344,125 +362,252 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
     if (this.dt >= this.speedSwitchStop) {
         this.boolStop = true;
       //  this.boolForceStop = false;
-      //  this.isStopped = false;
+      //  this.canStop = false;
     }
 
-    //force stop
-    if (this.boolForceStop) {
-        this.boolStop = false;
-        this.boolStartTimer = false;
-        this.dt = 0;
-        if (!this.tvArray[this.f][this.g].isStopped) {
-            this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-        }
-        if ( this.tvArray[this.f][this.g].isStopped ) {
-            this.g ++;
-        }
-        if ( this.g > 2) {
-            this.g = 0;
-            this.f ++;
-        }
-        if ( this.f > 2) {
-            this.f = 0;
-        }
-        if ( this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped ) {
-            this.boolForceStop = false;
-            this.boolRotate = false;
-            this.f = 0;
-            this.g = 0;
-            this.boolEndAnimation = true;
-            this.boolMoveFront = true;
-           // this.isStopped = true;
-            this.boolChangeStopToStart = true;
-        }
-    }
-
-    //normal stop
-    if (this.boolStop) {
-        this.dt1 += deltaTime;
-        if (!this.tvArray[this.f][this.g].isStopped) {
-                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-        }
-        if ( this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
-            this.g++;
-            this.dt1 = 0;
-        }
-        if ( this.g > 2) {
-            this.g = 0;
-            this.f ++;
-        }
-        if ( this.f > 2) {
-            this.f = 0;
-        }
-        if ( this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped ) {
+    if (this.autoPlay) {
+        //force stop autoPlay
+        if (this.boolForceStop) {
             this.boolStop = false;
-            this.boolForceStop = false;
-            this.boolRotate = false;
             this.boolStartTimer = false;
             this.dt = 0;
-            this.f = 0;
-            this.g = 0;
-            this.boolEndAnimation = true;
-            this.boolMoveFront = true;
-            // this.isStopped = true;
-            this.boolChangeStopToStart = true;
-        }
-    }
-
-    if ( this.boolEndAnimation && this.arrayStop.length != 0 ) {
-        var winL = this.genArraySymb.getWinlineScore();
-        if (winL[this.k] == 0) {
-            this.k ++;
-            if (this.k > this.moveArray.length - 1 ) {
-                this.k = 0;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
             }
-        } else {
-          if (this.boolMoveFront) {
-              for (var i = 0; i < this.tvArray.length; i++) {
-                  for (var j = 0; j < this.tvArray[0].length; j++) {
-                      if (this.moveArray[this.k][i][j] == 1) {
-                          this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
-                          this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
-                          this.tvArray[j][i].symbsParent.visible = true;
-                          this.tvArray[j][i].startAnimation();
-                          this.boolMoveFront = false;
-                      } else {
-                          this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                      }
-                  }
-              }
+            if (this.tvArray[this.f][this.g].isStopped) {
+                this.g++;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.boolForceStop = false;
+                this.boolRotate = false;
+                this.f = 0;
+                this.g = 0;
+                this.boolEndAnimation = true;
+                this.boolMoveFront = true;
+                // this.canStop = true;
+                this.boolChangeStopToStart = true;
+            }
+        }
 
-          } else /*if (this.boolMoveBack)*/ {
-              for (var i = 0; i < this.tvArray.length; i++) {
-                  for (var j = 0; j < this.tvArray[0].length; j++) {
+        //stop autoPlay
+        if (this.boolStop) {
+            this.dt1 += deltaTime;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
+                this.g++;
+                this.dt1 = 0;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.boolStop = false;
+                this.boolForceStop = false;
+                this.boolRotate = false;
+                this.boolStartTimer = false;
+                this.dt = 0;
+                this.f = 0;
+                this.g = 0;
+                this.boolEndAnimation = true;
+                this.boolMoveFront = true;
+                // this.canStop = true;
+                this.boolChangeStopToStart = true;
+                if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    var totalScore = this.getTotalScore();
+                    totalScore += totalRound;
+                    this.setTotalScore(totalScore);
+                    this.autoPlayStop = true;
+                }
+                this.autoPlayStart = false;
+            }
+        }
+        if (this.boolEndAnimation && this.arrayStop.length != 0) {
+            var winL = this.genArraySymb.getWinlineRound();
+            if (winL[this.k] == 0) {
+                this.k++;
+                if (this.k > this.moveArray.length - 1) {
+                    this.k = 0;
+                    this.stopStartRotateSymb();
+                }
+            } else {
+                if (this.boolMoveFront) {
 
-                          if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
-                              this.tvArray[j][i].stopAnimation();
-                              this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
-                              this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                              this.tvArray[j][i].symbsParent.visible = false;
-                              this.boolMoveFront = true;
-                           }
+                    for (var i = 0; i < this.tvArray.length; i++) {
+                        for (var j = 0; j < this.tvArray[0].length; j++) {
+                            if (this.moveArray[this.k][i][j] == 1) {
+                                this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                                this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                                this.tvArray[j][i].symbsParent.visible = true;
+                                this.tvArray[j][i].startAnimation();
+                                this.boolMoveFront = false;
+                            } else {
+                                this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                            }
+                        }
+                    }
 
-                         if (this.moveArray[this.k][i][j] == 1) {
-                             if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
-                                 this.switchK = true;
-                             }
-                         }
-                  }
-              }
-          }
+                } else /*if (this.boolMoveBack)*/ {
+                    for (var i = 0; i < this.tvArray.length; i++) {
+                        for (var j = 0; j < this.tvArray[0].length; j++) {
 
-            if ( this.switchK ) {
+                            if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                                this.tvArray[j][i].stopAnimation();
+                                this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                                this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                this.tvArray[j][i].symbsParent.visible = false;
+                                this.boolMoveFront = true;
+                            }
+
+                            if (this.moveArray[this.k][i][j] == 1) {
+                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
+                                    this.switchK = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (this.switchK) {
+                    this.k++;
+                    if (this.k > this.moveArray.length - 1) {
+                        this.k = 0;
+                        this.stopStartRotateSymb();
+                    }
+                    this.switchK = false;
+                }
+            }
+        }
+    } else {
+        //force stop
+        if (this.boolForceStop) {
+            this.boolStop = false;
+            this.boolStartTimer = false;
+            this.dt = 0;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped) {
+                this.g++;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.boolForceStop = false;
+                this.boolRotate = false;
+                this.f = 0;
+                this.g = 0;
+                this.boolEndAnimation = true;
+                this.boolMoveFront = true;
+                // this.canStop = true;
+                this.boolChangeStopToStart = true;
+            }
+        }
+
+        //normal stop
+        if (this.boolStop) {
+            this.dt1 += deltaTime;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
+                this.g++;
+                this.dt1 = 0;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.boolStop = false;
+                this.boolForceStop = false;
+                this.boolRotate = false;
+                this.boolStartTimer = false;
+                this.dt = 0;
+                this.f = 0;
+                this.g = 0;
+                this.boolEndAnimation = true;
+                this.boolMoveFront = true;
+                // this.canStop = true;
+                this.boolChangeStopToStart = true;
+            }
+        }
+
+        if (this.boolEndAnimation && this.arrayStop.length != 0) {
+            var winL = this.genArraySymb.getWinlineRound();
+            if (winL[this.k] == 0) {
                 this.k++;
                 if (this.k > this.moveArray.length - 1) {
                     this.k = 0;
                 }
-                this.switchK = false;
+            } else {
+                if (this.boolMoveFront) {
+                    for (var i = 0; i < this.tvArray.length; i++) {
+                        for (var j = 0; j < this.tvArray[0].length; j++) {
+                            if (this.moveArray[this.k][i][j] == 1) {
+                                this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                                this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                                this.tvArray[j][i].symbsParent.visible = true;
+                                this.tvArray[j][i].startAnimation();
+                                this.boolMoveFront = false;
+                            } else {
+                                this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                            }
+                        }
+                    }
+
+                } else /*if (this.boolMoveBack)*/ {
+                    for (var i = 0; i < this.tvArray.length; i++) {
+                        for (var j = 0; j < this.tvArray[0].length; j++) {
+
+                            if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                                this.tvArray[j][i].stopAnimation();
+                                this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                                this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                this.tvArray[j][i].symbsParent.visible = false;
+                                this.boolMoveFront = true;
+                            }
+
+                            if (this.moveArray[this.k][i][j] == 1) {
+                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
+                                    this.switchK = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (this.switchK) {
+                    this.k++;
+                    if (this.k > this.moveArray.length - 1) {
+                        this.k = 0;
+                    }
+                    this.switchK = false;
+                }
             }
         }
     }
-
     //update with time
     for (var i = 0; i < this.numTotalTV; i++) {
         this.children[i].updateWithTime(deltaTimeElapsed, deltaTime);

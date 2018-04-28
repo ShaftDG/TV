@@ -4,7 +4,9 @@ function  GenerateWinCombination(numCilinder, numPlayingSymbPerCilinder, totalSy
     this.numPlayingSymbPerCilinder = numPlayingSymbPerCilinder;
     this.totalSymb = totalSymb;
 
-    this.totalScore = 0;
+    this.totalRound = 0;
+
+    this.totalScore = 250250;
 
     this.numSymbline = [ 0, 0, 0, 0, 0 ];
 
@@ -97,7 +99,7 @@ GenerateWinCombination.prototype.generate = function() {
 
     console.log("stopPositionArray", this.stopPositionArray);
     this.winLine(this.arrayCombination);
-    this.winlineScore();
+    this.winlineRound();
     this.moveWinLine();
     return this.arrayCombination;
 };
@@ -130,7 +132,7 @@ GenerateWinCombination.prototype.winLine = function(arrayCombination) {
     console.log("this.winLineArray", this.winLineArray);
 };
 
-GenerateWinCombination.prototype.winlineScore = function() {
+GenerateWinCombination.prototype.winlineRound = function() {
 
     for (var j = 0; j < this.winLineNum; j++ ) {
         if (j == 0) {
@@ -279,21 +281,28 @@ GenerateWinCombination.prototype.getMoveArray = function() {
     return this.moveArray;
 };
 
-GenerateWinCombination.prototype.getWinlineScore = function() {
+GenerateWinCombination.prototype.getWinlineRound = function() {
     return this.numWinSymbline;
 };
 
-GenerateWinCombination.prototype.getTotalScore = function() {
+GenerateWinCombination.prototype.getTotalRound = function() {
     for (var i = 0; i < this.numSymbline.length; i++) {
-        this.totalScore += this.payTable[this.firstSymbline[i]][this.numSymbline[i]];
+        this.totalRound += this.payTable[this.firstSymbline[i]][this.numSymbline[i]];
     }
+    return this.totalRound;
+};
+
+GenerateWinCombination.prototype.setTotalRound = function(num) {
+        this.totalRound = num;
+};
+
+GenerateWinCombination.prototype.getTotalScore = function() {
     return this.totalScore;
 };
 
 GenerateWinCombination.prototype.setTotalScore = function(num) {
-        this.totalScore = num;
+    this.totalScore = num;
 };
-
 
   /*[  0 ,  0 ,  100 , 1000 , 5000 ], // SYMB_Seven
     [  0 ,  0 ,   50 ,  200 ,  500 ], // SYMB_Diamond

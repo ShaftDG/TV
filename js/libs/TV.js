@@ -69,7 +69,7 @@ function TV(textureLoader, align, isMobile)
             t_texture:   { value: textureLoader.load("textures/background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
-
+            boolGlitch:  { value: false },
             start:   { value: 0.001 },
             end:   { value: 0.75 },
             alpha:   { value: 1.0 },

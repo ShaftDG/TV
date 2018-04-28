@@ -21,6 +21,7 @@ function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.deltaLenthString = 0;
 
     this.dt = 0.0;
+    this.dt1 = 0.0;
 
     this.posX = posX;
     this.posY = posY;
@@ -58,7 +59,8 @@ function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, 
                 f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
                 noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
                 time: { value: 0.0 },
-                rateFactor:   { value: 1.0 }
+                rateFactor:   { value: 1.0 },
+                boolGlitch:  { value: false },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -132,7 +134,7 @@ function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, 
             t_texture:   { value: textureLoader.load("textures/background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
-
+            boolGlitch:  { value: false },
             start:   { value: 0.001 },
             end:   { value: 0.75 },
             alpha:   { value: 1.0 },
@@ -369,6 +371,9 @@ MessageTotalScore.prototype.constructor = MessageTotalScore;
 
 MessageTotalScore.prototype.setNumber = function(number) {
     this.number = number;
+    var deltaNumber = Math.abs(this.number - (this.k + 1));
+    this.lengthChangeNumbers = deltaNumber.toString().length;
+    this.StartStopSwitch = true;
 };
 
 MessageTotalScore.prototype.setBeginNumber = function(number) {
@@ -468,6 +473,7 @@ MessageTotalScore.prototype.update = function(deltaTime) {
         if (this.StartStopSwitch) {
 
             this.setString(this.k);
+
             for (var j = 0; j < this.arrayNumbers.length; j++) {
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].visible = true;
                 if (this.alignment == "centre") {
@@ -485,7 +491,11 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                     uv[uv.length - 1 - i] = this.arraySymb[this.arrayNumbers[this.arrayNumbers.length - 1 - j]] [uv.length - 1 - i];
                 }
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
-                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
+
+                if (j < this.lengthChangeNumbers) {
+                    this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = true;
+                    this.dt1 = 0.0;
+                }
             }
 
             this.dt += deltaTime;
@@ -510,4 +520,15 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                 }
             }
         }
+    for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
+        this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
+        if (this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value) {
+            this.dt1 += deltaTime;
+            if (this.dt1 > 0.5) {
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = false;
+                this.dt1 = 0.0;
+            }
+        }
+    }
+
 };

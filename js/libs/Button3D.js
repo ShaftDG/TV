@@ -5,6 +5,8 @@ function Button3D(textureLoader, isMobile) {
 
     this.mixers = [];
 
+    this.dt = 0.0;
+
     var materialCorps = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#b8b5b8"),
         map: textureLoader.load("textures/button/button_corps_BaseColor.png"),
@@ -29,7 +31,7 @@ function Button3D(textureLoader, isMobile) {
             t_texture:   { value: textureLoader.load("textures/background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
-
+            boolGlitch:  { value: false },
             start:   { value: 0.001 },
             end:   { value: 0.75 },
             alpha:   { value: 1.0 },
@@ -143,7 +145,7 @@ Button3D.prototype.stopColor = function()
     this.materialHolo.uniforms.color.value =  new THREE.Color( "#ff6a5d" );
     this.buttonParent.children[0].children[1].visible = false;
     this.buttonParent.children[0].children[0].visible = true;
-
+    this.materialHolo.uniforms.boolGlitch.value = true;
   //  this.action.stop();
   //  this.action.play();
 };
@@ -159,6 +161,7 @@ Button3D.prototype.startColor = function()
     this.materialHolo.uniforms.color.value =  new THREE.Color( "#97ff85" );
     this.buttonParent.children[0].children[1].visible = true;
     this.buttonParent.children[0].children[0].visible = false;
+    this.materialHolo.uniforms.boolGlitch.value = true;
     //this.action.stop();
 };
 
@@ -166,6 +169,14 @@ Button3D.prototype.updateWithTime = function(time, deltaTime)
 {
     this.material.uniforms.time.value = time * 2.0;
     this.materialHolo.uniforms.time.value = time;
+
+    if (this.materialHolo.uniforms.boolGlitch.value) {
+        this.dt += deltaTime;
+        if (this.dt > 0.25) {
+            this.materialHolo.uniforms.boolGlitch.value = false;
+            this.dt = 0.0;
+        }
+    }
 
     if (this.buttonParent.children[0].children[1].visible) {
         this.buttonParent.children[0].children[1].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;

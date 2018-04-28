@@ -22,6 +22,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.number = 0;
     this.k = 0;
     this.dt = 0.0;
+    this.dt1 = 0.0;
 
     this.posX = posX;
     this.posY = posY;
@@ -49,7 +50,8 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             f_texture:   { value: textureLoader.load("textures/winplane/nameSlot.png") },
             noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
             time: { value: 0.0 },
-            rateFactor:   { value: 1.0 }
+            rateFactor:   { value: 1.0 },
+            boolGlitch:  { value: true },
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -94,7 +96,8 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
                 f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
                 noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
                 time: { value: 0.0 },
-                rateFactor:   { value: 1.0 }
+                rateFactor:   { value: 1.0 },
+                boolGlitch:  { value: false },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -168,7 +171,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             t_texture:   { value: textureLoader.load("textures/background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
-
+            boolGlitch:  { value: false },
             start:   { value: 0.001 },
             end:   { value: 0.75 },
             alpha:   { value: 1.0 },
@@ -403,8 +406,15 @@ function arraySymbs(col, row) {
 MessageTotalRound.prototype = Object.create(THREE.Object3D.prototype);
 MessageTotalRound.prototype.constructor = MessageTotalRound;
 
+MessageTotalRound.prototype.visibleSlotName = function() {
+    this.nameSlot.visible = true;
+    this.nameSlot.material.uniforms.boolGlitch.value = true;
+    this.dt1 = 0.0;
+};
+
 MessageTotalRound.prototype.setNumber = function(number) {
    this.number = number;
+   this.StartStopSwitch = true;
 };
 
 MessageTotalRound.prototype.setString = function(number) {
@@ -449,6 +459,11 @@ MessageTotalRound.prototype.start = function() {
     this.StartStopSwitch = true;
 };
 
+/*ButtonHolo.prototype.startGlitch = function()
+{
+    this.materialHolo.uniforms.boolGlitch.value = true;
+};*/
+
 MessageTotalRound.prototype.update = function(deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
@@ -473,7 +488,7 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                     uv[uv.length - 1 - i] = this.arraySymb[this.arrayNumbers[this.arrayNumbers.length - 1 - j]] [uv.length - 1 - i];
                 }
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
-                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = true;
             }
 
             this.dt += deltaTime;
@@ -488,4 +503,21 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                 }
             }
         }
+    for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
+        this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
+        if (this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value) {
+            this.dt1 += deltaTime;
+            if (this.dt1 > 0.5) {
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = false;
+                this.dt1 = 0.0;
+            }
+        }
+    }
+    if (this.nameSlot.material.uniforms.boolGlitch.value) {
+        this.dt1 += deltaTime;
+        if (this.dt1 > 0.5) {
+            this.nameSlot.material.uniforms.boolGlitch.value = false;
+            this.dt1 = 0.0;
+        }
+    }
 };

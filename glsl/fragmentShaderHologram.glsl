@@ -8,7 +8,7 @@ uniform float speedFactor;
 uniform float start;
 uniform float end;
 uniform float alpha;
-
+uniform bool boolGlitch;
 uniform sampler2D f_texture;
 uniform sampler2D s_texture;
 uniform sampler2D t_texture;
@@ -18,6 +18,22 @@ varying vec2 vUv;
 varying vec3 fNormal;
 varying vec3 fPosition;
 
+
+float rand(vec2 co){
+      //return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453) * 2.0 - 1.0;
+       float r =1.0- max(
+                        texture2D(f_texture,  vec2(co.x + time, co.y + time)).r,
+                        max(
+                                texture2D(f_texture, vec2(co.x + time, co.y + time)).g,
+                                texture2D(f_texture, vec2(co.x + time, co.y + time)).b
+                            )
+                     );
+       return r;
+   }
+
+   float offset(float blocks, vec2 uv) {
+   	return rand(vec2(floor(uv.y * blocks), floor(uv.x * blocks)));
+   }
 /*#ifdef USE_GLITCH
 
 #endif
@@ -108,6 +124,15 @@ void main() {
        gl_FragColor *= 1.2;
       // gl_FragColor.a = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
 #endif
+
+if (boolGlitch) {
+        uv = vUv;
+       	float r = 3.0*offset(5.0, vec2(uv.x + time*2., uv.y + time*5.));
+       	float g = 5.0*offset(2.0, vec2(uv.x + time*2., uv.y + time*20.));
+       	float b = 3.0*offset(5.0, vec2(uv.x + time*2., uv.y + time*5.));
+        gl_FragColor.a = mix(r, g, b);
+}
+//gl_FragColor.rgb *=  2.5*offset(10.0, vec2(normalize(uv.x) + time, normalize(uv.y) + time));
 
 /*#ifdef USE_HOLO
 
