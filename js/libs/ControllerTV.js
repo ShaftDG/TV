@@ -312,6 +312,14 @@ ControllerTV.prototype.pausedToTimeAnimation = function () {
     }
 };
 
+ControllerTV.prototype.setBet = function (num) {
+    this.genArraySymb.setBet(num);
+};
+
+ControllerTV.prototype.getBet = function () {
+    return this.genArraySymb.getBet();
+};
+
 ControllerTV.prototype.stopStartRotateSymb = function () {
 
     if ( this.boolRotate ) {
@@ -331,7 +339,7 @@ ControllerTV.prototype.stopStartRotateSymb = function () {
             this.canStop = true;
 
             var totalScore = this.getTotalScore();
-            totalScore -= 10.;
+            totalScore -= this.genArraySymb.getBet();
             this.setTotalScore(totalScore);
             this.autoPlayStart = true;
             this.autoPlayStop = false;
@@ -393,6 +401,13 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                 this.boolMoveFront = true;
                 // this.canStop = true;
                 this.boolChangeStopToStart = true;
+                if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    var totalScore = this.getTotalScore();
+                    totalScore += totalRound;
+                    this.setTotalScore(totalScore);
+                    this.autoPlayStop = true;
+                }
             }
         }
 
@@ -519,6 +534,13 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                 this.boolMoveFront = true;
                 // this.canStop = true;
                 this.boolChangeStopToStart = true;
+                if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    var totalScore = this.getTotalScore();
+                    totalScore += totalRound;
+                    this.setTotalScore(totalScore);
+                    this.autoPlayStop = true;
+                }
             }
         }
 
@@ -551,6 +573,13 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                 this.boolMoveFront = true;
                 // this.canStop = true;
                 this.boolChangeStopToStart = true;
+                if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    var totalScore = this.getTotalScore();
+                    totalScore += totalRound;
+                    this.setTotalScore(totalScore);
+                    this.autoPlayStop = true;
+                }
             }
         }
 

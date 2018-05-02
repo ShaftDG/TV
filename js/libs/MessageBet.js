@@ -1,10 +1,13 @@
-function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
+function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
     THREE.Object3D.apply(this);
 
-    this.name = "MessageTotalRound";
+    this.name = "MessageBet";
 
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
+
+    this.col = col;
+    this.row = row;
 
     this.withoutSwitchNumber = false;
     this.speedSwitchNumber = speedSwitchNumber;
@@ -12,21 +15,17 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         this.withoutSwitchNumber = true;
     }
 
-    this.col = col;
-    this.row = row;
-
     this.stringIn = stringIn;
     this.stringBuff = stringIn;
     this.stringPattern = stringPattern;
 
     this.arraySymb = arraySymbs(this.col, this.row);
     this.arrayNumbers = parseString(this.stringIn, this.stringPattern);
-    this.arrayNumbersBuff = parseString(this.stringBuff, this.stringPattern);
-
+    this.arrayNumbersBuff = parseString(stringIn, this.stringPattern);
     this.groupNumbers = new THREE.Object3D;
 
-    this.number = 0;
-    this.k = 0;
+    this.deltaLenthString = 0;
+
     this.dt = 0.0;
     this.dt1 = 0.0;
 
@@ -41,43 +40,6 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
 
     this.distanceBetweenCharacters = distanceBetweenCharacters;
 
-    ///////////////////////////////
-    var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
-    var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
-    var materialHolo =	new THREE.ShaderMaterial({
-        defines         : {
-            USE_HOLO      : true,
-            USE_OFF_SYMB  : false,
-            USE_SCANLINE  : true
-        },
-        uniforms: {
-            color: { value : new THREE.Vector3(10, 3, 3) },
-            s_texture:   { value: textureLoader.load("textures/background/display.png") },
-            f_texture:   { value: textureLoader.load("textures/winplane/nameSlot.png") },
-            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            time: { value: 0.0 },
-            rateFactor:   { value: 1.0 },
-            boolGlitch:  { value: true },
-        },
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        transparent: true,
-        blending:       THREE.AdditiveBlending,
-        //depthTest:      false,
-        //depthWrite:      false,
-    } );
-
-    materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
-    materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
-    materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
-    var geometry = new THREE.PlaneBufferGeometry(80, 40);
-    //geometry.rotateX(-Math.PI / 2.0);
-    this.nameSlot = new THREE.Mesh(geometry, materialHolo);
-    this.nameSlot.name = "this.nameSlot";
-    // this.nameSlot.position.z = 40;
-  //  this.nameSlot.position.y = -5;
-    this.add(this.nameSlot);
-
     var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
     var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
 
@@ -87,6 +49,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             uv[i] = this.arraySymb[ this.arrayNumbers[j] ] [i];
         }
         var geometry = new THREE.PlaneBufferGeometry(this.widthCharacter, this.heightCharacter);
+        geometry.rotateX(Math.PI / 2.0);
         geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
         geometry.attributes.uv.needsUpdate = true;
 
@@ -97,7 +60,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
                 USE_SCANLINE  : true
             },
             uniforms: {
-                color: { value : new THREE.Vector3(10, 3, 3) },
+                color: { value : new THREE.Vector3(3, 4, 4) },
                 s_texture:   { value: textureLoader.load("textures/background/display.png") },
                 f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
                 noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
@@ -117,24 +80,24 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
         materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
 
-      /*  var material = new THREE.MeshBasicMaterial({
-            color: "#f9eba0",
-            map: textureLoader.load('textures/winplane/numbers1.png'),
-            //normalMap: textureLoader.load('textures/winplane/numbers1_normal.jpg'),
-            //normalScale: new THREE.Vector2(0.4, 0.4),
-           // emissive: "#0e0b0b",
-           // specular: "#14160f",
-          //  shininess: 30
-           // transparent: true,
-          //  blending:       THREE.AdditiveBlending,
-         //   depthWrite:      false,
-           // depthTest:       false,
-           // alphaTest: 0.5
-        });
-       // if (!isMobile) {
-         //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
-          //  material.normalScale = new THREE.Vector2(0.4, 0.4);
-      //  }*/
+        /*  var material = new THREE.MeshBasicMaterial({
+              color: "#f9eba0",
+              map: textureLoader.load('textures/winplane/numbers1.png'),
+              //normalMap: textureLoader.load('textures/winplane/numbers1_normal.jpg'),
+              //normalScale: new THREE.Vector2(0.4, 0.4),
+             // emissive: "#0e0b0b",
+             // specular: "#14160f",
+            //  shininess: 30
+             // transparent: true,
+            //  blending:       THREE.AdditiveBlending,
+           //   depthWrite:      false,
+             // depthTest:       false,
+             // alphaTest: 0.5
+          });
+         // if (!isMobile) {
+           //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
+            //  material.normalScale = new THREE.Vector2(0.4, 0.4);
+        //  }*/
         var mesh = new THREE.Mesh(geometry, materialHolo);
         //mesh.visible = false;
         mesh.name = "meshPlane";
@@ -171,7 +134,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             USE_SCANLINE  : false
         },
         uniforms: {
-            color: { value : new THREE.Color("#7373ff") },
+            color: { value : new THREE.Color("#ff6a5d") },
             f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
             s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
             t_texture:   { value: textureLoader.load("textures/background/display.png") },
@@ -203,15 +166,15 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             if (child.isMesh) {
                 if (child.name == "corps") {
                     child.material = materialCorps;
-                    //  child.material.color = new THREE.Color("#485675");
+                    //child.material.color = new THREE.Color("#111d5c");
                 } else if (child.name == "linz") {
                     child.material = materialHolo;
-                   //   child.material.color = new THREE.Color("#027500");
+                    //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "corpsLinz") {
                     child.material = materialCorpsLinz;
-                    //  child.material.color = new THREE.Color("#750f00");
+                    child.material.color = new THREE.Color("#377075");
                 } else {
-                      child.material.color = new THREE.Color("#ff0100");
+                    child.material.color = new THREE.Color("#ff0100");
                 }
                 /*    mesh.castShadow = true;
                     //mesh.receiveShadow = true;
@@ -225,16 +188,16 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             }
         });
     });
-      holoParent.scale.set(1.025, 1.0, 1.0);
-      holoParent.position.z = -3.75;
-  //  this.holoParent = holoParent;
+    holoParent.scale.set(1.025, 1.0, 1.0);
+    holoParent.position.z = -3.75;
+    //  this.holoParent = holoParent;
     this.add(holoParent);
 ///////////////////////////////////////////
     var vertexShader = shaders.vertexShaders.vertexShProjector;
     var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
     this.material =	new THREE.ShaderMaterial({
         uniforms: {
-            rayColor:           { value: new THREE.Color( "#02e9ff" ) },
+            rayColor:           { value: new THREE.Color( "#ff6a5d" ) },
             time:               { value: 0.0 },
             rayAngleSpread:     { value: 0.0 },
             rayDistanceSpread:  { value: 20.0 },
@@ -243,7 +206,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
         transparent: true,
-       // side: THREE.DoubleSide,
+        // side: THREE.DoubleSide,
         blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,
@@ -336,7 +299,7 @@ function arraySymbs(col, row) {
     for (var j = 0; j < RowCount; j++ ) {
         arraySymb[j]=[];
     }
-      //  console.log("arraySymb", arraySymb);
+    //  console.log("arraySymb", arraySymb);
     var  x = 0.0;
     var  y = 1.0;
     /*
@@ -352,34 +315,34 @@ function arraySymbs(col, row) {
 
     for (var j = 0; j < ColCount; j++ ) {
         ///////////////////// Col
-       x = 0.0;
-       y = 1.0;
+        x = 0.0;
+        y = 1.0;
         if (j % 2 == 0) {
-               if ((j / 2) % 2 == 0) {
-                         for (var i = 0; i < RowCount; i++) {
+            if ((j / 2) % 2 == 0) {
+                for (var i = 0; i < RowCount; i++) {
 
-                            // if (x >= 1.0 - 1.0 / Col) {
-                             if (x >= 0.9) {
-                                 x = 0.0;
-                             }
-                                arraySymb[i] [j] = Math.round(x * 100) / 100;
-                                x = x + 1.0 / Col;
-                     }
-
-               } else {
-
-                     for (var i = 0; i < RowCount; i++) {
-
-                         x = x + 1.0 / Col;
-
-                            //if (x >= 1.0) {
-                            if (x > 1.0) {
-                               x = 1.0 / Col;
-                            }
-                         arraySymb[i] [j] = Math.round(x * 100) / 100;
+                    // if (x >= 1.0 - 1.0 / Col) {
+                    if (x >= 0.9) {
+                        x = 0.0;
                     }
-                  // x = 1.0 / Col;
-               }
+                    arraySymb[i] [j] = Math.round(x * 100) / 100;
+                    x = x + 1.0 / Col;
+                }
+
+            } else {
+
+                for (var i = 0; i < RowCount; i++) {
+
+                    x = x + 1.0 / Col;
+
+                    //if (x >= 1.0) {
+                    if (x > 1.0) {
+                        x = 1.0 / Col;
+                    }
+                    arraySymb[i] [j] = Math.round(x * 100) / 100;
+                }
+                // x = 1.0 / Col;
+            }
             ///////////////////// Row 
         } else {
 
@@ -409,29 +372,70 @@ function arraySymbs(col, row) {
     return arraySymb;
 }
 
-MessageTotalRound.prototype = Object.create(THREE.Object3D.prototype);
-MessageTotalRound.prototype.constructor = MessageTotalRound;
+MessageBet.prototype = Object.create(THREE.Object3D.prototype);
+MessageBet.prototype.constructor = MessageBet;
 
-MessageTotalRound.prototype.visibleSlotName = function() {
-    this.nameSlot.visible = true;
-    this.nameSlot.material.uniforms.boolGlitch.value = true;
-    this.dt1 = 0.0;
+MessageBet.prototype.setNumber = function(number) {
+    this.number = number;
+    var deltaNumber = Math.abs(this.number - (this.k + 1));
+    this.lengthChangeNumbers = deltaNumber.toString().length;
+    this.StartStopSwitch = true;
 };
 
-MessageTotalRound.prototype.setBeginNumber = function(number) {
+MessageBet.prototype.setBeginNumber = function(number) {
     this.k = number;
 };
 
-MessageTotalRound.prototype.setNumber = function(number) {
-   this.number = number;
-   this.StartStopSwitch = true;
-};
-
-MessageTotalRound.prototype.setString = function(number) {
+MessageBet.prototype.setString = function(number) {
     if (number > -1) {
         var stringIn = number.toString();
         if (stringIn.length > this.groupNumbers.children.length) {
-            this.stringIn = stringIn.substr(0, stringIn.length - (stringIn.length - this.groupNumbers.children.length));
+            var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
+            var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
+            this.deltaLenthString = this.groupNumbers.children.length - stringIn.length;
+            for (var j = 0; j < stringIn.length - this.groupNumbers.children.length; j++ ) {
+                var uv = new Float32Array( 8 );
+                for (var i = 0; i < uv.length; i++) {
+                    uv[i] = this.arraySymb[ this.arrayNumbers[j] ] [i];
+                }
+                var geometry = new THREE.PlaneBufferGeometry(this.widthCharacter, this.heightCharacter);
+                geometry.rotateX(Math.PI / 2.0);
+                geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
+                geometry.attributes.uv.needsUpdate = true;
+
+                var materialHolo =	new THREE.ShaderMaterial({
+                    defines         : {
+                        USE_HOLO      : true,
+                        USE_OFF_SYMB  : false,
+                        USE_SCANLINE  : true
+                    },
+                    uniforms: {
+                        color: { value : new THREE.Vector3(3, 4, 4) },
+                        s_texture:   { value: textureLoader.load("textures/background/display.png") },
+                        f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
+                        noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                        time: { value: 0.0 },
+                        rateFactor:   { value: 1.0 }
+                    },
+                    vertexShader: vertexShader,
+                    fragmentShader: fragmentShader,
+                    transparent: true,
+                    blending:       THREE.AdditiveBlending,
+                    //depthTest:      false,
+                    //depthWrite:      false,
+                } );
+
+                materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+                materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+                materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
+
+                var mesh = new THREE.Mesh(geometry, materialHolo);
+                mesh.name = "meshPlane";
+                this.groupNumbers.add(mesh);
+            }
+            this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 +
+                (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
+
         } else if (stringIn.length < this.groupNumbers.children.length) {
             this.stringIn = "";
             this.deltaLenthString = this.groupNumbers.children.length - stringIn.length;
@@ -456,7 +460,7 @@ MessageTotalRound.prototype.setString = function(number) {
     }
 };
 
-MessageTotalRound.prototype.stop = function() {
+MessageBet.prototype.stop = function() {
     for (var j = 0; j < this.groupNumbers.children.length; j++) {
         this.groupNumbers.children[j].visible = false;
     }
@@ -464,86 +468,85 @@ MessageTotalRound.prototype.stop = function() {
     this.OnOffSwitch = false;
 };
 
-MessageTotalRound.prototype.start = function() {
+MessageBet.prototype.start = function() {
     this.OnOffSwitch = true;
     this.StartStopSwitch = true;
 };
 
-/*ButtonHolo.prototype.startGlitch = function()
-{
-    this.materialHolo.uniforms.boolGlitch.value = true;
-};*/
-
-MessageTotalRound.prototype.update = function(deltaTime) {
+MessageBet.prototype.update = function(deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
-    this.nameSlot.material.uniforms.time.value += deltaTime;
-        if (this.StartStopSwitch) {
-            this.setString(this.k);
-            for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
-                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].visible = true;
-                if (this.alignment == "centre") {
-                    ///CENTRE
-                    this.groupNumbers.position.x = this.posX + j * this.widthCharacter * 0.5 + (j) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between characters
-                } else if (this.alignment == "left") {
-                    ///LEFT
-                    this.groupNumbers.position.x = this.posX + j * this.widthCharacter + (j) * this.distanceBetweenCharacters;//12.8 character width; 0,7 distance between characters
-                } else if (this.alignment == "right") {
-                    ///RIGHT
-                    this.groupNumbers.position.x = this.posX;//12.8 character width; 0,7 distance between characters
-                }
-                var uv = this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.array;
-                for (var i = 0; i < uv.length; i++) {
-                    uv[uv.length - 1 - i] = this.arraySymb[this.arrayNumbers[this.arrayNumbers.length - 1 - j]] [uv.length - 1 - i];
-                }
-                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
-                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = true;
+    if (this.StartStopSwitch) {
+
+        this.setString(this.k);
+
+        for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
+            this.groupNumbers.children[this.arrayNumbers.length - 1 - j].visible = true;
+            if (this.alignment == "centre") {
+                ///CENTRE
+                this.groupNumbers.position.x = this.posX + j * this.widthCharacter * 0.5 + (j) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between characters
+            } else if (this.alignment == "left") {
+                ///LEFT
+                this.groupNumbers.position.x = this.posX + j * this.widthCharacter + (j) * this.distanceBetweenCharacters;//12.8 character width; 0,7 distance between characters
+            } else if (this.alignment == "right") {
+                ///RIGHT
+                this.groupNumbers.position.x = this.posX;//12.8 character width; 0,7 distance between characters
             }
+            var uv = this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.array;
+            for (var i = 0; i < uv.length; i++) {
+                uv[uv.length - 1 - i] = this.arraySymb[this.arrayNumbers[this.arrayNumbers.length - 1 - j]] [uv.length - 1 - i];
+            }
+            this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
 
-
-
-            if (!this.withoutSwitchNumber) {
-                this.dt += deltaTime;
-                if (this.dt > this.speedSwitchNumber) {
-                    if (this.k < this.number) {
-                        if (this.k.toString().length > 4) {
-                            this.k += 1111;
-                        } else if (this.k.toString().length > 3) {
-                            this.k += 111;
-                        } else if (this.k.toString().length > 2) {
-                            this.k += 11;
-                        } else {
-                            this.k++;
-                        }
-                        this.dt = 0;
-                        if (this.k > this.number) {
-                            this.k = this.number;
-                        }
-                    } else if (this.k > this.number) {
-                        if (this.k.toString().length > 4) {
-                            this.k -= 1111;
-                        } else if (this.k.toString().length > 3) {
-                            this.k -= 111;
-                        } else if (this.k.toString().length > 2) {
-                            this.k -= 11;
-                        } else {
-                            this.k--;
-                        }
-                        this.dt = 0;
-                        if (this.k < this.number) {
-                            this.k = this.number;
-                        }
-                    } else if (this.k == this.number) {
-                        this.StartStopSwitch = false;
-                    }
-                }
-            } else {
-                this.k = this.number;
-                for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
-                     this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = false;
-                }
+            if (j < this.lengthChangeNumbers) {
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = true;
+                this.dt1 = 0.0;
             }
         }
+
+        if (!this.withoutSwitchNumber) {
+            this.dt += deltaTime;
+            if (this.dt > this.speedSwitchNumber) {
+                if (this.k < this.number) {
+                    if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 3) {
+                        this.k += 1111;
+                    } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 2) {
+                        this.k += 111;
+                    } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 1) {
+                        this.k += 11;
+                    } else {
+                        this.k++;
+                    }
+                    this.dt = 0;
+                    if (this.k > this.number) {
+                        this.k = this.number;
+                    }
+                } else if (this.k > this.number) {
+                    if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 3) {
+                        this.k -= 1111;
+                    } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 2) {
+                        this.k -= 111;
+                    } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 1) {
+                        this.k -= 11;
+                    } else {
+                        this.k--;
+                    }
+                    this.dt = 0;
+                    if (this.k < this.number) {
+                        this.k = this.number;
+                    }
+                } else if (this.k == this.number) {
+                    this.StartStopSwitch = false;
+                }
+            }
+
+        } else {
+            this.k = this.number;
+            for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
+                this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = false;
+            }
+        }
+    }
     for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
         this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.time.value += deltaTime;
         if (this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value) {
@@ -554,11 +557,5 @@ MessageTotalRound.prototype.update = function(deltaTime) {
             }
         }
     }
-    if (this.nameSlot.material.uniforms.boolGlitch.value) {
-        this.dt1 += deltaTime;
-        if (this.dt1 > 0.5) {
-            this.nameSlot.material.uniforms.boolGlitch.value = false;
-            this.dt1 = 0.0;
-        }
-    }
+
 };

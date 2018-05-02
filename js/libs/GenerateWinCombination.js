@@ -6,6 +6,8 @@ function  GenerateWinCombination(numCilinder, numPlayingSymbPerCilinder, totalSy
 
     this.totalRound = 0;
 
+    this.bet = 10;
+
     this.totalScore = 250250;
 
     this.numSymbline = [ 0, 0, 0, 0, 0 ];
@@ -289,11 +291,19 @@ GenerateWinCombination.prototype.getTotalRound = function() {
     for (var i = 0; i < this.numSymbline.length; i++) {
         this.totalRound += this.payTable[this.firstSymbline[i]][this.numSymbline[i]];
     }
-    return this.totalRound;
+    return this.totalRound * (this.bet / 10.0);
 };
 
 GenerateWinCombination.prototype.setTotalRound = function(num) {
-        this.totalRound = num;
+    this.totalRound = num;
+};
+
+GenerateWinCombination.prototype.setBet = function(num) {
+    this.bet = num;
+};
+
+GenerateWinCombination.prototype.getBet = function() {
+   return this.bet;
 };
 
 GenerateWinCombination.prototype.getTotalScore = function() {
@@ -302,6 +312,7 @@ GenerateWinCombination.prototype.getTotalScore = function() {
 
 GenerateWinCombination.prototype.setTotalScore = function(num) {
     this.totalScore = num;
+    console.log("totalScore", this.totalScore);
 };
 
   /*[  0 ,  0 ,  100 , 1000 , 5000 ], // SYMB_Seven

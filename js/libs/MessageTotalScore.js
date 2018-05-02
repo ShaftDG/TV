@@ -1,4 +1,4 @@
-function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters) {
+function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
     THREE.Object3D.apply(this);
 
     this.name = "MessageTotalScore";
@@ -8,6 +8,12 @@ function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, 
 
     this.col = col;
     this.row = row;
+
+    this.withoutSwitchNumber = false;
+    this.speedSwitchNumber = speedSwitchNumber;
+    if (speedSwitchNumber == 0.0) {
+        this.withoutSwitchNumber = true;
+    }
 
     this.stringIn = stringIn;
     this.stringBuff = stringIn;
@@ -449,7 +455,7 @@ MessageTotalScore.prototype.setString = function(number) {
             this.groupNumbers.children[j].position.z = this.posZ;
             this.groupNumbers.children[j].position.y = this.posY;
             this.groupNumbers.children[j].position.x = this.posX - lengthPlaneX + this.widthCharacter + (this.widthCharacter + this.distanceBetweenCharacters) * j;
-          //  this.groupNumbers.children[j].visible = false;
+            this.groupNumbers.children[j].visible = false;
         }
     }
 };
@@ -474,7 +480,7 @@ MessageTotalScore.prototype.update = function(deltaTime) {
 
             this.setString(this.k);
 
-            for (var j = 0; j < this.arrayNumbers.length; j++) {
+            for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].visible = true;
                 if (this.alignment == "centre") {
                     ///CENTRE
@@ -498,25 +504,46 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                 }
             }
 
-            this.dt += deltaTime;
-
-            if (this.dt > 0.01) {
-                if (this.k < this.number) {
-                    this.k++;
-                    this.dt = 0;
-                    if (this.k > this.number) {
-                        this.k = this.number - 1;
-                        //  this.number = 0;
-                        this.StartStopSwitch = false;
-                    }
-                } else {
-                    this.k--;
-                    this.dt = 0;
+            if (!this.withoutSwitchNumber) {
+                this.dt += deltaTime;
+                if (this.dt > this.speedSwitchNumber) {
                     if (this.k < this.number) {
-                        this.k = this.number - 1;
-                        //  this.number = 0;
+                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 4) {
+                            this.k += 1111;
+                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 3) {
+                            this.k += 111;
+                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 2) {
+                            this.k += 11;
+                        } else {
+                            this.k++;
+                        }
+                        this.dt = 0;
+                        if (this.k > this.number) {
+                            this.k = this.number;
+                        }
+                    } else if (this.k > this.number) {
+                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 4) {
+                            this.k -= 1111;
+                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 3) {
+                            this.k -= 111;
+                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 2) {
+                            this.k -= 11;
+                        } else {
+                            this.k--;
+                        }
+                        this.dt = 0;
+                        if (this.k < this.number) {
+                            this.k = this.number;
+                        }
+                    } else if (this.k == this.number) {
                         this.StartStopSwitch = false;
                     }
+                }
+
+            } else {
+                this.k = this.number;
+                for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
+                    this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = false;
                 }
             }
         }

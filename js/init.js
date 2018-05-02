@@ -32,7 +32,7 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 //GUI
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
-var totalRound2D, totalScore2D;
+var totalRound2D, totalScore2D, totalBet;
 //var totalRound = 0;
 //var totalScore = 261485;
 var boolStopScore = false;
@@ -229,12 +229,13 @@ function init() {
     var stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
+    totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
     totalRound2D.position.y = 45 /*+ 10*/;
     totalRound2D.position.z = 25;
     totalRound2D.rotation.x = 0.5;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
   //  totalRound2D.setString(stringIn);
+    totalRound2D.setBeginNumber(0);
     totalRound2D.setNumber(0);
     totalRound2D.stop();
    // totalRound2D.start();
@@ -249,7 +250,7 @@ function init() {
     stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75);
+    totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
     totalScore2D.position.y = -42 /*+ 10*/;
     totalScore2D.position.z = 25;
     totalScore2D.rotation.x = -Math.PI/2;
@@ -261,6 +262,27 @@ function init() {
     //cameraParent.add(totalRound2D);
     totalScore2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalScore2D);
+////////////////////////////////////////////
+    stringIn = "00000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
+    totalBet = new MessageBet(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
+    totalBet.position.y = -20 /*+ 10*/;
+    totalBet.position.x = -50;
+    totalBet.position.z = 25;
+    totalBet.rotation.x = -Math.PI/2;
+    // totalRound2D.rotation.x = -60 * Math.PI / 180;
+    var bet = slot.getBet();
+    totalBet.setBeginNumber(bet);
+    totalBet.setNumber(bet);
+    totalBet.start();
+    //cameraParent.add(totalRound2D);
+    totalBet.scale.set(0.7, 0.7, 0.7);
+    scene.add(totalBet);
 ////////////////////////////////////////////
     terminal = new Terminal(textureLoader, false);
     terminal.name = "terminal";
@@ -342,13 +364,12 @@ function animate() {
         boolMoveCamera = true;
         var totalRound = slot.getTotalSum();
         var totalScore = slot.getTotalScore();
-        totalScore += totalRound;
-        slot.setTotalScore(totalScore);
+     //   totalScore += totalRound;
+     //   slot.setTotalScore(totalScore);
         totalScore2D.setNumber(totalScore);
         totalRound2D.nameSlot.visible = false;
         totalRound2D.setNumber(totalRound);
         boolStopScore = false;
-        console.log("totalScore", totalScore);
     }
     if (slot.autoPlay) {
         if (slot.autoPlayStart) {
@@ -378,6 +399,7 @@ function animate() {
     slot.updateWithTime(deltaTimeElapsed, deltaTime);
     totalRound2D.update(deltaTime * 1.2);
     totalScore2D.update(deltaTime * 1.2);
+    totalBet.update(deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
     /* if (slot.getBoolEndAnimation()) {
          boolStartStop = false;
@@ -487,6 +509,7 @@ function onKeyDown ( event ) {
             totalScore2D.setNumber(totalScore);
             if (!boolStartStop) {
                 button.stopColor();
+                totalRound2D.setBeginNumber(0);
                 totalRound2D.stop();
                 if (!totalRound2D.nameSlot.visible) {
                     totalRound2D.visibleSlotName();
@@ -547,6 +570,7 @@ function onDocumentMouseDown( event ) {
             totalScore2D.setNumber(totalScore);
             if (!boolStartStop) {
                 button.stopColor();
+                totalRound2D.setBeginNumber(0);
                 totalRound2D.stop();
                 if (!totalRound2D.nameSlot.visible) {
                     totalRound2D.visibleSlotName();
@@ -590,8 +614,21 @@ function onDocumentMouseDown( event ) {
             buttonHoloAutoPlay.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
-                console.log("Bet");
             buttonHoloBet.startGlitch();
+            var bet = slot.getBet();
+            totalBet.setBeginNumber(bet);
+            if (bet < 50) {
+                bet += 10.0;
+            } else if (bet >= 50 && bet < 500) {
+                bet += 50.0;
+            } else if (bet >= 500 && bet < 1000) {
+                bet += 100.0;
+            } else if (bet >= 1000) {
+                bet = 10.0;
+            }
+            totalBet.setNumber(bet);
+           // console.log("Bet: ", bet);
+            slot.setBet(bet);
         }
 
         /*  if (intersects[0].object.parent.name == "startStopButton") {
