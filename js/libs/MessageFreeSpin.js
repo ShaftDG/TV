@@ -151,6 +151,55 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.materialHolo.uniforms.s_texture.value.wrapS = this.materialHolo.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
     this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHolo = this.materialHolo;
+    /////////////////////////////////////////
+    var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
+    var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
+    this.materialHoloFreeSpin =	new THREE.ShaderMaterial({
+        defines         : {
+            USE_HOLO      : true,
+            USE_OFF_SYMB  : false,
+            USE_SCANLINE  : true
+        },
+        uniforms: {
+            color: { value : new THREE.Vector3(10, 3, 3) },
+            s_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/winplane/freespin.png") },
+            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            time: { value: 0.0 },
+            rateFactor:   { value: 1.0 },
+            boolGlitch:  { value: true },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        transparent: true,
+        blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+    this.materialHoloFreeSpin.uniforms.f_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+    this.materialHoloFreeSpin.uniforms.s_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+    this.materialHoloFreeSpin.uniforms.noise_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
+    var materialHoloFreeSpin = this.materialHoloFreeSpin;
+    ///////////////////////////////////////////
+    var vertexShader = shaders.vertexShaders.vertexShProjector;
+    var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
+    this.material =	new THREE.ShaderMaterial({
+        uniforms: {
+            rayColor:           { value: new THREE.Color( "#0ec0ff" ) },
+            time:               { value: 0.0 },
+            rayAngleSpread:     { value: 0.0 },
+            rayDistanceSpread:  { value: 20.0 },
+            rayBrightness:      { value: 10.0 }
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        transparent: true,
+        //side: THREE.DoubleSide,
+        blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+    var material = this.material;
     var OBJobject = "holoProjFreeSpin.obj";
     var holoParent = new THREE.Object3D;
     var loaderOBJ = new THREE.OBJLoader( loadingManager );
@@ -162,6 +211,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     //child.material.color = new THREE.Color("#111d5c");
                 } else if (child.name == "linz") {
                     child.material = materialHolo;
+                    //   child.material.color = new THREE.Color("#027500");
+                } else if (child.name == "disc") {
+                    child.material = materialHoloFreeSpin;
+                    //   child.material.color = new THREE.Color("#027500");
+                } else if (child.name == "disc_light") {
+                    child.material = material;
                     //   child.material.color = new THREE.Color("#027500");
                 } else {
                     child.material.color = new THREE.Color("#ff0100");
@@ -183,25 +238,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
   //  holoParent.position.z = -3.75;
     //  this.holoParent = holoParent;
     this.add(holoParent);
-///////////////////////////////////////////
-    var vertexShader = shaders.vertexShaders.vertexShProjector;
-    var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
-    this.material =	new THREE.ShaderMaterial({
-        uniforms: {
-            rayColor:           { value: new THREE.Color( "#0ec0ff" ) },
-            time:               { value: 0.0 },
-            rayAngleSpread:     { value: 0.0 },
-            rayDistanceSpread:  { value: 20.0 },
-            rayBrightness:      { value: 10.0 }
-        },
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        transparent: true,
-        //side: THREE.DoubleSide,
-        blending:       THREE.AdditiveBlending,
-        //depthTest:      false,
-        //depthWrite:      false,
-    } );
+
     ////////////////////////////////////////////
     var geometry = new THREE.CylinderBufferGeometry(15, 6, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
@@ -440,6 +477,7 @@ MessageFreeSpin.prototype.start = function() {
 MessageFreeSpin.prototype.update = function(deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
+    this.materialHoloFreeSpin.uniforms.time.value += deltaTime;
     if (this.StartStopSwitch) {
 
         this.setString(this.k);
