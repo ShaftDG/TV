@@ -9,6 +9,7 @@ var sunlight, tv, slot;
 
 var boolStartStop = false;
 var boolStartStopAutoPlay = false;
+var boolUpdateScore = false;
 var button, terminal, buttonHoloFullScreen, buttonHoloAutoPlay, buttonHoloBet;
 var textureFullScreen, textureFullScreenCancel;
 
@@ -32,7 +33,7 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 //GUI
 //var gui = new dat.GUI( { width: 300 } ), optionsTonguesOfFire, optionsOriginFire, optionsStartStop;
 
-var totalRound2D, totalScore2D, totalBet;
+var totalRound2D, totalScore2D, totalBet, totalFreeSpin;
 //var totalRound = 0;
 //var totalScore = 261485;
 var boolStopScore = false;
@@ -258,7 +259,6 @@ function init() {
     var totalScore = slot.getTotalScore();
     totalScore2D.setBeginNumber(totalScore);
     totalScore2D.setNumber(totalScore);
-    totalScore2D.start();
     //cameraParent.add(totalRound2D);
     totalScore2D.scale.set(0.7, 0.7, 0.7);
     scene.add(totalScore2D);
@@ -271,19 +271,40 @@ function init() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalBet = new MessageBet(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
-    totalBet.position.y = -20 /*+ 10*/;
-    totalBet.position.x = -50;
-    totalBet.position.z = 25;
-    totalBet.rotation.x = -Math.PI/2;
+    totalBet.position.y = -22 /*+ 10*/;
+    totalBet.position.x = -65;
+    totalBet.position.z = 10;
+   // totalBet.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
     var bet = slot.getBet();
     totalBet.setBeginNumber(bet);
     totalBet.setNumber(bet);
-    totalBet.start();
     //cameraParent.add(totalRound2D);
-    totalBet.scale.set(0.7, 0.7, 0.7);
+    totalBet.scale.set(0.7, 0.8, 0.7);
+  //  totalBet.rotation.y = Math.PI / 8;
     scene.add(totalBet);
 ////////////////////////////////////////////
+    stringIn = "00000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
+    totalFreeSpin = new MessageFreeSpin(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 10, 10, -0.75, 0.01);
+    totalFreeSpin.position.y = 22 /*+ 10*/;
+    totalFreeSpin.position.x = 80;
+    totalFreeSpin.position.z = 10;
+    // totalBet.rotation.x = -Math.PI/2;
+    // totalRound2D.rotation.x = -60 * Math.PI / 180;
+    totalFreeSpin.setBeginNumber(0);
+    totalFreeSpin.setNumber(0);
+    totalFreeSpin.stop();
+    //cameraParent.add(totalRound2D);
+    totalFreeSpin.scale.set(0.7, 0.8, 0.7);
+    totalFreeSpin.rotation.y = -Math.PI / 5;
+    scene.add(totalFreeSpin);
+//////////////////////////////////////////////////
     terminal = new Terminal(textureLoader, false);
     terminal.name = "terminal";
     terminal.position.set(0, -40.0, 5.0);
@@ -360,35 +381,69 @@ function animate() {
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
-    if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
-        boolMoveCamera = true;
-        var totalRound = slot.getTotalSum();
-        var totalScore = slot.getTotalScore();
-     //   totalScore += totalRound;
-     //   slot.setTotalScore(totalScore);
-        totalScore2D.setNumber(totalScore);
-        totalRound2D.nameSlot.visible = false;
-        totalRound2D.setNumber(totalRound);
-        boolStopScore = false;
-    }
     if (slot.autoPlay) {
         if (slot.autoPlayStart) {
-            totalScore2D.setNumber(slot.getTotalScore());
             slot.autoPlayStart = false;
-            if (!totalRound2D.nameSlot.visible) {
-                totalRound2D.visibleSlotName();
-            }
-            totalRound2D.stop();
             button.stopColor();
+            if (!slot.boolFreeSpin) {
+                totalScore2D.setNumber(slot.getTotalScore());
+                slot.autoPlayStart = false;
+                if (!totalRound2D.nameSlot.visible) {
+                    totalRound2D.visibleSlotName();
+                }
+                totalRound2D.stop();
+            }
         }
         if (slot.autoPlayStop) {
-            totalRound2D.nameSlot.visible = false;
-            totalRound2D.setNumber(slot.getTotalSum());
-            totalScore2D.setNumber(slot.getTotalScore());
             slot.autoPlayStop = false;
             button.startColor();
+            if (slot.totalRoundFreeSpin > 0) {
+                totalRound2D.nameSlot.visible = false;
+                totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                boolUpdateScore = true;
+            } else {
+                if (slot.getTotalSum() > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.getTotalSum());
+                    totalScore2D.setNumber(slot.getTotalScore());
+                }
+            }
         }
+    } else {
+        buttonHoloAutoPlay.materialHolo.uniforms.boolOn.value = false;
+        buttonHoloAutoPlay.boolOnOffSwitch = false;
+        boolStartStopAutoPlay = false;
+
+            if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
+                boolMoveCamera = true;
+                if (!slot.boolFreeSpin) {
+                    var totalRound = slot.getTotalSum();
+                    var totalScore = slot.getTotalScore();
+                    //   totalScore += totalRound;
+                    //   slot.setTotalScore(totalScore);
+                    totalScore2D.setNumber(totalScore);
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(totalRound);
+                    boolStopScore = false;
+                } else {
+                    boolUpdateScore = true;
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                    boolStopScore = false;
+                }
+            }
     }
+    if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
+        console.log("free",slot.getTotalScore() );
+        totalScore2D.setNumber(slot.getTotalScore());
+        boolUpdateScore = false;
+    }
+    if (slot.genArraySymb.numFreeSpin > 0) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else {
+        totalFreeSpin.stop();
+    }
+
     if (slot.boolChangeStopToStart && boolStartStop) {
        button.startColor();
        boolStartStop = false;
@@ -400,6 +455,7 @@ function animate() {
     totalRound2D.update(deltaTime * 1.2);
     totalScore2D.update(deltaTime * 1.2);
     totalBet.update(deltaTime * 1.2);
+    totalFreeSpin.update(deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
     /* if (slot.getBoolEndAnimation()) {
          boolStartStop = false;
@@ -504,21 +560,38 @@ function onKeyDown ( event ) {
         case 32: // stop rotate
             // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
             boolMoveCamera = false;
-            slot.stopStartRotateSymb();
-            var totalScore = slot.getTotalScore();
-            totalScore2D.setNumber(totalScore);
-            if (!boolStartStop) {
-                button.stopColor();
-                totalRound2D.setBeginNumber(0);
-                totalRound2D.stop();
-                if (!totalRound2D.nameSlot.visible) {
-                    totalRound2D.visibleSlotName();
+            if (!slot.genArraySymb.boolFreeSpin) {
+                slot.stopStartRotateSymb();
+                var totalScore = slot.getTotalScore();
+                totalScore2D.setNumber(totalScore);
+                if (!boolStartStop) {
+                    button.stopColor();
+                    totalRound2D.setBeginNumber(0);
+                    totalRound2D.stop();
+                    if (!totalRound2D.nameSlot.visible) {
+                        totalRound2D.visibleSlotName();
+                    }
+                    boolStopScore = true;
+                    boolStartStop = true;
+                } else if (slot.boolChangeStopToStart) {
+                    button.startColor();
+                    boolStartStop = false;
                 }
-                boolStopScore = true;
-                boolStartStop = true;
-            } else if (slot.boolChangeStopToStart) {
-                button.startColor();
-                boolStartStop = false;
+            } else {
+                slot.stopStartRotateSymbFreeSpin();
+                if (!boolStartStop) {
+                    button.stopColor();
+             //       totalRound2D.setBeginNumber(0);
+              //      totalRound2D.stop();
+              //      if (!totalRound2D.nameSlot.visible) {
+               //         totalRound2D.visibleSlotName();
+              //      }
+                    boolStopScore = true;
+                    boolStartStop = true;
+                } else if (slot.boolChangeStopToStart) {
+                    button.startColor();
+                    boolStartStop = false;
+                }
             }
             break;
     }
@@ -565,21 +638,38 @@ function onDocumentMouseDown( event ) {
        // console.log(intersects[0].object.parent.name);
         if (intersects[0].object.parent.name == "button") {
             boolMoveCamera = false;
-            slot.stopStartRotateSymb();
-            var totalScore = slot.getTotalScore();
-            totalScore2D.setNumber(totalScore);
-            if (!boolStartStop) {
-                button.stopColor();
-                totalRound2D.setBeginNumber(0);
-                totalRound2D.stop();
-                if (!totalRound2D.nameSlot.visible) {
-                    totalRound2D.visibleSlotName();
+            if (!slot.genArraySymb.boolFreeSpin) {
+                slot.stopStartRotateSymb();
+                var totalScore = slot.getTotalScore();
+                totalScore2D.setNumber(totalScore);
+                if (!boolStartStop) {
+                    button.stopColor();
+                    totalRound2D.setBeginNumber(0);
+                    totalRound2D.stop();
+                    if (!totalRound2D.nameSlot.visible) {
+                        totalRound2D.visibleSlotName();
+                    }
+                    boolStopScore = true;
+                    boolStartStop = true;
+                } else if (slot.boolChangeStopToStart) {
+                    button.startColor();
+                    boolStartStop = false;
                 }
-                boolStopScore = true;
-                boolStartStop = true;
             } else {
-                button.startColor();
-                boolStartStop = false;
+                slot.stopStartRotateSymbFreeSpin();
+                if (!boolStartStop) {
+                    button.stopColor();
+                    //       totalRound2D.setBeginNumber(0);
+                    //      totalRound2D.stop();
+                    //      if (!totalRound2D.nameSlot.visible) {
+                    //         totalRound2D.visibleSlotName();
+                    //      }
+                    boolStopScore = true;
+                    boolStartStop = true;
+                } else if (slot.boolChangeStopToStart) {
+                    button.startColor();
+                    boolStartStop = false;
+                }
             }
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloFullScreen") {
@@ -597,21 +687,40 @@ function onDocumentMouseDown( event ) {
             buttonHoloFullScreen.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloAutoPlay") {
-            if (!boolStartStopAutoPlay) {
-                console.log("AutoPlay = Start");
-                boolStartStopAutoPlay = true;
-                slot.autoPlay = true;
-                buttonHoloAutoPlay.OnOff();
-                slot.stopStartRotateSymb();
+            if (!slot.genArraySymb.boolFreeSpin) {
+                if (!boolStartStopAutoPlay) {
+                    console.log("AutoPlay = Start");
+                    boolStartStopAutoPlay = true;
+                    slot.autoPlay = true;
+                    buttonHoloAutoPlay.OnOff();
+                    slot.stopStartRotateSymb();
+                } else {
+                    console.log("AutoPlay = Stop");
+                    boolStartStopAutoPlay = false;
+                    slot.autoPlay = false;
+                    buttonHoloAutoPlay.OnOff();
+                    //  slot.stopStartRotateSymb();
+                    boolStartStop = true;
+                }
+                buttonHoloAutoPlay.startGlitch();
+
             } else {
-                console.log("AutoPlay = Stop");
-                boolStartStopAutoPlay = false;
-                slot.autoPlay = false;
-                buttonHoloAutoPlay.OnOff();
-              //  slot.stopStartRotateSymb();
-                boolStartStop = true;
+                if (!boolStartStopAutoPlay) {
+                    console.log("AutoPlay = Start");
+                    boolStartStopAutoPlay = true;
+                    slot.autoPlay = true;
+                    buttonHoloAutoPlay.OnOff();
+                    slot.stopStartRotateSymbFreeSpin();
+                } else {
+                    console.log("AutoPlay = Stop");
+                    boolStartStopAutoPlay = false;
+                    slot.autoPlay = false;
+                    buttonHoloAutoPlay.OnOff();
+                    //  slot.stopStartRotateSymbFreeSpin();
+                    boolStartStop = true;
+                }
+                buttonHoloAutoPlay.startGlitch();
             }
-            buttonHoloAutoPlay.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
             buttonHoloBet.startGlitch();

@@ -9,7 +9,7 @@ function TV(textureLoader, align, isMobile)
     this.boolRate = false;
     this.resolutionPaused = false;
 
-    this.isStopped = true;
+    this.isStopped = false;
 
     this.speedFactor = 16.0;
     this.i = 0;

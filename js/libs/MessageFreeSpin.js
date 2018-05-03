@@ -1,7 +1,7 @@
-function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
+function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
     THREE.Object3D.apply(this);
 
-    this.name = "MessageBet";
+    this.name = "MessageFreeSpin";
 
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
@@ -49,7 +49,7 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
             uv[i] = this.arraySymb[ this.arrayNumbers[j] ] [i];
         }
         var geometry = new THREE.PlaneBufferGeometry(this.widthCharacter, this.heightCharacter);
-     //   geometry.rotateX(Math.PI / 2.0);
+        //   geometry.rotateX(Math.PI / 2.0);
         geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
         geometry.attributes.uv.needsUpdate = true;
 
@@ -110,21 +110,13 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
 ///////////////////////////////////////////
     var materialCorps = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/holoProj/holoProj_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Metallic.png"),
+        map: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_BaseColor.png"),
+        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_Metallic.png"),
         metalness: 0.5,
-        roughnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_Roughness.png"),
         roughness: 0.5,
-        normalMap: textureLoader.load("textures/holoProj/holoProj_corps_Normal.png"),
-    });
-    var materialCorpsLinz = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/holoProj/holoProj_corpsLinz_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Metallic.png"),
-        metalness: 0.5,
-        roughnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Roughness.png"),
-        roughness: 0.5,
-        normalMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Normal.png"),
+        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_Normal.png"),
+        side: THREE.DoubleSide
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -159,7 +151,7 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
     this.materialHolo.uniforms.s_texture.value.wrapS = this.materialHolo.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
     this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHolo = this.materialHolo;
-    var OBJobject = "holoProjBet.obj";
+    var OBJobject = "holoProjFreeSpin.obj";
     var holoParent = new THREE.Object3D;
     var loaderOBJ = new THREE.OBJLoader( loadingManager );
     loaderOBJ.load("obj/" + OBJobject, function (object) {
@@ -171,9 +163,6 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
                 } else if (child.name == "linz") {
                     child.material = materialHolo;
                     //   child.material.color = new THREE.Color("#027500");
-                } else if (child.name == "corpsLinz") {
-                    child.material = materialCorpsLinz;
-                    child.material.color = new THREE.Color("#377075");
                 } else {
                     child.material.color = new THREE.Color("#ff0100");
                 }
@@ -190,8 +179,8 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
         });
     });
     holoParent.scale.set(1.0, 1.0, 1.0);
-   // holoParent.rotation.z = Math.PI / 2.0;
-    holoParent.position.z = -3.75;
+    holoParent.rotation.z = Math.PI / 10.0;
+  //  holoParent.position.z = -3.75;
     //  this.holoParent = holoParent;
     this.add(holoParent);
 ///////////////////////////////////////////
@@ -208,60 +197,26 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
         transparent: true,
-        // side: THREE.DoubleSide,
+        //side: THREE.DoubleSide,
         blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,
     } );
     ////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 10, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-  //  geometry.rotateZ(-Math.PI / 2.0);
+    var geometry = new THREE.CylinderBufferGeometry(15, 6, 0, 24, 1.0, true);
+    geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = 14.5-10;
-    mesh.position.z = 6.5;
     this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 10, 7, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-   // geometry.rotateZ(-Math.PI / 2.0);
+    var geometry = new THREE.CylinderBufferGeometry(15, 5, 0, 24, 1.0, true);
+    geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = 14.5-8.5;
-    mesh.position.z = 6.5;
     this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 12, 5, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-  //  geometry.rotateZ(-Math.PI / 2.0);
+    var geometry = new THREE.CylinderBufferGeometry(15, 4, 0, 24, 1.0, true);
+    geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = 14.5-7.5;
-    mesh.position.z = 6.5;
     this.add(mesh);
-    ////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 10, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(-Math.PI);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = -14.5+10;
-    mesh.position.z = 6.5;
-    this.add(mesh);
-
-    var geometry = new THREE.CylinderBufferGeometry(2, 10, 7, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(-Math.PI);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = -14.5+8.5;
-    mesh.position.z = 6.5;
-    this.add(mesh);
-
-    var geometry = new THREE.CylinderBufferGeometry(2, 12, 5, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(-Math.PI);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = -14.5+7.5;
-    mesh.position.z = 6.5;
-    this.add(mesh);
-
 }
 
 function parseString(stringIn, stringPattern) {
@@ -381,21 +336,21 @@ function arraySymbs(col, row) {
     return arraySymb;
 }
 
-MessageBet.prototype = Object.create(THREE.Object3D.prototype);
-MessageBet.prototype.constructor = MessageBet;
+MessageFreeSpin.prototype = Object.create(THREE.Object3D.prototype);
+MessageFreeSpin.prototype.constructor = MessageFreeSpin;
 
-MessageBet.prototype.setNumber = function(number) {
+MessageFreeSpin.prototype.setNumber = function(number) {
     this.number = number;
     var deltaNumber = Math.abs(this.number - (this.k + 1));
     this.lengthChangeNumbers = deltaNumber.toString().length;
     this.StartStopSwitch = true;
 };
 
-MessageBet.prototype.setBeginNumber = function(number) {
+MessageFreeSpin.prototype.setBeginNumber = function(number) {
     this.k = number;
 };
 
-MessageBet.prototype.setString = function(number) {
+MessageFreeSpin.prototype.setString = function(number) {
     if (number > -1) {
         var stringIn = number.toString();
         if (stringIn.length > this.groupNumbers.children.length) {
@@ -469,7 +424,7 @@ MessageBet.prototype.setString = function(number) {
     }
 };
 
-MessageBet.prototype.stop = function() {
+MessageFreeSpin.prototype.stop = function() {
     for (var j = 0; j < this.groupNumbers.children.length; j++) {
         this.groupNumbers.children[j].visible = false;
     }
@@ -477,12 +432,12 @@ MessageBet.prototype.stop = function() {
     this.OnOffSwitch = false;
 };
 
-MessageBet.prototype.start = function() {
+MessageFreeSpin.prototype.start = function() {
     this.OnOffSwitch = true;
     this.StartStopSwitch = true;
 };
 
-MessageBet.prototype.update = function(deltaTime) {
+MessageFreeSpin.prototype.update = function(deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
     if (this.StartStopSwitch) {

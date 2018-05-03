@@ -35,6 +35,12 @@ function  GenerateWinCombination(numCilinder, numPlayingSymbPerCilinder, totalSy
         [  0 ,  25 ,   50 ,  100 ,  200 ], // SYMB_Strawberry
     ];
 
+    this.freeSpinSymb = 7;
+    this.numFreeSpinSymb = 0;
+    this.numFreeSpin = 0;
+    this.boolFreeSpin = false;
+
+
     this.r = [
         [ 3, 3, 3, 2, 0, 2, 2, 7, 5, 5, 6, 6, 6, 5, 5, 5, 1, 1, 4, 1, 4, 4, 4, 3, 0 ],
         [ 3, 3, 3, 3, 4, 4, 4, 2, 4, 2, 2, 5, 0, 5, 5, 5, 1, 1, 0, 1, 6, 6, 6, 6, 7 ],
@@ -90,13 +96,29 @@ function randomInteger(min, max) {
 }
 
 GenerateWinCombination.prototype.generate = function() {
-
+    this.numFreeSpinSymb = 0;
     for (var j = 0; j < this.numCilinder; j++ ) {
         var stopPosition = randomInteger(0, this.r[0].length - 1);
         this.stopPositionArray[j] = stopPosition;
         for (var i = 0; i < this.numPlayingSymbPerCilinder; i++ ) {
-            this.arrayCombination[j][i] = this.r[j][(stopPosition > 0) ? stopPosition + i - 1 : (i > 0) ? stopPosition + i - 1 : this.r[0].length - 1 ];
+           this.arrayCombination[j][i] = this.r[j][(stopPosition > 0) ? stopPosition + i - 1 : (i > 0) ? stopPosition + i - 1 : this.r[0].length - 1 ];
+           //this.arrayCombination[j][i] = 7;
+           if (this.arrayCombination[j][i] == this.freeSpinSymb) {
+               this.numFreeSpinSymb++;
+           }
         }
+    }
+    console.log("=================================");
+    if (this.numFreeSpinSymb >= 1) {
+        this.boolFreeSpin = true;
+        this.numFreeSpin += 5;
+        console.log("FreeSpin: Yes - ", this.numFreeSpin);
+        this.numFreeSpinSymb = 0;
+    }
+    if (this.numFreeSpin <= 0) {
+        console.log("FreeSpin: No");
+        this.boolFreeSpin = false;
+        this.numFreeSpinSymb = 0;
     }
 
     console.log("stopPositionArray", this.stopPositionArray);
@@ -145,7 +167,7 @@ GenerateWinCombination.prototype.winlineRound = function() {
                     } else {
                         break;
                     }
-                } else if (i == 0) {
+                } else if (i == 0 /*&& this.winLineArray[j][i] != this.freeSpinSymb*/) {
                     this.numSymbline[j] = 0;
                     this.firstSymbline[j] = this.winLineArray[j][i];
                 }
@@ -158,7 +180,7 @@ GenerateWinCombination.prototype.winlineRound = function() {
                     } else {
                         break;
                     }
-                } else if (i == 0) {
+                } else if (i == 0 /*&& this.winLineArray[j][i] != this.freeSpinSymb*/) {
                     this.numSymbline[j] = 0;
                     this.firstSymbline[j] = this.winLineArray[j][i];
                 }
@@ -171,7 +193,7 @@ GenerateWinCombination.prototype.winlineRound = function() {
                     } else {
                         break;
                     }
-                } else if (i == 0) {
+                } else if (i == 0 /*&& this.winLineArray[j][i] != this.freeSpinSymb*/) {
                     this.numSymbline[j] = 0;
                     this.firstSymbline[j] = this.winLineArray[j][i];
                 }
@@ -184,7 +206,7 @@ GenerateWinCombination.prototype.winlineRound = function() {
                     } else {
                         break;
                     }
-                } else if (i == 0) {
+                } else if (i == 0 /* && this.winLineArray[j][i] != this.freeSpinSymb*/) {
                     this.numSymbline[j] = 0;
                     this.firstSymbline[j] = this.winLineArray[j][i];
                 }
@@ -197,7 +219,7 @@ GenerateWinCombination.prototype.winlineRound = function() {
                     } else {
                         break;
                     }
-                } else if (i == 0) {
+                } else if (i == 0 /*&& this.winLineArray[j][i] != this.freeSpinSymb*/) {
                     this.numSymbline[j] = 0;
                     this.firstSymbline[j] = this.winLineArray[j][i];
                 }
