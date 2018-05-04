@@ -67,6 +67,9 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.canStop = true;
     this.boolChangeStopToStart = true;
 
+    this.boolMoveFreeSpin = false;
+    this.boolMoveBackFreeSpin = false;
+
     this.autoPlay = false;
     this.autoPlayStart = false;
     this.autoPlayStop = false;
@@ -106,12 +109,12 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
                 if ( j == 0 ) {
                     tv.rotation.y = 0.35;
                     tv.rotation.z = -0.15;
-                    tv.position.x -= 2.5;
+                 //   tv.position.x -= 2.5;
                     tv.position.z += 6;
                 } else if ( j == 2) {
                     tv.rotation.y = -0.35;
                     tv.rotation.z = 0.15;
-                    tv.position.x += 2.5;
+                 //   tv.position.x += 2.5;
                     tv.position.z += 6;
                 }
                 //  tv.position.z = -0.5;
@@ -172,6 +175,316 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 }
 ControllerTV.prototype = Object.create(THREE.Object3D.prototype);
 ControllerTV.prototype.constructor = ControllerTV;
+
+ControllerTV.prototype.freeSpin = function(deltaTime) {
+    var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
+    var lengthY = (this.numTVperLine - 1) * (this.distanceBetweenTVY);
+    for (var i = 0; i < this.numLineTV; i++) {
+        for (var j = 0; j < this.numTVperLine; j++) {
+            if ( i == 0 ) {
+                if (this.tvArray[i][j].position.y >= ((lengthY / 2) - this.distanceBetweenTVY * i) + 3 ) {
+                    this.tvArray[i][j].position.y = ((lengthY / 2) - this.distanceBetweenTVY * i) + 3;
+                } else {
+                    this.tvArray[i][j].position.y += deltaTime*10.0;
+                }
+                if (this.tvArray[i][j].rotation.x <= 0) {
+                    this.tvArray[i][j].rotation.x = 0;
+                } else {
+                    this.tvArray[i][j].rotation.x -= deltaTime;
+                }
+                if ( j == 0 ) {
+                    if (this.tvArray[i][j].rotation.y <= 0) {
+                        this.tvArray[i][j].rotation.y = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.y -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z >= 0) {
+                        this.tvArray[i][j].rotation.z = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.z += deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.x <= (0 - lengthX / 2) + this.distanceBetweenTVX * j - 2.5) {
+                        this.tvArray[i][j].position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j - 2.5;
+                    } else {
+                        this.tvArray[i][j].position.x -= deltaTime*7.5
+                    }
+                    if (this.tvArray[i][j].position.z <= 0) {
+                        this.tvArray[i][j].position.z = 0;
+                    } else {
+                        this.tvArray[i][j].position.z -= deltaTime*40.0;
+                    }
+                } else if ( j == 1) {
+                    if (this.tvArray[i][j].position.z <= 0) {
+                        this.tvArray[i][j].position.z = 0;
+                    } else {
+                        this.tvArray[i][j].position.z -= deltaTime*30.0;
+                    }
+                } else if ( j == 2) {
+                    if (this.tvArray[i][j].rotation.y >= 0) {
+                        this.tvArray[i][j].rotation.y = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.y += deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z <= 0) {
+                        this.tvArray[i][j].rotation.z = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.z -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.x >= (0 - lengthX / 2) + this.distanceBetweenTVX * j + 2.5) {
+                        this.tvArray[i][j].position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j + 2.5;
+                    } else {
+                        this.tvArray[i][j].position.x += deltaTime*7.5;
+                    }
+                    if (this.tvArray[i][j].position.z <= 0) {
+                        this.tvArray[i][j].position.z = 0;
+                    } else {
+                        this.tvArray[i][j].position.z -= deltaTime*40.0;
+                    }
+                }
+            } else if ( i == 1 ) {
+                if (this.tvArray[i][j].position.y >= ((lengthY / 2) - this.distanceBetweenTVY * i) + 3 ) {
+                    this.tvArray[i][j].position.y = ((lengthY / 2) - this.distanceBetweenTVY * i) + 3;
+                } else {
+                    this.tvArray[i][j].position.y += deltaTime*10.0;
+                }
+
+                if (this.tvArray[i][j].position.z <= 0) {
+                    this.tvArray[i][j].position.z = 0;
+                } else {
+                    this.tvArray[i][j].position.z -= deltaTime*20.0;
+                }
+
+                if (this.tvArray[i][j].rotation.x <= 0) {
+                    this.tvArray[i][j].rotation.x = 0;
+                } else {
+                    this.tvArray[i][j].rotation.x -= deltaTime;
+                }
+                if ( j == 0 ) {
+                    if (this.tvArray[i][j].rotation.y <= 0) {
+                        this.tvArray[i][j].rotation.y = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.y -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z >= 0) {
+                        this.tvArray[i][j].rotation.z = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.z += deltaTime;
+                    }
+                } else if ( j == 2) {
+                    if (this.tvArray[i][j].rotation.y >= 0) {
+                        this.tvArray[i][j].rotation.y = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.y += deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z <= 0) {
+                        this.tvArray[i][j].rotation.z = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.z -= deltaTime;
+                    }
+                }
+            } else if ( i == 2 ) {
+                if (this.tvArray[i][j].position.y >= ((lengthY / 2) - this.distanceBetweenTVY * i) + 3 ) {
+                    this.tvArray[i][j].position.y = ((lengthY / 2) - this.distanceBetweenTVY * i) + 3;
+                } else {
+                    this.tvArray[i][j].position.y += deltaTime*10.0;
+                }
+                if (this.tvArray[i][j].rotation.x >= 0) {
+                    this.tvArray[i][j].rotation.x = 0;
+                } else {
+                    this.tvArray[i][j].rotation.x += deltaTime * 0.9;
+                }
+                if ( j == 0 ) {
+                    if (this.tvArray[i][j].rotation.y <= 0) {
+                        this.tvArray[i][j].rotation.y = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.y -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z <= 0) {
+                        this.tvArray[i][j].rotation.z = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.z -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.z <= 0) {
+                        this.tvArray[i][j].position.z = 0;
+                    } else {
+                        this.tvArray[i][j].position.z -= deltaTime*30.0;
+                    }
+                } else if ( j == 1) {
+                    if (this.tvArray[i][j].position.z <= 0) {
+                        this.tvArray[i][j].position.z = 0;
+                    } else {
+                        this.tvArray[i][j].position.z -= deltaTime*20.0;
+                    }
+                } else if ( j == 2) {
+                    if (this.tvArray[i][j].rotation.y >= 0) {
+                        this.tvArray[i][j].rotation.y = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.y += deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z >= 0) {
+                        this.tvArray[i][j].rotation.z = 0;
+                    } else {
+                        this.tvArray[i][j].rotation.z += deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.z <= 0) {
+                        this.tvArray[i][j].position.z = 0;
+                    } else {
+                        this.tvArray[i][j].position.z -= deltaTime*30.0;
+                    }
+                }
+            }
+        }
+    }
+};
+
+ControllerTV.prototype.back = function(deltaTime) {
+    var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
+    var lengthY = (this.numTVperLine - 1) * (this.distanceBetweenTVY);
+    for (var i = 0; i < this.numLineTV; i++) {
+        for (var j = 0; j < this.numTVperLine; j++) {
+            if ( i == 0 ) {
+                if (this.tvArray[i][j].position.y <= (lengthY / 2) - this.distanceBetweenTVY * i - 1.0) {
+                    this.tvArray[i][j].position.y = (lengthY / 2) - this.distanceBetweenTVY * i - 1.0;
+                } else {
+                    this.tvArray[i][j].position.y -= deltaTime*10.0;
+                }
+                if (this.tvArray[i][j].rotation.x >= 0.35) {
+                    this.tvArray[i][j].rotation.x = 0.35;
+                } else {
+                    this.tvArray[i][j].rotation.x += deltaTime;
+                }
+                if ( j == 0 ) {
+                    if (this.tvArray[i][j].rotation.y >= 0.35) {
+                        this.tvArray[i][j].rotation.y = 0.35;
+                    } else {
+                        this.tvArray[i][j].rotation.y += deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z <= -0.15) {
+                        this.tvArray[i][j].rotation.z = -0.15;
+                    } else {
+                        this.tvArray[i][j].rotation.z -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.x >= (0 - lengthX / 2) + this.distanceBetweenTVX * j) {
+                        this.tvArray[i][j].position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j;
+                    } else {
+                        this.tvArray[i][j].position.x += deltaTime*7.5;
+                    }
+                    if (this.tvArray[i][j].position.z >= 14) {
+                        this.tvArray[i][j].position.z = 14;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*40.0;
+                    }
+                } else if ( j == 1) {
+                    if (this.tvArray[i][j].position.z >= 8) {
+                        this.tvArray[i][j].position.z = 8;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime * 30.0;
+                    }
+                } else if ( j == 2) {
+                    if (this.tvArray[i][j].rotation.y <= -0.35) {
+                        this.tvArray[i][j].rotation.y = -0.35;
+                    } else {
+                        this.tvArray[i][j].rotation.y -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z >= 0.15) {
+                        this.tvArray[i][j].rotation.z = 0.15;
+                    } else {
+                        this.tvArray[i][j].rotation.z += deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.x <= (0 - lengthX / 2) + this.distanceBetweenTVX * j) {
+                        this.tvArray[i][j].position.x = (0 - lengthX / 2) + this.distanceBetweenTVX * j;
+                    } else {
+                        this.tvArray[i][j].position.x -= deltaTime*7.5;
+                    }
+                    if (this.tvArray[i][j].position.z >= 14) {
+                        this.tvArray[i][j].position.z = 14;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*40.0;
+                    }
+                }
+            } else if ( i == 1 ) {
+                if (this.tvArray[i][j].position.y <= (lengthY / 2) - this.distanceBetweenTVY * i) {
+                    this.tvArray[i][j].position.y = (lengthY / 2) - this.distanceBetweenTVY * i;
+                } else {
+                    this.tvArray[i][j].position.y -= deltaTime*10.0;
+                }
+                if ( j == 0 ) {
+                    if (this.tvArray[i][j].rotation.y >= 0.35) {
+                        this.tvArray[i][j].rotation.y = 0.35;
+                    } else {
+                        this.tvArray[i][j].rotation.y += deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.z >= 6) {
+                        this.tvArray[i][j].position.z = 6;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*40.0;
+                    }
+                } else if ( j == 2) {
+                    if (this.tvArray[i][j].rotation.y <= -0.35) {
+                        this.tvArray[i][j].rotation.y = -0.35;
+                    } else {
+                        this.tvArray[i][j].rotation.y -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.z >= 6) {
+                        this.tvArray[i][j].position.z = 6;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*40.0;
+                    }
+                }
+            } else if ( i == 2 ) {
+                if (this.tvArray[i][j].position.y <= (lengthY / 2) - this.distanceBetweenTVY * i) {
+                    this.tvArray[i][j].position.y = (lengthY / 2) - this.distanceBetweenTVY * i;
+                } else {
+                    this.tvArray[i][j].position.y -= deltaTime*10.0;
+                }
+                if (this.tvArray[i][j].rotation.x <= -0.35) {
+                    this.tvArray[i][j].rotation.x = -0.35;
+                } else {
+                    this.tvArray[i][j].rotation.x -= deltaTime;
+                }
+                if ( j == 0 ) {
+                    if (this.tvArray[i][j].rotation.y >= 0.35) {
+                        this.tvArray[i][j].rotation.y = 0.35;
+                    } else {
+                        this.tvArray[i][j].rotation.y += deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z >= 0.15) {
+                        this.tvArray[i][j].rotation.z = 0.15;
+                    } else {
+                        this.tvArray[i][j].rotation.z += deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.z >= 8) {
+                        this.tvArray[i][j].position.z = 8;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*40.0;
+                    }
+                } else if ( j == 1) {
+                    if (this.tvArray[i][j].position.z >= 2) {
+                        this.tvArray[i][j].position.z = 2;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*20.0;
+                    }
+                } else if ( j == 2) {
+                    if (this.tvArray[i][j].rotation.y <= -0.35) {
+                        this.tvArray[i][j].rotation.y = -0.35;
+                    } else {
+                        this.tvArray[i][j].rotation.y -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].rotation.z <= -0.15) {
+                        this.tvArray[i][j].rotation.z = -0.15;
+                    } else {
+                        this.tvArray[i][j].rotation.z -= deltaTime;
+                    }
+                    if (this.tvArray[i][j].position.z >= 8) {
+                        this.tvArray[i][j].position.z = 8;
+                    } else {
+                        this.tvArray[i][j].position.z += deltaTime*40.0;
+                    }
+                }
+            }
+        }
+    }
+};
 
 ControllerTV.prototype.setBeginSettings = function() {
     this.boolStart = true;
@@ -660,6 +973,9 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                     this.k++;
                     if (this.k > this.moveArray.length - 1) {
                         this.k = 0;
+                        if (this.genArraySymb.boolFreeSpin) {
+                            this.boolFreeSpin = true;
+                        }
                     }
                 } else {
                     if (this.boolMoveFront) {
@@ -702,6 +1018,9 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                         this.k++;
                         if (this.k > this.moveArray.length - 1) {
                             this.k = 0;
+                            if (this.genArraySymb.boolFreeSpin) {
+                                this.boolFreeSpin = true;
+                            }
                         }
                         this.switchK = false;
                     }
@@ -1027,6 +1346,14 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
             }
         }
     }
+    if (this.boolMoveFreeSpin) {
+        this.freeSpin(deltaTime);
+    }
+
+    if (this.boolMoveBackFreeSpin) {
+        this.back(deltaTime);
+    }
+
     //update with time
     for (var i = 0; i < this.numTotalTV; i++) {
         this.children[i].updateWithTime(deltaTimeElapsed, deltaTime);

@@ -7,6 +7,8 @@ var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
 
+var dt = 0;
+
 var boolStartStop = false;
 var boolStartStopAutoPlay = false;
 var boolUpdateScore = false;
@@ -293,7 +295,7 @@ function init() {
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
     totalFreeSpin = new MessageFreeSpin(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 10, 10, -0.75, 0.01);
     totalFreeSpin.position.y = 22 /*+ 10*/;
-    totalFreeSpin.position.x = 80;
+    totalFreeSpin.position.x = 75;
     totalFreeSpin.position.z = 10;
     // totalBet.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
@@ -302,7 +304,7 @@ function init() {
     totalFreeSpin.stop();
     //cameraParent.add(totalRound2D);
     totalFreeSpin.scale.set(0.7, 0.8, 0.7);
-    totalFreeSpin.rotation.y = -Math.PI / 5;
+  //  totalFreeSpin.rotation.y = -Math.PI / 5;
     scene.add(totalFreeSpin);
 //////////////////////////////////////////////////
     terminal = new Terminal(textureLoader, false);
@@ -391,24 +393,32 @@ function animate() {
                 if (!totalRound2D.nameSlot.visible) {
                     totalRound2D.visibleSlotName();
                 }
+                totalRound2D.setBeginNumber(0);
                 totalRound2D.stop();
             }
         }
         if (slot.autoPlayStop) {
-            slot.autoPlayStop = false;
-            button.startColor();
+           // slot.autoPlayStop = false;
+            if (!totalRound2D.boolEndOfCount) {
+                button.startColor();
+            }
             if (slot.totalRoundFreeSpin > 0) {
                 totalRound2D.nameSlot.visible = false;
                 totalRound2D.setNumber(slot.totalRoundFreeSpin);
                 boolUpdateScore = true;
             } else {
+                button.startColor();
                 if (slot.getTotalSum() > 0) {
+                    if (totalRound2D.boolEndOfCount) {
+                        dt += deltaTime;
+                    }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.getTotalSum());
-                    totalScore2D.setNumber(slot.getTotalScore());
+                   // totalScore2D.setNumber(slot.getTotalScore());
                 }
             }
         }
+
     } else {
         buttonHoloAutoPlay.materialHolo.uniforms.boolOn.value = false;
         buttonHoloAutoPlay.boolOnOffSwitch = false;
@@ -421,10 +431,13 @@ function animate() {
                     var totalScore = slot.getTotalScore();
                     //   totalScore += totalRound;
                     //   slot.setTotalScore(totalScore);
-                    totalScore2D.setNumber(totalScore);
+                  //  totalScore2D.setNumber(totalScore);
+                    if (totalRound2D.boolEndOfCount) {
+                        dt += deltaTime;
+                    }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(totalRound);
-                    boolStopScore = false;
+                   // boolStopScore = false;
                 } else {
                     boolUpdateScore = true;
                     totalRound2D.nameSlot.visible = false;
@@ -433,13 +446,23 @@ function animate() {
                 }
             }
     }
-    if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
-        console.log("free",slot.getTotalScore() );
+
+    if (dt > 1.0) {
+        dt = 0;
         totalScore2D.setNumber(slot.getTotalScore());
+        totalRound2D.setNumber(0);
+        boolStopScore = false;
+        slot.autoPlayStop = false;
+    }
+
+    if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
+        totalScore2D.setNumber(slot.getTotalScore());
+        totalRound2D.setNumber(0);
         boolUpdateScore = false;
     }
-    if (slot.genArraySymb.numFreeSpin > 0) {
+    if (slot.genArraySymb.numFreeSpin > 0 && slot.boolFreeSpin) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+        totalFreeSpin.start();
     } else {
         totalFreeSpin.stop();
     }
@@ -457,6 +480,123 @@ function animate() {
     totalBet.update(deltaTime * 1.2);
     totalFreeSpin.update(deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
+    var speedFactor = 2.0;
+    if (slot.genArraySymb.numFreeSpin > 0) {
+       // totalScore2D.stop();
+        if (slot.genArraySymb.numFreeSpin > 0 && slot.boolFreeSpin) {
+            slot.boolMoveBackFreeSpin = false;
+            slot.boolMoveFreeSpin = true;
+            if (slot.position.x <= -15.0) {
+                slot.position.x = -15.0;
+            } else {
+                slot.position.x -= deltaTime * 10.0*speedFactor;
+            }
+            if (slot.position.y <= 0.0) {
+                slot.position.y = 0.0;
+            } else {
+                slot.position.y -= deltaTime * 7.25*speedFactor;
+            }
+            if (slot.position.z >= 30.0) {
+                slot.position.z = 30.0;
+            } else {
+                slot.position.z += deltaTime * 20.0*speedFactor;
+            }
+            ///////////////////
+            if (totalFreeSpin.rotation.y <= -Math.PI / 5) {
+                totalFreeSpin.rotation.y = -Math.PI / 5;
+            } else {
+                totalFreeSpin.rotation.y -= deltaTime*0.6*speedFactor;
+            }
+            if (totalFreeSpin.position.x <= 60.0) {
+                totalFreeSpin.position.x = 60.0;
+            } else {
+                totalFreeSpin.position.x -= deltaTime * 15.0*speedFactor;
+            }
+            if (totalFreeSpin.position.y <= 12.0) {
+                totalFreeSpin.position.y = 12.0;
+            } else {
+                totalFreeSpin.position.y -= deltaTime * 10.0*speedFactor;
+            }
+            if (totalFreeSpin.position.z >= 30.0) {
+                totalFreeSpin.position.z = 30.0;
+            } else {
+                totalFreeSpin.position.z += deltaTime * 20.0*speedFactor;
+            }
+            //////////////////
+            if (totalScore2D.rotation.x <= -Math.PI) {
+                totalScore2D.rotation.x = -Math.PI;
+            } else {
+                totalScore2D.rotation.x -= deltaTime * 0.5 * speedFactor;
+            }
+            if (totalScore2D.position.y <= -70) {
+                totalScore2D.position.y = -70;
+            } else {
+                totalScore2D.position.y -= deltaTime * 30.0*speedFactor;
+            }
+            ///////////////////
+            if (buttonHoloBet.position.y <= -70) {
+                buttonHoloBet.position.y = -70;
+            } else {
+                buttonHoloBet.position.y -= deltaTime * 30.0*speedFactor;
+            }
+        }
+    } else if (slot.genArraySymb.numFreeSpin <= 0 && !slot.boolFreeSpin) {
+        if (slot.position.x >= 0.0) {
+            slot.position.x = 0.0;
+        } else {
+            slot.position.x += deltaTime * 10.0*speedFactor;
+        }
+        if (slot.position.y >= 11.0) {
+            slot.position.y = 11.0;
+        } else {
+            slot.position.y += deltaTime * 7.25*speedFactor;
+        }
+        if (slot.position.z <= 0.0) {
+            slot.position.z = 0.0;
+            slot.boolMoveBackFreeSpin = true;
+            slot.boolMoveFreeSpin = false;
+        } else {
+            slot.position.z -= deltaTime * 20.0*speedFactor;
+        }
+        //////////////////////////
+        if (totalFreeSpin.rotation.y >= 0.0) {
+            totalFreeSpin.rotation.y = 0.0;
+        } else {
+            totalFreeSpin.rotation.y += deltaTime*0.6*speedFactor;
+        }
+        if (totalFreeSpin.position.x >= 75.0) {
+            totalFreeSpin.position.x = 75.0;
+        } else {
+            totalFreeSpin.position.x += deltaTime * 15.0*speedFactor;
+        }
+        if (totalFreeSpin.position.y >= 22.0) {
+            totalFreeSpin.position.y = 22.0;
+        } else {
+            totalFreeSpin.position.y += deltaTime * 10.0*speedFactor;
+        }
+        if (totalFreeSpin.position.z <= 10.0) {
+            totalFreeSpin.position.z = 10.0;
+        } else {
+            totalFreeSpin.position.z -= deltaTime * 20.0*speedFactor;
+        }
+        ////////////////////////////
+        if (totalScore2D.rotation.x >= -Math.PI/2) {
+            totalScore2D.rotation.x = -Math.PI/2;
+        } else {
+            totalScore2D.rotation.x += deltaTime * 0.5 * speedFactor;
+        }
+        if (totalScore2D.position.y >= -42) {
+            totalScore2D.position.y = -42;
+        } else {
+            totalScore2D.position.y += deltaTime * 30.0*speedFactor;
+        }
+        //////////////////////////
+        if (buttonHoloBet.position.y >= -46) {
+            buttonHoloBet.position.y = -46;
+        } else {
+            buttonHoloBet.position.y += deltaTime * 30.0*speedFactor;
+        }
+    }
     /* if (slot.getBoolEndAnimation()) {
          boolStartStop = false;
          startStopButton.setTexture("start");
@@ -553,9 +693,11 @@ function onKeyDown ( event ) {
             //  slot.stopAnimation();
             break;
         case 84: // t - paused
+
             // tv.pausedAnimation();
             //tv.pausedToTimeAnimation();
             // slot.pausedToTimeAnimation();
+
             break;
         case 32: // stop rotate
             // tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );

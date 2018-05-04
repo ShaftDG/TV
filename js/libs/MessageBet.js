@@ -261,7 +261,6 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
     mesh.position.y = -14.5+7.5;
     mesh.position.z = 6.5;
     this.add(mesh);
-
 }
 
 function parseString(stringIn, stringPattern) {

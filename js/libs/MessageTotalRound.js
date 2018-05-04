@@ -6,6 +6,8 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
 
+    this.boolEndOfCount = false;
+
     this.withoutSwitchNumber = false;
     this.speedSwitchNumber = speedSwitchNumber;
     if (speedSwitchNumber == 0.0) {
@@ -453,6 +455,7 @@ MessageTotalRound.prototype.setString = function(number) {
             this.groupNumbers.children[j].position.x = this.posX - lengthPlaneX + this.widthCharacter + (this.widthCharacter + this.distanceBetweenCharacters) * j;
             this.groupNumbers.children[j].visible = false;
         }
+        this.boolEndOfCount = false;
     }
 };
 
@@ -517,7 +520,7 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                         }
                         this.dt = 0;
                         if (this.k > this.number) {
-                            this.k = this.number;
+                            this.boolEndOfCount = true;
                         }
                     } else if (this.k > this.number) {
                         if (this.k.toString().length > 4) {
@@ -535,10 +538,12 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                         }
                     } else if (this.k == this.number) {
                         this.StartStopSwitch = false;
+                        this.boolEndOfCount = true;
                     }
                 }
             } else {
                 this.k = this.number;
+                this.boolEndOfCount = true;
                 for (var j = 0; j < this.arrayNumbers.length - this.deltaLenthString; j++) {
                      this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = false;
                 }

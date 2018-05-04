@@ -211,12 +211,15 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     //child.material.color = new THREE.Color("#111d5c");
                 } else if (child.name == "linz") {
                     child.material = materialHolo;
+               //     child.visible = false;
                     //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "disc") {
                     child.material = materialHoloFreeSpin;
+                 //   child.visible = false;
                     //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "disc_light") {
                     child.material = material;
+                  //  child.visible = false;
                     //   child.material.color = new THREE.Color("#027500");
                 } else {
                     child.material.color = new THREE.Color("#ff0100");
@@ -236,24 +239,27 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     holoParent.scale.set(1.0, 1.0, 1.0);
     holoParent.rotation.z = Math.PI / 10.0;
   //  holoParent.position.z = -3.75;
-    //  this.holoParent = holoParent;
+    this.holoParent = holoParent;
     this.add(holoParent);
 
     ////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(15, 6, 0, 24, 1.0, true);
+    this.Parent = new THREE.Object3D;
+    var geometry = new THREE.CylinderBufferGeometry(14, 6, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    this.add(mesh);
+    this.Parent.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(15, 5, 0, 24, 1.0, true);
+    var geometry = new THREE.CylinderBufferGeometry(14, 5, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    this.add(mesh);
+    this.Parent.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(15, 4, 0, 24, 1.0, true);
+    var geometry = new THREE.CylinderBufferGeometry(14, 4, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    this.add(mesh);
+    this.Parent.add(mesh);
+   // this.Parent.visible = false;
+    this.add(this.Parent);
 }
 
 function parseString(stringIn, stringPattern) {
@@ -465,13 +471,46 @@ MessageFreeSpin.prototype.stop = function() {
     for (var j = 0; j < this.groupNumbers.children.length; j++) {
         this.groupNumbers.children[j].visible = false;
     }
+    for (var j = 0; j < this.Parent.children.length; j++) {
+        this.Parent.children[j].visible = false;
+    }
+    this.holoParent.traverse(function (child) {
+        if (child.isMesh) {
+            if (child.name == "corps") {
+                child.visible = true;
+            } else if (child.name == "linz") {
+                child.visible = false;
+            } else if (child.name == "disc") {
+                child.visible = false;
+            } else if (child.name == "disc_light") {
+                child.visible = false;
+            }
+        }
+    });
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
+
 };
 
 MessageFreeSpin.prototype.start = function() {
     this.OnOffSwitch = true;
     this.StartStopSwitch = true;
+    for (var j = 0; j < this.Parent.children.length; j++) {
+        this.Parent.children[j].visible = true;
+    }
+    this.holoParent.traverse(function (child) {
+        if (child.isMesh) {
+            if (child.name == "corps") {
+                child.visible = true;
+            } else if (child.name == "linz") {
+                child.visible = true;
+            } else if (child.name == "disc") {
+                child.visible = true;
+            } else if (child.name == "disc_light") {
+                child.visible = true;
+            }
+        }
+    });
 };
 
 MessageFreeSpin.prototype.update = function(deltaTime) {

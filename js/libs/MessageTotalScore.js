@@ -72,6 +72,7 @@ function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, 
             fragmentShader: fragmentShader,
             transparent: true,
             blending:       THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
             //depthTest:      false,
             //depthWrite:      false,
         } );
@@ -421,6 +422,7 @@ MessageTotalScore.prototype.setString = function(number) {
                     fragmentShader: fragmentShader,
                     transparent: true,
                     blending:       THREE.AdditiveBlending,
+                    side: THREE.DoubleSide,
                     //depthTest:      false,
                     //depthWrite:      false,
                 } );

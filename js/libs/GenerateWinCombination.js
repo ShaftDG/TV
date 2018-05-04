@@ -111,7 +111,7 @@ GenerateWinCombination.prototype.generate = function() {
     console.log("=================================");
     if (this.numFreeSpinSymb >= 1) {
         this.boolFreeSpin = true;
-        this.numFreeSpin += 5;
+        this.numFreeSpin += 2;
         console.log("FreeSpin: Yes - ", this.numFreeSpin);
         this.numFreeSpinSymb = 0;
     }
