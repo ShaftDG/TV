@@ -407,7 +407,6 @@ function animate() {
                 totalRound2D.setNumber(slot.totalRoundFreeSpin);
                 boolUpdateScore = true;
             } else {
-                button.startColor();
                 if (slot.getTotalSum() > 0) {
                     if (totalRound2D.boolEndOfCount) {
                         dt += deltaTime;
@@ -415,6 +414,8 @@ function animate() {
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.getTotalSum());
                    // totalScore2D.setNumber(slot.getTotalScore());
+                } else {
+                    button.startColor();
                 }
             }
         }
@@ -453,6 +454,7 @@ function animate() {
         totalRound2D.setNumber(0);
         boolStopScore = false;
         slot.autoPlayStop = false;
+        button.startColor();
     }
 
     if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
