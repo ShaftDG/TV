@@ -132,6 +132,7 @@ if (boolGlitch) {
        	float b = 3.0*offset(5.0, vec2(uv.x + time*2., uv.y + time*5.));
         gl_FragColor.a = mix(r, g, b);
 }
+gl_FragColor.a *= alpha;
 //gl_FragColor.rgb *=  2.5*offset(10.0, vec2(normalize(uv.x) + time, normalize(uv.y) + time));
 
 /*#ifdef USE_HOLO

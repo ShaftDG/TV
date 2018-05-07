@@ -67,6 +67,11 @@ function  GenerateWinCombination(numCilinder, numPlayingSymbPerCilinder, totalSy
     for (var j = 0; j < this.numCilinder; j++ ) {
         this.arrayCombination[j]=[];
     }
+    this.moveArrayFreeSpinSymb = [];
+    for (var j = 0; j < this.numCilinder; j++ ) {
+        this.moveArrayFreeSpinSymb[j] = [];
+    }
+
     this.winLineArray = [];
     for (var j = 0; j < this.winLineNum; j++ ) {
         this.winLineArray[j]=[];
@@ -97,6 +102,7 @@ function randomInteger(min, max) {
 
 GenerateWinCombination.prototype.generate = function() {
     this.numFreeSpinSymb = 0;
+    this.boolPlusFreeSpin = false;
     for (var j = 0; j < this.numCilinder; j++ ) {
         var stopPosition = randomInteger(0, this.r[0].length - 1);
         this.stopPositionArray[j] = stopPosition;
@@ -104,7 +110,10 @@ GenerateWinCombination.prototype.generate = function() {
            this.arrayCombination[j][i] = this.r[j][(stopPosition > 0) ? stopPosition + i - 1 : (i > 0) ? stopPosition + i - 1 : this.r[0].length - 1 ];
            //this.arrayCombination[j][i] = 7;
            if (this.arrayCombination[j][i] == this.freeSpinSymb) {
+               this.moveArrayFreeSpinSymb[j][i] = 1;
                this.numFreeSpinSymb++;
+           } else {
+               this.moveArrayFreeSpinSymb[j][i] = 0;
            }
         }
     }
@@ -112,7 +121,9 @@ GenerateWinCombination.prototype.generate = function() {
     if (this.numFreeSpinSymb >= 1) {
         this.boolFreeSpin = true;
         this.numFreeSpin += 2;
+        this.boolPlusFreeSpin = true;
         console.log("FreeSpin: Yes - ", this.numFreeSpin);
+        console.log("this.moveArrayFreeSpinSymb", this.moveArrayFreeSpinSymb);
         this.numFreeSpinSymb = 0;
     }
     if (this.numFreeSpin <= 0) {
@@ -305,6 +316,10 @@ GenerateWinCombination.prototype.getMoveArray = function() {
     return this.moveArray;
 };
 
+GenerateWinCombination.prototype.getMoveArrayFreeSpinSymb = function() {
+    return this.moveArrayFreeSpinSymb;
+};
+
 GenerateWinCombination.prototype.getWinlineRound = function() {
     return this.numWinSymbline;
 };
@@ -326,6 +341,10 @@ GenerateWinCombination.prototype.setBet = function(num) {
 
 GenerateWinCombination.prototype.getBet = function() {
    return this.bet;
+};
+
+GenerateWinCombination.prototype.getNumFreeSpin = function() {
+    return this.numFreeSpin;
 };
 
 GenerateWinCombination.prototype.getTotalScore = function() {

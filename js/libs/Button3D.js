@@ -50,6 +50,37 @@ function Button3D(textureLoader, isMobile) {
     this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHolo = this.materialHolo;
     ////////////////////////////////////////
+    this.materialHoloPlane =	new THREE.ShaderMaterial({
+        defines         : {
+            USE_OFF       : true,
+            USE_SCANLINE  : false
+        },
+        uniforms: {
+            color: { value : new THREE.Color("#97ff85") },
+            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            time: { value: 0.0 },
+            speedFactor:   { value: 10.0 },
+            boolGlitch:  { value: false },
+            start:   { value: 0.01 },
+            end:   { value: 0.05 },
+            alpha:   { value: 0.3 },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        //side: THREE.DoubleSide,
+        transparent: true,
+        blending:       THREE.AdditiveBlending,
+        depthTest:      false,
+        //depthWrite:      false,
+    } );
+
+    this.materialHoloPlane.uniforms.f_texture.value.wrapS = this.materialHoloPlane.uniforms.f_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+    this.materialHoloPlane.uniforms.s_texture.value.wrapS = this.materialHoloPlane.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+    this.materialHoloPlane.uniforms.t_texture.value.wrapS = this.materialHoloPlane.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
+    var materialHoloPlane = this.materialHoloPlane;
+    ////////////////////////////////////////
     var buttonParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
     loaderOBJ.load("obj/button.fbx", function (object) {
@@ -67,8 +98,16 @@ function Button3D(textureLoader, isMobile) {
                     child.material = materialHolo;
                     //child.material.color = new THREE.Color("#00830d");
                    // child.visible = false;
+                } else if (child.name == "plane_start") {
+                    child.material = materialHoloPlane;
+                    //child.material.color = new THREE.Color("#00830d");
+                    // child.visible = false;
                 } else if (child.name == "stop") {
                     child.material = materialHolo;
+                    //child.material.color = new THREE.Color("#00830d");
+                    child.visible = false;
+                } else if (child.name == "plane_stop") {
+                    child.material = materialHoloPlane;
                     //child.material.color = new THREE.Color("#00830d");
                     child.visible = false;
                 } else {
@@ -81,6 +120,7 @@ function Button3D(textureLoader, isMobile) {
         });
     });
 
+    console.log(buttonParent);
     buttonParent.name = "button";
     //  tvParent.position.y = -0.3;
     this.buttonParent = buttonParent;
@@ -143,8 +183,9 @@ Button3D.prototype.stopColor = function()
 {
     this.material.uniforms.rayColor.value = new THREE.Color( "#ff6a5d" );
     this.materialHolo.uniforms.color.value =  new THREE.Color( "#ff6a5d" );
-    this.buttonParent.children[0].children[1].visible = false;
-    this.buttonParent.children[0].children[0].visible = true;
+    this.materialHoloPlane.uniforms.color.value =  new THREE.Color( "#ff6a5d" );
+    this.buttonParent.children[0].children[1].visible = this.buttonParent.children[0].children[5].visible = false;
+    this.buttonParent.children[0].children[0].visible = this.buttonParent.children[0].children[4].visible = true;
     this.materialHolo.uniforms.boolGlitch.value = true;
   //  this.action.stop();
   //  this.action.play();
@@ -159,8 +200,9 @@ Button3D.prototype.startColor = function()
 {
     this.material.uniforms.rayColor.value = new THREE.Color( "#97ff85" );
     this.materialHolo.uniforms.color.value =  new THREE.Color( "#97ff85" );
-    this.buttonParent.children[0].children[1].visible = true;
-    this.buttonParent.children[0].children[0].visible = false;
+    this.materialHoloPlane.uniforms.color.value =  new THREE.Color( "#97ff85" );
+    this.buttonParent.children[0].children[1].visible = this.buttonParent.children[0].children[5].visible = true;
+    this.buttonParent.children[0].children[0].visible = this.buttonParent.children[0].children[4].visible = false;
     this.materialHolo.uniforms.boolGlitch.value = true;
     //this.action.stop();
 };
@@ -169,6 +211,7 @@ Button3D.prototype.updateWithTime = function(time, deltaTime)
 {
     this.material.uniforms.time.value = time * 2.0;
     this.materialHolo.uniforms.time.value = time;
+    this.materialHoloPlane.uniforms.time.value = time;
 
     if (this.materialHolo.uniforms.boolGlitch.value) {
         this.dt += deltaTime;
@@ -182,11 +225,13 @@ Button3D.prototype.updateWithTime = function(time, deltaTime)
         this.buttonParent.children[0].children[1].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
         this.buttonParent.children[0].children[1].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
         this.buttonParent.children[0].children[1].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        this.buttonParent.children[0].children[5].rotation.copy(this.buttonParent.children[0].children[1].rotation);
     }
     if (this.buttonParent.children[0].children[0].visible) {
         this.buttonParent.children[0].children[0].rotation.x = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.5  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
         this.buttonParent.children[0].children[0].rotation.y = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.2 - 0.5;
         this.buttonParent.children[0].children[0].rotation.z = (Math.sin(time * 2.0) - Math.cos(time * 2.0)) * 0.1 - 0.15  /*+ Math.random() * (0.22 - 0.2) + 0.2*/;
+        this.buttonParent.children[0].children[4].rotation.copy(this.buttonParent.children[0].children[0].rotation);
     }
 
 
@@ -196,6 +241,5 @@ Button3D.prototype.updateWithTime = function(time, deltaTime)
 
         }
     }
-
 
 };

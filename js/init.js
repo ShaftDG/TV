@@ -40,6 +40,7 @@ var totalRound2D, totalScore2D, totalBet, totalFreeSpin;
 //var totalScore = 261485;
 var boolStopScore = false;
 var boolMoveCamera = false;
+var boolStartColor = false;
 //var checkStartStop = false;
 var isMobile;
 
@@ -275,7 +276,7 @@ function init() {
     totalBet = new MessageBet(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
     totalBet.position.y = -22 /*+ 10*/;
     totalBet.position.x = -65;
-    totalBet.position.z = 10;
+    totalBet.position.z = 5;
    // totalBet.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
     var bet = slot.getBet();
@@ -387,6 +388,7 @@ function animate() {
         if (slot.autoPlayStart) {
             slot.autoPlayStart = false;
             button.stopColor();
+            boolStartColor = true;
             if (!slot.boolFreeSpin) {
                 totalScore2D.setNumber(slot.getTotalScore());
                 slot.autoPlayStart = false;
@@ -398,24 +400,27 @@ function animate() {
             }
         }
         if (slot.autoPlayStop) {
-           // slot.autoPlayStop = false;
-            if (!totalRound2D.boolEndOfCount) {
+            if (boolStartColor) {
+                boolStartColor = false;
                 button.startColor();
             }
-            if (slot.totalRoundFreeSpin > 0) {
-                totalRound2D.nameSlot.visible = false;
-                totalRound2D.setNumber(slot.totalRoundFreeSpin);
-                boolUpdateScore = true;
-            } else {
+            if (!slot.boolFreeSpin) {
+                if (totalRound2D.boolEndOfCount) {
+                    dt += deltaTime;
+                }
                 if (slot.getTotalSum() > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.getTotalSum());
+                }
+            } else {
+                if (slot.totalRoundFreeSpin > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                    boolUpdateScore = true;
+                } else {
                     if (totalRound2D.boolEndOfCount) {
                         dt += deltaTime;
                     }
-                    totalRound2D.nameSlot.visible = false;
-                    totalRound2D.setNumber(slot.getTotalSum());
-                   // totalScore2D.setNumber(slot.getTotalScore());
-                } else {
-                    button.startColor();
                 }
             }
         }
@@ -429,16 +434,11 @@ function animate() {
                 boolMoveCamera = true;
                 if (!slot.boolFreeSpin) {
                     var totalRound = slot.getTotalSum();
-                    var totalScore = slot.getTotalScore();
-                    //   totalScore += totalRound;
-                    //   slot.setTotalScore(totalScore);
-                  //  totalScore2D.setNumber(totalScore);
                     if (totalRound2D.boolEndOfCount) {
                         dt += deltaTime;
                     }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(totalRound);
-                   // boolStopScore = false;
                 } else {
                     boolUpdateScore = true;
                     totalRound2D.nameSlot.visible = false;
@@ -454,7 +454,7 @@ function animate() {
         totalRound2D.setNumber(0);
         boolStopScore = false;
         slot.autoPlayStop = false;
-        button.startColor();
+        boolStartColor = true;
     }
 
     if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
@@ -536,6 +536,12 @@ function animate() {
                 totalScore2D.position.y -= deltaTime * 30.0*speedFactor;
             }
             ///////////////////
+            if (totalBet.rotation.y >= Math.PI) {
+                totalBet.rotation.y = Math.PI;
+            } else {
+                totalBet.rotation.y += deltaTime * 1.0 * speedFactor;
+            }
+            ///////////////////
             if (buttonHoloBet.position.y <= -70) {
                 buttonHoloBet.position.y = -70;
             } else {
@@ -593,6 +599,12 @@ function animate() {
             totalScore2D.position.y += deltaTime * 30.0*speedFactor;
         }
         //////////////////////////
+        if (totalBet.rotation.y <= 0) {
+            totalBet.rotation.y = 0;
+        } else {
+            totalBet.rotation.y -= deltaTime * 1.0 * speedFactor;
+        }
+        ///////////////////
         if (buttonHoloBet.position.y >= -46) {
             buttonHoloBet.position.y = -46;
         } else {
@@ -760,7 +772,14 @@ function onDocumentMouseMove( event ) {
             document.body.style.cursor = 'pointer';
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
-            document.body.style.cursor = 'pointer';
+            var uv = intersects[ 0 ].uv;
+            if (uv.x >= 0.24 && uv.x <= 0.76 && uv.y >= 0.65 && uv.y <= 0.88) {
+                document.body.style.cursor = 'pointer';
+            } else if (uv.x >= 0.24 && uv.x <= 0.76 && uv.y >= 0.12 && uv.y <= 0.35) {
+                document.body.style.cursor = 'pointer';
+            } else {
+                document.body.style.cursor = 'auto';
+            }
         }
     } else {
         document.body.style.cursor = 'auto';
@@ -867,21 +886,38 @@ function onDocumentMouseDown( event ) {
             }
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
+
+            var uv = intersects[ 0 ].uv;
+
             buttonHoloBet.startGlitch();
             var bet = slot.getBet();
             totalBet.setBeginNumber(bet);
-            if (bet < 50) {
-                bet += 10.0;
-            } else if (bet >= 50 && bet < 500) {
-                bet += 50.0;
-            } else if (bet >= 500 && bet < 1000) {
-                bet += 100.0;
-            } else if (bet >= 1000) {
-                bet = 10.0;
+
+            if (uv.x >= 0.24 && uv.x <= 0.76 && uv.y >= 0.65 && uv.y <= 0.88) {
+                if (bet < 50) {
+                    bet += 10.0;
+                } else if (bet >= 50 && bet < 500) {
+                    bet += 50.0;
+                } else if (bet >= 500 && bet < 1000) {
+                    bet += 100.0;
+                } else if (bet >= 1000) {
+                    bet = 1000.0;
+                }
+                totalBet.setNumber(bet);
+                slot.setBet(bet);
+            } else if (uv.x >= 0.24 && uv.x <= 0.76 && uv.y >= 0.12 && uv.y <= 0.35) {
+                if (bet <= 50 && bet > 10) {
+                    bet -= 10.0;
+                } else if (bet > 50 && bet <= 500) {
+                    bet -= 50.0;
+                } else if (bet > 500 && bet <= 1000) {
+                    bet -= 100.0;
+                } else if (bet <= 10) {
+                    bet = 10.0;
+                }
+                totalBet.setNumber(bet);
+                slot.setBet(bet);
             }
-            totalBet.setNumber(bet);
-           // console.log("Bet: ", bet);
-            slot.setBet(bet);
         }
 
         /*  if (intersects[0].object.parent.name == "startStopButton") {

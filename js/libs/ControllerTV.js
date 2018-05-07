@@ -57,7 +57,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 
     this.boolUpdateArraySymb = false;
     this.boolStop = false;
-    this.boolStart = false;
+    this.boolStart = true;
     this.boolMoveFront = false;
   //  this.boolMoveBack = false;
     this.boolEndAnimation = true;
@@ -69,6 +69,8 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 
     this.boolMoveFreeSpin = false;
     this.boolMoveBackFreeSpin = false;
+
+    this.animationEnded = false;
 
     this.autoPlay = false;
     this.autoPlayStart = false;
@@ -176,7 +178,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 ControllerTV.prototype = Object.create(THREE.Object3D.prototype);
 ControllerTV.prototype.constructor = ControllerTV;
 
-ControllerTV.prototype.freeSpin = function(deltaTime) {
+ControllerTV.prototype.freeSpinGamePosition = function(deltaTime) {
     var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
     var lengthY = (this.numTVperLine - 1) * (this.distanceBetweenTVY);
     for (var i = 0; i < this.numLineTV; i++) {
@@ -337,7 +339,7 @@ ControllerTV.prototype.freeSpin = function(deltaTime) {
     }
 };
 
-ControllerTV.prototype.back = function(deltaTime) {
+ControllerTV.prototype.mainGamePosition = function(deltaTime) {
     var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
     var lengthY = (this.numTVperLine - 1) * (this.distanceBetweenTVY);
     for (var i = 0; i < this.numLineTV; i++) {
@@ -493,6 +495,7 @@ ControllerTV.prototype.setBeginSettings = function() {
   //  this.boolMoveBack = false;
     this.boolEndAnimation = false;
     this.boolStartTimer = true;
+    this.animationEnded = false;
  //   this.boolForceStop = false;
   //  this.boolShowLine = false;
     this.k = 0;
@@ -516,6 +519,7 @@ ControllerTV.prototype.start = function() {
     this.genArraySymb.setTotalRound(0);
     this.arrayStop = this.genArraySymb.generate();
     this.moveArray = this.genArraySymb.getMoveArray();
+    this.moveArrayFreeSpinSymb = this.genArraySymb.getMoveArrayFreeSpinSymb();
     this.totalSum = this.genArraySymb.getTotalRound();
 
     console.log("this.totalSum", this.totalSum);
@@ -685,7 +689,7 @@ ControllerTV.prototype.stopStartRotateSymbFreeSpin = function () {
             this.boolRotate = true;
             this.canStop = true;
 
-            if (this.genArraySymb.numFreeSpin < 1) {
+            if (this.genArraySymb.numFreeSpin <= 0) {
                 this.genArraySymb.boolFreeSpin = false;
                 this.boolFreeSpin = false;
                 this.genArraySymb.numFreeSpin = 0;
@@ -699,6 +703,699 @@ ControllerTV.prototype.stopStartRotateSymbFreeSpin = function () {
     }
 };
 
+ControllerTV.prototype.mainGame = function (deltaTime) {
+    if (this.autoPlay) {
+        //force stop autoPlay
+        if (this.boolForceStop) {
+            this.boolStop = false;
+            this.boolStartTimer = false;
+            this.dt = 0;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped) {
+                this.g++;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    if (this.getTotalSum() > 0) {
+                        var totalRound = this.getTotalSum();
+                        var totalScore = this.getTotalScore();
+                        totalScore += totalRound;
+                        this.setTotalScore(totalScore);
+                    }
+                    this.autoPlayStart = false;
+                    this.autoPlayStop = true;
+                    /* if (this.genArraySymb.boolFreeSpin) {
+                         this.autoPlay = false;
+                     }*/
+                }
+            }
+        }
+
+        //stop autoPlay
+        if (this.boolStop) {
+            this.dt1 += deltaTime;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
+                this.g++;
+                this.dt1 = 0;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolStop = false;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.boolStartTimer = false;
+                    this.dt = 0;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    if (this.getTotalSum() > 0) {
+                        var totalRound = this.getTotalSum();
+                        var totalScore = this.getTotalScore();
+                        totalScore += totalRound;
+                        this.setTotalScore(totalScore);
+                    }
+                    this.autoPlayStart = false;
+                    this.autoPlayStop = true;
+                    /* if (this.genArraySymb.boolFreeSpin) {
+                         this.autoPlay = false;
+                     }*/
+                }
+            }
+        }
+        if (!this.animationEnded) {
+            if (this.boolEndAnimation && this.arrayStop.length != 0) {
+                var winL = this.genArraySymb.getWinlineRound();
+                if (winL[this.k] == 0) {
+                    this.k++;
+                    if (this.k > this.moveArray.length - 1) {
+                        this.k = 0;
+                        if (this.genArraySymb.boolFreeSpin) {
+                            this.autoPlay = false;
+                            this.boolFreeSpin = true;
+                            this.animationEnded = true;
+                        } else {
+                            this.stopStartRotateSymb();
+                        }
+                    }
+                } else {
+                    if (this.boolMoveFront) {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                                    this.tvArray[j][i].symbsParent.visible = true;
+                                    this.tvArray[j][i].startAnimation();
+                                    this.boolMoveFront = false;
+                                } else {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                }
+                            }
+                        }
+
+                    } else /*if (this.boolMoveBack)*/ {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+
+                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                                    this.tvArray[j][i].stopAnimation();
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                    this.tvArray[j][i].symbsParent.visible = false;
+                                    this.boolMoveFront = true;
+                                }
+
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
+                                        this.switchK = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    if (this.switchK) {
+                        this.k++;
+                        if (this.k > this.moveArray.length - 1) {
+                            this.k = 0;
+                            if (this.genArraySymb.boolFreeSpin) {
+                                this.autoPlay = false;
+                                this.boolFreeSpin = true;
+                                this.animationEnded = true;
+                            } else {
+                                this.stopStartRotateSymb();
+                            }
+                        }
+                        this.switchK = false;
+                    }
+                }
+            }
+        }  else {
+            this.animationFreeSpinSymb();
+        }
+    } else {
+        //force stop
+        if (this.boolForceStop) {
+            this.boolStop = false;
+            this.boolStartTimer = false;
+            this.dt = 0;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped) {
+                this.g++;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    if (this.getTotalSum() > 0) {
+                        var totalRound = this.getTotalSum();
+                        var totalScore = this.getTotalScore();
+                        totalScore += totalRound;
+                        this.setTotalScore(totalScore);
+                    }
+                }
+            }
+        }
+
+        //normal stop
+        if (this.boolStop) {
+            this.dt1 += deltaTime;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
+                this.g++;
+                this.dt1 = 0;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolStop = false;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.boolStartTimer = false;
+                    this.dt = 0;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    if (this.getTotalSum() > 0) {
+                        var totalRound = this.getTotalSum();
+                        var totalScore = this.getTotalScore();
+                        totalScore += totalRound;
+                        this.setTotalScore(totalScore);
+                    }
+                }
+            }
+        }
+        if (!this.animationEnded) {
+            if (this.boolEndAnimation && this.arrayStop.length != 0) {
+                var winL = this.genArraySymb.getWinlineRound();
+                if (winL[this.k] == 0) {
+                    this.k++;
+                    if (this.k > this.moveArray.length - 1) {
+                        this.k = 0;
+                        if (this.genArraySymb.boolFreeSpin) {
+                            this.boolFreeSpin = true;
+                            this.animationEnded = true;
+                        }
+                    }
+                } else {
+
+                    if (this.boolMoveFront) {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                                    this.tvArray[j][i].symbsParent.visible = true;
+                                    this.tvArray[j][i].startAnimation();
+                                    this.boolMoveFront = false;
+                                } else {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                }
+                            }
+                        }
+
+                    } else /*if (this.boolMoveBack)*/ {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+
+                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                                    this.tvArray[j][i].stopAnimation();
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                    this.tvArray[j][i].symbsParent.visible = false;
+                                    this.boolMoveFront = true;
+                                }
+
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
+                                        this.switchK = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.switchK) {
+                        this.k++;
+                        if (this.k > this.moveArray.length - 1) {
+                            this.k = 0;
+                            if (this.genArraySymb.boolFreeSpin) {
+                                this.boolFreeSpin = true;
+                                this.animationEnded = true;
+                            }
+                        }
+                        this.switchK = false;
+                    }
+                }
+            }
+        } else {
+            this.animationFreeSpinSymb();
+        }
+    }
+};
+
+ControllerTV.prototype.freeSpinGame = function (deltaTime) {
+    if (this.autoPlay) {
+        //force stop autoPlay
+        if (this.boolForceStop) {
+            this.boolStop = false;
+            this.boolStartTimer = false;
+            this.dt = 0;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped) {
+                this.g++;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    //     if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    this.totalRoundFreeSpin += totalRound;
+                    //      }
+                    this.autoPlayStart = false;
+                    this.autoPlayStop = true;
+                }
+            }
+        }
+
+        //stop autoPlay
+        if (this.boolStop) {
+            this.dt1 += deltaTime;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
+                this.g++;
+                this.dt1 = 0;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolStop = false;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.boolStartTimer = false;
+                    this.dt = 0;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    //     if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    this.totalRoundFreeSpin += totalRound;
+                    //       }
+                    this.autoPlayStart = false;
+                    this.autoPlayStop = true;
+                }
+            }
+        }
+        if (!this.animationEnded) {
+            if (this.boolEndAnimation && this.arrayStop.length != 0) {
+                var winL = this.genArraySymb.getWinlineRound();
+                if (winL[this.k] == 0) {
+                    this.k++;
+                    if (this.k > this.moveArray.length - 1) {
+                        this.k = 0;
+                        if (this.genArraySymb.numFreeSpin <= 0) {
+                            this.genArraySymb.boolFreeSpin = false;
+                            this.boolFreeSpin = false;
+                            this.genArraySymb.numFreeSpin = 0;
+                            this.autoPlay = false;
+                            this.animationEnded = true;
+                            var totalScore = this.getTotalScore();
+                            totalScore += this.totalRoundFreeSpin;
+                            this.setTotalScore(totalScore);
+                            this.totalRoundFreeSpin = 0;
+                        } else {
+                            if (this.genArraySymb.boolPlusFreeSpin) {
+                                this.animationEnded = true;
+                            } else {
+                                this.stopStartRotateSymbFreeSpin();
+                            }
+                        }
+                    }
+                } else {
+                    if (this.boolMoveFront) {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                                    this.tvArray[j][i].symbsParent.visible = true;
+                                    this.tvArray[j][i].startAnimation();
+                                    this.boolMoveFront = false;
+                                } else {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                }
+                            }
+                        }
+
+                    } else /*if (this.boolMoveBack)*/ {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+
+                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                                    this.tvArray[j][i].stopAnimation();
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                    this.tvArray[j][i].symbsParent.visible = false;
+                                    this.boolMoveFront = true;
+                                }
+
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
+                                        this.switchK = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.switchK) {
+                        this.k++;
+                        if (this.k > this.moveArray.length - 1) {
+                            this.k = 0;
+                            if (this.genArraySymb.numFreeSpin <= 0) {
+                                this.genArraySymb.boolFreeSpin = false;
+                                this.boolFreeSpin = false;
+                                this.genArraySymb.numFreeSpin = 0;
+                                this.autoPlay = false;
+                                this.animationEnded = true;
+                                var totalScore = this.getTotalScore();
+                                totalScore += this.totalRoundFreeSpin;
+                                this.setTotalScore(totalScore);
+                                this.totalRoundFreeSpin = 0;
+                            } else {
+                                if (this.genArraySymb.boolPlusFreeSpin) {
+                                    this.animationEnded = true;
+                                } else {
+                                    this.stopStartRotateSymbFreeSpin();
+                                }
+                            }
+                        }
+                        this.switchK = false;
+                    }
+                }
+            }
+        } else {
+            this.animationFreeSpinSymb();
+        }
+    } else {
+        //force stop
+        if (this.boolForceStop) {
+            this.boolStop = false;
+            this.boolStartTimer = false;
+            this.dt = 0;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped) {
+                this.g++;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    //   if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    this.totalRoundFreeSpin += totalRound;
+                    //    }
+                }
+            }
+        }
+
+        //normal stop
+        if (this.boolStop) {
+            this.dt1 += deltaTime;
+            if (!this.tvArray[this.f][this.g].isStopped) {
+                this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
+            }
+            if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
+                this.g++;
+                this.dt1 = 0;
+            }
+            if (this.g > 2) {
+                this.g = 0;
+                this.f++;
+            }
+            if (this.f > 2) {
+                this.f = 0;
+            }
+            if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                this.dt2 += deltaTime;
+                if (this.dt2 > this.speedSwitchBetweenRounds) {
+                    this.dt2 = 0;
+                    this.boolStop = false;
+                    this.boolForceStop = false;
+                    this.boolRotate = false;
+                    this.boolStartTimer = false;
+                    this.dt = 0;
+                    this.f = 0;
+                    this.g = 0;
+                    this.boolEndAnimation = true;
+                    this.boolMoveFront = true;
+                    // this.canStop = true;
+                    this.boolChangeStopToStart = true;
+                    //    if (this.getTotalSum() > 0) {
+                    var totalRound = this.getTotalSum();
+                    this.totalRoundFreeSpin += totalRound;
+
+                    //   }
+                }
+            }
+        }
+        if (!this.animationEnded) {
+            if (this.boolEndAnimation && this.arrayStop.length != 0) {
+                var winL = this.genArraySymb.getWinlineRound();
+                if (winL[this.k] == 0) {
+                    this.k++;
+                    if (this.k > this.moveArray.length - 1) {
+                        this.k = 0;
+                        if (this.genArraySymb.numFreeSpin <= 0) {
+                            this.genArraySymb.boolFreeSpin = false;
+                            this.boolFreeSpin = false;
+                            this.genArraySymb.numFreeSpin = 0;
+                            var totalScore = this.getTotalScore();
+                            totalScore += this.totalRoundFreeSpin;
+                            this.setTotalScore(totalScore);
+                            this.totalRoundFreeSpin = 0;
+                        } else {
+                         //   if (this.genArraySymb.boolFreeSpin) {
+                                this.animationEnded = true;
+                      //      }
+                        }
+                    }
+                } else {
+
+                    if (this.boolMoveFront) {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                                    this.tvArray[j][i].symbsParent.visible = true;
+                                    this.tvArray[j][i].startAnimation();
+                                    this.boolMoveFront = false;
+                                } else {
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                }
+                            }
+                        }
+
+                    } else /*if (this.boolMoveBack)*/ {
+                        for (var i = 0; i < this.tvArray.length; i++) {
+                            for (var j = 0; j < this.tvArray[0].length; j++) {
+
+                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                                    this.tvArray[j][i].stopAnimation();
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                                    this.tvArray[j][i].symbsParent.visible = false;
+                                    this.boolMoveFront = true;
+                                }
+
+                                if (this.moveArray[this.k][i][j] == 1) {
+                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
+                                        this.switchK = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.switchK) {
+                        this.k++;
+                        if (this.k > this.moveArray.length - 1) {
+                            this.k = 0;
+                            if (this.genArraySymb.numFreeSpin <= 0) {
+                                this.genArraySymb.boolFreeSpin = false;
+                                this.boolFreeSpin = false;
+                                this.genArraySymb.numFreeSpin = 0;
+                              //  this.animationEnded = true;
+                                var totalScore = this.getTotalScore();
+                                totalScore += this.totalRoundFreeSpin;
+                                this.setTotalScore(totalScore);
+                                this.totalRoundFreeSpin = 0;
+                            } else {
+                              //  if (this.genArraySymb.boolFreeSpin) {
+                                    this.animationEnded = true;
+                              //  }
+                            }
+                        }
+                        this.switchK = false;
+                    }
+                }
+            }
+        } else {
+            this.animationFreeSpinSymb();
+        }
+    }
+};
+
+ControllerTV.prototype.animationFreeSpinSymb = function () {
+    if (this.boolMoveFront) {
+        for (var i = 0; i < this.tvArray.length; i++) {
+            for (var j = 0; j < this.tvArray[0].length; j++) {
+                if (this.moveArrayFreeSpinSymb[i][j] == 1) {
+                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
+                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
+                    this.tvArray[j][i].symbsParent.visible = true;
+                    this.tvArray[j][i].startAnimation();
+                    this.boolMoveFront = false;
+                } else {
+                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                }
+            }
+        }
+    } else {
+        for (var i = 0; i < this.tvArray.length; i++) {
+            for (var j = 0; j < this.tvArray[0].length; j++) {
+                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+                    this.tvArray[j][i].stopAnimation();
+                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                    this.tvArray[j][i].symbsParent.visible = false;
+
+                        if (this.autoPlay) {
+                            this.stopStartRotateSymbFreeSpin();
+                            this.animationEnded = false;
+                        } else {
+                            this.boolMoveFront = false;
+                        }
+                }
+            }
+        }
+    }
+};
+
 ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
     //update request arrayStop
     if (this.boolUpdateArraySymb) {
@@ -706,6 +1403,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
         this.genArraySymb.setTotalRound(0);
         this.arrayStop = this.genArraySymb.generate();
         this.moveArray = this.genArraySymb.getMoveArray();
+        this.moveArrayFreeSpinSymb = this.genArraySymb.getMoveArrayFreeSpinSymb();
         this.totalSum = this.genArraySymb.getTotalRound();
 
         if (this.arrayStop.length != 0) {
@@ -726,632 +1424,16 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
     }
 
     if (!this.boolFreeSpin) {
-        if (this.autoPlay) {
-            //force stop autoPlay
-            if (this.boolForceStop) {
-                this.boolStop = false;
-                this.boolStartTimer = false;
-                this.dt = 0;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped) {
-                    this.g++;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        if (this.getTotalSum() > 0) {
-                            var totalRound = this.getTotalSum();
-                            var totalScore = this.getTotalScore();
-                            totalScore += totalRound;
-                            this.setTotalScore(totalScore);
-                        }
-                        this.autoPlayStart = false;
-                        this.autoPlayStop = true;
-                        /* if (this.genArraySymb.boolFreeSpin) {
-                             this.autoPlay = false;
-                         }*/
-                    }
-                }
-            }
-
-            //stop autoPlay
-            if (this.boolStop) {
-                this.dt1 += deltaTime;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
-                    this.g++;
-                    this.dt1 = 0;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolStop = false;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.boolStartTimer = false;
-                        this.dt = 0;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        if (this.getTotalSum() > 0) {
-                            var totalRound = this.getTotalSum();
-                            var totalScore = this.getTotalScore();
-                            totalScore += totalRound;
-                            this.setTotalScore(totalScore);
-                        }
-                        this.autoPlayStart = false;
-                        this.autoPlayStop = true;
-                        /* if (this.genArraySymb.boolFreeSpin) {
-                             this.autoPlay = false;
-                         }*/
-                    }
-                }
-            }
-            if (this.boolEndAnimation && this.arrayStop.length != 0) {
-                var winL = this.genArraySymb.getWinlineRound();
-                if (winL[this.k] == 0) {
-                    this.k++;
-                    if (this.k > this.moveArray.length - 1) {
-                        this.k = 0;
-                        if (this.genArraySymb.boolFreeSpin) {
-                            this.autoPlay = false;
-                            this.boolFreeSpin = true;
-                        } else {
-                            this.stopStartRotateSymb();
-                        }
-                    }
-                } else {
-                    if (this.boolMoveFront) {
-
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
-                                    this.tvArray[j][i].symbsParent.visible = true;
-                                    this.tvArray[j][i].startAnimation();
-                                    this.boolMoveFront = false;
-                                } else {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                }
-                            }
-                        }
-
-                    } else /*if (this.boolMoveBack)*/ {
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-
-                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
-                                    this.tvArray[j][i].stopAnimation();
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                    this.tvArray[j][i].symbsParent.visible = false;
-                                    this.boolMoveFront = true;
-                                }
-
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
-                                        this.switchK = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (this.switchK) {
-                        this.k++;
-                        if (this.k > this.moveArray.length - 1) {
-                            this.k = 0;
-                            if (this.genArraySymb.boolFreeSpin) {
-                                this.autoPlay = false;
-                                this.boolFreeSpin = true;
-                            } else {
-                                this.stopStartRotateSymb();
-                            }
-                        }
-                        this.switchK = false;
-                    }
-                }
-            }
-        } else {
-            //force stop
-            if (this.boolForceStop) {
-                this.boolStop = false;
-                this.boolStartTimer = false;
-                this.dt = 0;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped) {
-                    this.g++;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        if (this.getTotalSum() > 0) {
-                            var totalRound = this.getTotalSum();
-                            var totalScore = this.getTotalScore();
-                            totalScore += totalRound;
-                            this.setTotalScore(totalScore);
-                        }
-                    }
-                }
-            }
-
-            //normal stop
-            if (this.boolStop) {
-                this.dt1 += deltaTime;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
-                    this.g++;
-                    this.dt1 = 0;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolStop = false;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.boolStartTimer = false;
-                        this.dt = 0;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        if (this.getTotalSum() > 0) {
-                            var totalRound = this.getTotalSum();
-                            var totalScore = this.getTotalScore();
-                            totalScore += totalRound;
-                            this.setTotalScore(totalScore);
-                        }
-                    }
-                }
-            }
-
-            if (this.boolEndAnimation && this.arrayStop.length != 0) {
-                var winL = this.genArraySymb.getWinlineRound();
-                if (winL[this.k] == 0) {
-                    this.k++;
-                    if (this.k > this.moveArray.length - 1) {
-                        this.k = 0;
-                        if (this.genArraySymb.boolFreeSpin) {
-                            this.boolFreeSpin = true;
-                        }
-                    }
-                } else {
-                    if (this.boolMoveFront) {
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
-                                    this.tvArray[j][i].symbsParent.visible = true;
-                                    this.tvArray[j][i].startAnimation();
-                                    this.boolMoveFront = false;
-                                } else {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                }
-                            }
-                        }
-
-                    } else /*if (this.boolMoveBack)*/ {
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-
-                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
-                                    this.tvArray[j][i].stopAnimation();
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                    this.tvArray[j][i].symbsParent.visible = false;
-                                    this.boolMoveFront = true;
-                                }
-
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
-                                        this.switchK = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (this.switchK) {
-                        this.k++;
-                        if (this.k > this.moveArray.length - 1) {
-                            this.k = 0;
-                            if (this.genArraySymb.boolFreeSpin) {
-                                this.boolFreeSpin = true;
-                            }
-                        }
-                        this.switchK = false;
-                    }
-                }
-            }
-        }
+        this.mainGame(deltaTime);
     } else {
-        if (this.autoPlay) {
-            //force stop autoPlay
-            if (this.boolForceStop) {
-                this.boolStop = false;
-                this.boolStartTimer = false;
-                this.dt = 0;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped) {
-                    this.g++;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        //     if (this.getTotalSum() > 0) {
-                        var totalRound = this.getTotalSum();
-                        this.totalRoundFreeSpin += totalRound;
-                        //      }
-                        this.autoPlayStart = false;
-                        this.autoPlayStop = true;
-                    }
-                }
-            }
-
-            //stop autoPlay
-            if (this.boolStop) {
-                this.dt1 += deltaTime;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
-                    this.g++;
-                    this.dt1 = 0;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolStop = false;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.boolStartTimer = false;
-                        this.dt = 0;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        //     if (this.getTotalSum() > 0) {
-                        var totalRound = this.getTotalSum();
-                        this.totalRoundFreeSpin += totalRound;
-                        //       }
-                        this.autoPlayStart = false;
-                        this.autoPlayStop = true;
-                    }
-                }
-            }
-            if (this.boolEndAnimation && this.arrayStop.length != 0) {
-                var winL = this.genArraySymb.getWinlineRound();
-                if (winL[this.k] == 0) {
-                    this.k++;
-                    if (this.k > this.moveArray.length - 1) {
-                        this.k = 0;
-                        if (this.genArraySymb.numFreeSpin <= 0) {
-                            this.genArraySymb.boolFreeSpin = false;
-                            this.boolFreeSpin = false;
-                            this.genArraySymb.numFreeSpin = 0;
-                            this.autoPlay = false;
-
-                            var totalScore = this.getTotalScore();
-                            totalScore += this.totalRoundFreeSpin;
-                            this.setTotalScore(totalScore);
-                            this.totalRoundFreeSpin = 0;
-                        } else {
-                            this.stopStartRotateSymbFreeSpin();
-                        }
-                    }
-                } else {
-                    if (this.boolMoveFront) {
-
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
-                                    this.tvArray[j][i].symbsParent.visible = true;
-                                    this.tvArray[j][i].startAnimation();
-                                    this.boolMoveFront = false;
-                                } else {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                }
-                            }
-                        }
-
-                    } else /*if (this.boolMoveBack)*/ {
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-
-                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
-                                    this.tvArray[j][i].stopAnimation();
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                    this.tvArray[j][i].symbsParent.visible = false;
-                                    this.boolMoveFront = true;
-                                }
-
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
-                                        this.switchK = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (this.switchK) {
-                        this.k++;
-                        if (this.k > this.moveArray.length - 1) {
-                            this.k = 0;
-                            if (this.genArraySymb.numFreeSpin <= 0) {
-                                this.genArraySymb.boolFreeSpin = false;
-                                this.boolFreeSpin = false;
-                                this.genArraySymb.numFreeSpin = 0;
-                                this.autoPlay = false;
-
-                                var totalScore = this.getTotalScore();
-                                totalScore += this.totalRoundFreeSpin;
-                                this.setTotalScore(totalScore);
-                                this.totalRoundFreeSpin = 0;
-                            } else {
-                                this.stopStartRotateSymbFreeSpin();
-                            }
-                        }
-                        this.switchK = false;
-                    }
-                }
-            }
-        } else {
-            //force stop
-            if (this.boolForceStop) {
-                this.boolStop = false;
-                this.boolStartTimer = false;
-                this.dt = 0;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped) {
-                    this.g++;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        //   if (this.getTotalSum() > 0) {
-                        var totalRound = this.getTotalSum();
-                        this.totalRoundFreeSpin += totalRound;
-                        //    }
-                    }
-                }
-            }
-
-            //normal stop
-            if (this.boolStop) {
-                this.dt1 += deltaTime;
-                if (!this.tvArray[this.f][this.g].isStopped) {
-                    this.tvArray[this.f][this.g].stopRotateSymb(this.arrayStop[this.g][this.f]);
-                }
-                if (this.tvArray[this.f][this.g].isStopped && this.dt1 >= 0.35) {
-                    this.g++;
-                    this.dt1 = 0;
-                }
-                if (this.g > 2) {
-                    this.g = 0;
-                    this.f++;
-                }
-                if (this.f > 2) {
-                    this.f = 0;
-                }
-                console.log(this.getTotalSum());
-                if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
-                    this.dt2 += deltaTime;
-                    if (this.dt2 > this.speedSwitchBetweenRounds) {
-                        this.dt2 = 0;
-                        this.boolStop = false;
-                        this.boolForceStop = false;
-                        this.boolRotate = false;
-                        this.boolStartTimer = false;
-                        this.dt = 0;
-                        this.f = 0;
-                        this.g = 0;
-                        this.boolEndAnimation = true;
-                        this.boolMoveFront = true;
-                        // this.canStop = true;
-                        this.boolChangeStopToStart = true;
-                        //    if (this.getTotalSum() > 0) {
-                        var totalRound = this.getTotalSum();
-                        this.totalRoundFreeSpin += totalRound;
-
-                        //   }
-                    }
-                }
-            }
-
-            if (this.boolEndAnimation && this.arrayStop.length != 0) {
-                var winL = this.genArraySymb.getWinlineRound();
-                if (winL[this.k] == 0) {
-                    this.k++;
-                    if (this.k > this.moveArray.length - 1) {
-                        this.k = 0;
-                        if (this.genArraySymb.numFreeSpin <= 0) {
-                            this.genArraySymb.boolFreeSpin = false;
-                            this.boolFreeSpin = false;
-                            this.genArraySymb.numFreeSpin = 0;
-
-                            var totalScore = this.getTotalScore();
-                            totalScore += this.totalRoundFreeSpin;
-                            this.setTotalScore(totalScore);
-                            this.totalRoundFreeSpin = 0;
-                        }
-                    }
-                } else {
-                    if (this.boolMoveFront) {
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = true;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = true;
-                                    this.tvArray[j][i].symbsParent.visible = true;
-                                    this.tvArray[j][i].startAnimation();
-                                    this.boolMoveFront = false;
-                                } else {
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                }
-                            }
-                        }
-
-                    } else /*if (this.boolMoveBack)*/ {
-                        for (var i = 0; i < this.tvArray.length; i++) {
-                            for (var j = 0; j < this.tvArray[0].length; j++) {
-
-                                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
-                                    this.tvArray[j][i].stopAnimation();
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
-                                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                                    this.tvArray[j][i].symbsParent.visible = false;
-                                    this.boolMoveFront = true;
-                                }
-
-                                if (this.moveArray[this.k][i][j] == 1) {
-                                    if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 0) {
-                                        this.switchK = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (this.switchK) {
-                        this.k++;
-                        if (this.k > this.moveArray.length - 1) {
-                            this.k = 0;
-                            if (this.genArraySymb.numFreeSpin <= 0) {
-                                this.genArraySymb.boolFreeSpin = false;
-                                this.boolFreeSpin = false;
-                                this.genArraySymb.numFreeSpin = 0;
-
-                                var totalScore = this.getTotalScore();
-                                totalScore += this.totalRoundFreeSpin;
-                                this.setTotalScore(totalScore);
-                                this.totalRoundFreeSpin = 0;
-                            }
-                        }
-                        this.switchK = false;
-                    }
-                }
-            }
-        }
+        this.freeSpinGame(deltaTime);
     }
     if (this.boolMoveFreeSpin) {
-        this.freeSpin(deltaTime);
+        this.freeSpinGamePosition(deltaTime);
     }
 
     if (this.boolMoveBackFreeSpin) {
-        this.back(deltaTime);
+        this.mainGamePosition(deltaTime);
     }
 
     //update with time
