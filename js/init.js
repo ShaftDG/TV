@@ -53,6 +53,9 @@ shaders.shaderSetLoaded = function(){
     init();
 };
 
+shaders.load( 'vertexShaderFireParticles' , 'vertexShFireParticles' , 'vertex' );
+shaders.load( 'fragmentShaderFireParticles' , 'fragmentShFireParticles' , 'fragment' );
+
 shaders.load( 'vertexShaderWideScreen' , 'vertexShWideScreen' , 'vertex' );
 shaders.load( 'fragmentShaderWideScreen' , 'fragmentShWideScreen' , 'fragment' );
 
@@ -280,7 +283,7 @@ function init() {
    // totalBet.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
     var bet = slot.getBet();
-    totalBet.setBeginNumber(bet);
+    totalBet.setBeginNumber(0);
     totalBet.setNumber(bet);
     //cameraParent.add(totalRound2D);
     totalBet.scale.set(0.7, 0.8, 0.7);
@@ -462,11 +465,12 @@ function animate() {
         totalRound2D.setNumber(0);
         boolUpdateScore = false;
     }
-    if (slot.genArraySymb.numFreeSpin > 0 && slot.boolFreeSpin) {
+
+    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin /*&& slot.animationEnded*/) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
-        totalFreeSpin.start();
+       // totalFreeSpin.start();
     } else {
-        totalFreeSpin.stop();
+       totalFreeSpin.stop();
     }
 
     if (slot.boolChangeStopToStart && boolStartStop) {

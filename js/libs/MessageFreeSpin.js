@@ -243,23 +243,23 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.add(holoParent);
 
     ////////////////////////////////////////////
-    this.Parent = new THREE.Object3D;
+    this.rayParent = new THREE.Object3D;
     var geometry = new THREE.CylinderBufferGeometry(14, 6, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    this.Parent.add(mesh);
+    this.rayParent.add(mesh);
 
     var geometry = new THREE.CylinderBufferGeometry(14, 5, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    this.Parent.add(mesh);
+    this.rayParent.add(mesh);
 
     var geometry = new THREE.CylinderBufferGeometry(14, 4, 0, 24, 1.0, true);
     geometry.rotateX(-Math.PI / 2.0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    this.Parent.add(mesh);
-   // this.Parent.visible = false;
-    this.add(this.Parent);
+    this.rayParent.add(mesh);
+   // this.rayParent.visible = false;
+    this.add(this.rayParent);
 }
 
 function parseString(stringIn, stringPattern) {
@@ -395,6 +395,7 @@ MessageFreeSpin.prototype.setBeginNumber = function(number) {
 
 MessageFreeSpin.prototype.setString = function(number) {
     if (number > -1) {
+        this.start();
         var stringIn = number.toString();
         if (stringIn.length > this.groupNumbers.children.length) {
             var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
@@ -471,19 +472,19 @@ MessageFreeSpin.prototype.stop = function() {
     for (var j = 0; j < this.groupNumbers.children.length; j++) {
         this.groupNumbers.children[j].visible = false;
     }
-    for (var j = 0; j < this.Parent.children.length; j++) {
-        this.Parent.children[j].visible = false;
-    }
+  //  for (var j = 0; j < this.rayParent.children.length; j++) {
+  //      this.rayParent.children[j].visible = false;
+ //   }
     this.holoParent.traverse(function (child) {
         if (child.isMesh) {
             if (child.name == "corps") {
                 child.visible = true;
             } else if (child.name == "linz") {
-                child.visible = false;
+                child.visible = true;
             } else if (child.name == "disc") {
                 child.visible = false;
             } else if (child.name == "disc_light") {
-                child.visible = false;
+                child.visible = true;
             }
         }
     });
@@ -495,9 +496,9 @@ MessageFreeSpin.prototype.stop = function() {
 MessageFreeSpin.prototype.start = function() {
     this.OnOffSwitch = true;
     this.StartStopSwitch = true;
-    for (var j = 0; j < this.Parent.children.length; j++) {
-        this.Parent.children[j].visible = true;
-    }
+   // for (var j = 0; j < this.rayParent.children.length; j++) {
+   //     this.rayParent.children[j].visible = true;
+   // }
     this.holoParent.traverse(function (child) {
         if (child.isMesh) {
             if (child.name == "corps") {

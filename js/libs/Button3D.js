@@ -65,7 +65,7 @@ function Button3D(textureLoader, isMobile) {
             boolGlitch:  { value: false },
             start:   { value: 0.01 },
             end:   { value: 0.05 },
-            alpha:   { value: 0.3 },
+            alpha:   { value: 0.5 },
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -120,7 +120,6 @@ function Button3D(textureLoader, isMobile) {
         });
     });
 
-    console.log(buttonParent);
     buttonParent.name = "button";
     //  tvParent.position.y = -0.3;
     this.buttonParent = buttonParent;

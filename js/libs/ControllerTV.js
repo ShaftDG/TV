@@ -12,6 +12,8 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.f = 0;
     this.g = 0;
 
+    this.d = new THREE.Vector3(0,0,0);
+
     this.posX = posX;
     this.posY = posY;
     this.posZ = posZ;
@@ -174,9 +176,108 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.position.x = this.posX;
     this.position.y = this.posY;
     this.position.z = this.posZ;
+
+    var optionsTonguesOfFire = {
+        xCoord:                 0,
+        yCoord:                 0,
+        zCoord:                 0,
+        totalParticles:         10,
+        scaleSizeParticles:     75,
+        distortFlame:           1.4,
+        distortAlpha:           1.2,
+        beginRadius:            0.2,
+        endRadius:              10.0,
+        combustion:             0.1,
+        movementSpeed:          0.25,
+        pulseFactor:            0.5,
+        boolBlending:           true
+    };
+
+    var optionsOriginFire = {
+        xCoord:                 0,
+        yCoord:                 0,
+        zCoord:                 0,
+        totalParticles:         5,
+        scaleSizeParticles:     100,
+        distortFlame:           1.4,
+        distortAlpha:           1.2,
+        beginRadius:            0.2,
+        endRadius:              100.0,
+        combustion:             0.013,
+        movementSpeed:          0.0,
+        pulseFactor:            0.0,
+        boolBlending:           true
+    };
+    var optionsOriginFireParticles = {
+        xCoord:              optionsOriginFire.xCoord,
+        yCoord:              optionsOriginFire.yCoord,
+        zCoord:              optionsOriginFire.zCoord,
+        noiseTexture:        textureLoader.load("textures/sprites/originFire.png"),
+        windVector:          new THREE.Vector3(-1.0, -1.0, 0.0),
+        totalParticles:      optionsOriginFire.totalParticles,
+        scaleSizeParticles:  optionsOriginFire.scaleSizeParticles,
+        distortFlame:        optionsOriginFire.distortFlame,
+        distortAlpha:        optionsOriginFire.distortFlame,
+        beginRadius:         optionsOriginFire.beginRadius,
+        endRadius:           optionsOriginFire.endRadius,
+        combustion:          optionsOriginFire.combustion,
+        movementSpeed:       optionsOriginFire.movementSpeed,
+        pulseFactor:         optionsOriginFire.pulseFactor,
+        boolBlending:        optionsOriginFire.boolBlending
+    };
+    var optionsTonguesOfFireParticles = {
+        xCoord:                 optionsTonguesOfFire.xCoord,
+        yCoord:                 optionsTonguesOfFire.yCoord,
+        zCoord:                 optionsTonguesOfFire.zCoord,
+        noiseTexture:           textureLoader.load("textures/sprites/originFire.png"),
+        windVector:             new THREE.Vector3(-1.0, -1.0, 0.0),
+        totalParticles:         optionsTonguesOfFire.totalParticles,
+        scaleSizeParticles:     optionsTonguesOfFire.scaleSizeParticles,
+        distortFlame:           optionsTonguesOfFire.distortFlame,
+        distortAlpha:           optionsTonguesOfFire.distortFlame,
+        beginRadius:            optionsTonguesOfFire.beginRadius,
+        endRadius:              optionsTonguesOfFire.endRadius,
+        combustion:             optionsTonguesOfFire.combustion,
+        movementSpeed:          optionsTonguesOfFire.movementSpeed,
+        pulseFactor:            optionsTonguesOfFire.pulseFactor,
+        boolBlending:           optionsTonguesOfFire.boolBlending
+    };
+    var optionsFire = {
+        optionsOriginFireParticles: optionsOriginFireParticles,
+        optionsTonguesOfFireParticles: optionsTonguesOfFireParticles
+    };
+    this.flameParticlesFreeSpin = new FlameBonfire(optionsFire, loadingManager, false);
+    this.flameParticlesFreeSpin.name = "fire";
+   // this.flameParticlesFreeSpin.position.x = cupFireRight.position.x;
+   // this.flameParticlesFreeSpin.position.y = cupFireRight.position.y;
+   // this.flameParticlesFreeSpin.position.z = 70;
+  //  this.flameParticlesFreeSpin.start();
+    this.addGeometry(new THREE.SphereBufferGeometry(1.0), optionsOriginFireParticles.windVector);
+    this.add(this.flameParticlesFreeSpin);
+
 }
 ControllerTV.prototype = Object.create(THREE.Object3D.prototype);
 ControllerTV.prototype.constructor = ControllerTV;
+
+ControllerTV.prototype.addGeometry = function( geometry, windVector ) {
+    this.flameParticlesFreeSpin.addFlame( geometry, windVector );
+};
+
+ControllerTV.prototype.setMotionVector = function(beginPosition, endPosition, movementSpeed) {
+
+    var vector = new THREE.Vector3(
+                        beginPosition.x - endPosition.x,
+                        beginPosition.y - endPosition.y,
+                        beginPosition.z - endPosition.z
+        );
+
+    var modA = Math.sqrt( vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+    var inversModA = 1.0 / modA;
+    vector.x *= inversModA;
+    vector.y *= inversModA;
+    vector.z *= inversModA;
+return vector;
+};
 
 ControllerTV.prototype.freeSpinGamePosition = function(deltaTime) {
     var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
@@ -592,9 +693,10 @@ ControllerTV.prototype.setTotalScore = function(num) {
 
 ControllerTV.prototype.addAnimation = function() {
 
-
     for (var i = 0; i < this.numTotalTV; i++) {
-        this.children[i].addAnimation();
+      //  if (this.children[i].name != "fire") {
+            this.children[i].addAnimation();
+      //  }
     }
 };
 
@@ -866,7 +968,7 @@ ControllerTV.prototype.mainGame = function (deltaTime) {
                 }
             }
         }  else {
-            this.animationFreeSpinSymb();
+            this.animationFreeSpinSymb(deltaTime);
         }
     } else {
         //force stop
@@ -1014,7 +1116,7 @@ ControllerTV.prototype.mainGame = function (deltaTime) {
                 }
             }
         } else {
-            this.animationFreeSpinSymb();
+            this.animationFreeSpinSymb(deltaTime);
         }
     }
 };
@@ -1191,7 +1293,7 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
                 }
             }
         } else {
-            this.animationFreeSpinSymb();
+            this.animationFreeSpinSymb(deltaTime);
         }
     } else {
         //force stop
@@ -1355,12 +1457,12 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
                 }
             }
         } else {
-            this.animationFreeSpinSymb();
+            this.animationFreeSpinSymb(deltaTime);
         }
     }
 };
 
-ControllerTV.prototype.animationFreeSpinSymb = function () {
+ControllerTV.prototype.animationFreeSpinSymb = function (deltaTime) {
     if (this.boolMoveFront) {
         for (var i = 0; i < this.tvArray.length; i++) {
             for (var j = 0; j < this.tvArray[0].length; j++) {
@@ -1378,7 +1480,7 @@ ControllerTV.prototype.animationFreeSpinSymb = function () {
     } else {
         for (var i = 0; i < this.tvArray.length; i++) {
             for (var j = 0; j < this.tvArray[0].length; j++) {
-                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
+               /* if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time == 2) {
                     this.tvArray[j][i].stopAnimation();
                     this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
                     this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
@@ -1390,9 +1492,53 @@ ControllerTV.prototype.animationFreeSpinSymb = function () {
                         } else {
                             this.boolMoveFront = false;
                         }
+                }*/
+                if (this.tvArray[j][i].actionSymbs[this.arrayStop[i][j]].time >= 1.0) {
+                    this.tvArray[j][i].pausedAnimation();
+                  //  this.tvArray[j][i].materialDisplay.uniforms.boolOffSymb.value = false;
+                 //   this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                 //   this.tvArray[j][i].symbsParent.visible = false;
+
+
+                this.scaleSymb(this.tvArray[j][i].getFreeSpinSymb(), deltaTime, this.tvArray[j][i].position);
+
+                   /* if (this.autoPlay) {
+                        this.stopStartRotateSymbFreeSpin();
+                        this.animationEnded = false;
+                    } else {
+                        this.boolMoveFront = false;
+                    }*/
                 }
             }
         }
+    }
+};
+
+ControllerTV.prototype.scaleSymb = function (object, deltaTime, position) {
+    if (object.scale.x <= 0.3) {
+
+       this.flameParticlesFreeSpin.position.x = position.x;
+       this.flameParticlesFreeSpin.position.y = position.y-7;
+       this.flameParticlesFreeSpin.position.z = position.z+29;
+
+        var pos = new THREE.Vector3(0,0,0);
+        pos.copy(this.flameParticlesFreeSpin.position);
+        this.d.copy(pos);
+        this.flameParticlesFreeSpin.setWindVector(this.setMotionVector(pos, new THREE.Vector3(75, 22, 10), 0.25));
+        this.flameParticlesFreeSpin.start();
+        object.scale.x = 0.3;
+    } else {
+        object.scale.x -= deltaTime*3.0;
+    }
+    if (object.scale.y <= 0.3) {
+        object.scale.y = 0.3;
+    } else {
+        object.scale.y -= deltaTime*3.0;
+    }
+    if (object.scale.z <= 0.3) {
+        object.scale.z = 0.3;
+    } else {
+        object.scale.z -= deltaTime*3.0;
     }
 };
 
@@ -1440,4 +1586,12 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
     for (var i = 0; i < this.numTotalTV; i++) {
         this.children[i].updateWithTime(deltaTimeElapsed, deltaTime);
     }
+
+    if (this.flameParticlesFreeSpin.visible) {
+      //  var d = this.setMotionVector(this.flameParticlesFreeSpin.position, new THREE.Vector3(75, 22, 10));
+        this.flameParticlesFreeSpin.position.x += Math.abs(this.d.x)*10.0*deltaTime;
+        this.flameParticlesFreeSpin.position.y += Math.abs(this.d.y)*10.0*deltaTime;
+        this.flameParticlesFreeSpin.position.z += Math.abs(this.d.z)*10.0*deltaTime;
+    }
+    this.flameParticlesFreeSpin.updateWithTime( deltaTimeElapsed );
 };
