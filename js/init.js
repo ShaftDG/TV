@@ -466,11 +466,13 @@ function animate() {
         boolUpdateScore = false;
     }
 
-    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin /*&& slot.animationEnded*/) {
+    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && !slot.genArraySymb.boolPlusFreeSpin) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
        // totalFreeSpin.start();
-    } else {
-       totalFreeSpin.stop();
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpin) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else  if (!slot.boolFreeSpin) {
+        totalFreeSpin.stop();
     }
 
     if (slot.boolChangeStopToStart && boolStartStop) {
@@ -508,10 +510,10 @@ function animate() {
                 slot.position.z += deltaTime * 20.0*speedFactor;
             }
             ///////////////////
-            if (totalFreeSpin.rotation.y <= -Math.PI / 5) {
-                totalFreeSpin.rotation.y = -Math.PI / 5;
+            if (totalFreeSpin.rotation.y <= -Math.PI / 4) {
+                totalFreeSpin.rotation.y = -Math.PI / 4;
             } else {
-                totalFreeSpin.rotation.y -= deltaTime*0.6*speedFactor;
+                totalFreeSpin.rotation.y -= deltaTime*0.8*speedFactor;
             }
             if (totalFreeSpin.position.x <= 60.0) {
                 totalFreeSpin.position.x = 60.0;
@@ -523,10 +525,10 @@ function animate() {
             } else {
                 totalFreeSpin.position.y -= deltaTime * 10.0*speedFactor;
             }
-            if (totalFreeSpin.position.z >= 30.0) {
-                totalFreeSpin.position.z = 30.0;
+            if (totalFreeSpin.position.z >= 40.0) {
+                totalFreeSpin.position.z = 40.0;
             } else {
-                totalFreeSpin.position.z += deltaTime * 20.0*speedFactor;
+                totalFreeSpin.position.z += deltaTime * 30*speedFactor;
             }
             //////////////////
             if (totalScore2D.rotation.x <= -Math.PI) {
@@ -589,7 +591,7 @@ function animate() {
         if (totalFreeSpin.position.z <= 10.0) {
             totalFreeSpin.position.z = 10.0;
         } else {
-            totalFreeSpin.position.z -= deltaTime * 20.0*speedFactor;
+            totalFreeSpin.position.z -= deltaTime * 30.0*speedFactor;
         }
         ////////////////////////////
         if (totalScore2D.rotation.x >= -Math.PI/2) {

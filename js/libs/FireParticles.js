@@ -2,6 +2,7 @@ function FireParticles(fireOption, textureLoader)
 {
     THREE.Object3D.apply(this);
     //////////////settings/////////
+    this.flameSpeed = fireOption.flameSpeed;
     this.movementSpeed = fireOption.movementSpeed;
     this.beginR = fireOption.beginRadius;
     this.endR = fireOption.endRadius;
@@ -72,6 +73,13 @@ function FireParticles(fireOption, textureLoader)
         this.material.blending = THREE.AdditiveBlending;
     }
     this.material.uniforms.noiseTexture.value.wrapS = this.material.uniforms.noiseTexture.value.wrapT = THREE.MirroredRepeatWrapping;
+
+    this.checkNumParticles = 0;
+    this.boolEnd = false;
+    this.boolEndArray = [];
+    for (var i = 0; i < this.totalParticles; i++) {
+        this.boolEndArray[i] = false;
+    }
 }
 
 FireParticles.prototype = Object.create(THREE.Object3D.prototype);
@@ -97,25 +105,10 @@ FireParticles.prototype.addFire = function(geometry, windVector) {
         var a = this.windVector.x / modA;
         var b = this.windVector.y / modA;
         var c = this.windVector.z / modA;
-        var Rdelta = (Math.random() * (1.0 - 0.1) + 0.1);
+        var Rdelta = (Math.random() * (1.0 - 0.25) + 0.25);
         var zzD =  c * Rdelta * this.movementSpeed,
             xxD =  a * Rdelta * this.movementSpeed,
             yyD =  b * Rdelta * this.movementSpeed;
-        if (this.windVector.x > 0) {
-            xxD *= 1.0;
-        } else {
-            xxD *= -1.0;
-        }
-        if (this.windVector.y > 0) {
-            yyD *= 1.0;
-        } else {
-            yyD *= -1.0;
-        }
-        if (this.windVector.z > 0) {
-            zzD *= 1.0;
-        } else {
-            zzD *= -1.0;
-        }
 
         this.positionsWWWW[ v * 3 + 0 ] = xxD;
         this.positionsWWWW[ v * 3 + 1 ] = yyD;
@@ -167,112 +160,172 @@ FireParticles.prototype.setWindVector = function(windVector)
         var a = this.windVector.x / modA;
         var b = this.windVector.y / modA;
         var c = this.windVector.z / modA;
-        var Rdelta = (Math.random() * (1.0 - 0.1) + 0.1);
+        var Rdelta = (Math.random() * (1.0 - 0.25) + 0.25);
         var zzD =  c * Rdelta * this.movementSpeed,
             xxD =  a * Rdelta * this.movementSpeed,
             yyD =  b * Rdelta * this.movementSpeed;
-        if (this.windVector.x > 0) {
-            xxD *= 1.0;
-        } else {
-            xxD *= -1.0;
-        }
-        if (this.windVector.y > 0) {
-            yyD *= 1.0;
-        } else {
-            yyD *= -1.0;
-        }
-        if (this.windVector.z > 0) {
-            zzD *= 1.0;
-        } else {
-            zzD *= -1.0;
-        }
 
         this.positionsWWWW[ v * 3 + 0 ] = xxD;
         this.positionsWWWW[ v * 3 + 1 ] = yyD;
         this.positionsWWWW[ v * 3 + 2 ] = zzD;
-       /* angleFactor[ v ] =
-            Math.acos(  ( 0.0 * this.windVector.x + 1.0 * this.windVector.y ) /
-                ( 1.0 * Math.sqrt(this.windVector.x * this.windVector.x + this.windVector.y * this.windVector.y) )
-            );
-
-        if (this.windVector.x > 0) {
-            angleFactor[ v ] *= 1.0;
-        } else {
-            angleFactor[ v ] *= -1.0;
-        }*/
     }
-   // this.geometry.attributes.angleFactor.needsUpdate = true;
 };
 
-FireParticles.prototype.updateParticles = function(deltaTime)
-{
-    if (this.geometry) {
-        this.material.uniforms.time.value = deltaTime;
-       // this.geometry.attributes.position.needsUpdate = true;
-       // this.geometry.attributes.size.needsUpdate = true;
-      //  this.geometry.attributes.customAlpha.needsUpdate = true;
+FireParticles.prototype.updateParticles = function(deltaTime) {
 
-        var sizes = this.geometry.attributes.size.array;
-        var alpha = this.geometry.attributes.customAlpha.array;
-        var pos = this.geometry.attributes.position.array;
-        var angleFactor = this.geometry.attributes.angleFactor.array;
+    if (this.geometry && this.particleSystem.visible) {
+        this.material.uniforms.time.value = deltaTime * this.flameSpeed;
+        if (this.movementSpeed > 0) {
+            var sizes = this.geometry.attributes.size.array;
+            var alpha = this.geometry.attributes.customAlpha.array;
+            var pos = this.geometry.attributes.position.array;
+            var angleFactor = this.geometry.attributes.angleFactor.array;
+            for (var i = 0, i3 = 0; i < this.totalParticles; i++, i3 += 3) {
+
+                if (!this.boolEndArray[i]) {
+                    pos[i3 + 0] += this.positionsWWWW[i3 + 0];
+                    pos[i3 + 1] += this.positionsWWWW[i3 + 1];
+                    pos[i3 + 2] += this.positionsWWWW[i3 + 2];
+                    var Rend = this.endR;
+                    var rPosition = Math.sqrt(Math.pow(pos[i3 + 0] + this.xCoord, 2) + Math.pow(pos[i3 + 1] + this.yCoord, 2) + Math.pow(pos[i3 + 2] + this.zCoord, 2));
+                    if (rPosition > Rend) {
+                        alpha[i] -= this.combustion;
+                        sizes[i] -= this.combustion;
+                    }
+
+                    if (alpha[i] <= 0.0) {
+                        alpha[i] = 1.0;
+                        sizes[i] = this.sizesBegin[i];
+                        pos[i3 + 0] = this.posBegin[i3 + 0];
+                        pos[i3 + 1] = this.posBegin[i3 + 1];
+                        pos[i3 + 2] = this.posBegin[i3 + 2];
+                        if (this.boolEnd) {
+                            this.boolEndArray[i] = true;
+                        }
+                    }
+                    angleFactor[i] =
+                        Math.acos(( 0.0 * this.windVector.x + 1.0 * this.windVector.y ) /
+                            ( 1.0 * Math.sqrt(this.windVector.x * this.windVector.x + this.windVector.y * this.windVector.y) )
+                        );
+                    if (this.windVector.x > 0) {
+                        angleFactor[i] *= 1.0;
+                    } else {
+                        angleFactor[i] *= -1.0;
+                    }
+                } else {
+                    var a = this.positionsWWWW[i3 + 0];
+                    var b = this.positionsWWWW[i3 + 1];
+                    var c = this.positionsWWWW[i3 + 2];
+                    var pulseFactorX = Math.sin(a * deltaTime ) * this.pulseFactor + 1;
+                    var pulseFactorY = Math.sin(b * deltaTime ) * this.pulseFactor + 1;
+                    var pulseFactorZ = Math.sin(c * deltaTime ) * this.pulseFactor + 1;
+                    pos[i3 + 0] -= this.positionsWWWW[i3 + 0] * pulseFactorX;
+                    pos[i3 + 1] -= this.positionsWWWW[i3 + 1] * pulseFactorY;
+                    pos[i3 + 2] -= this.positionsWWWW[i3 + 2] * pulseFactorZ;
+                    var Rend = this.endR*0.05;
+                    var rPosition = Math.sqrt(Math.pow(pos[i3 + 0] + this.xCoord, 2) + Math.pow(pos[i3 + 1] + this.yCoord, 2) + Math.pow(pos[i3 + 2] + this.zCoord, 2));
+                    if (rPosition > Rend) {
+                        alpha[i] -= this.combustion * 5.0;
+                        sizes[i] -= this.combustion * 5.0;
+                    }
+
+                    if (alpha[i] <= 0.0) {
+                        alpha[i] = 0.0;
+                        sizes[i] = this.sizesBegin[i];
+                        pos[i3 + 0] = this.posBegin[i3 + 0];
+                        pos[i3 + 1] = this.posBegin[i3 + 1];
+                        pos[i3 + 2] = this.posBegin[i3 + 2];
+                        /*this.checkNumParticles ++;
+                        if (this.checkNumParticles >= this.totalParticles) {
+                            this.particleSystem.visible = false;
+                            this.material.uniforms['started'].value = 0;
+                        }*/
+                    }
+                    angleFactor[i] =
+                        Math.acos(( 0.0 * this.windVector.x * pulseFactorX + 1.0 * this.windVector.y * pulseFactorY ) /
+                            ( 1.0 * Math.sqrt(this.windVector.x * this.windVector.x * pulseFactorX + this.windVector.y * this.windVector.y * pulseFactorY) )
+                        );
+                    if (this.windVector.x > 0) {
+                        angleFactor[i] *= 1.0;
+                    } else {
+                        angleFactor[i] *= -1.0;
+                    }
+                }
+            }
+            this.geometry.attributes.position.needsUpdate = true;
+            this.geometry.attributes.size.needsUpdate = true;
+            this.geometry.attributes.customAlpha.needsUpdate = true;
+            this.geometry.attributes.angleFactor.needsUpdate = true;
+        } else {
+            if (this.boolEnd) {
+                var sizes = this.geometry.attributes.size.array;
+                var alpha = this.geometry.attributes.customAlpha.array;
+                for (var i = 0, i3 = 0; i < this.totalParticles; i++, i3 += 3) {
+                    alpha[i] -= this.combustion * 5.0;
+                    sizes[i] -= this.combustion * 5.0;
+                    if (alpha[i] <= 0.0) {
+                        alpha[i] = 0.0;
+                        sizes[i] = this.sizesBegin[i];
+                    }
+                }
+                this.geometry.attributes.size.needsUpdate = true;
+                this.geometry.attributes.customAlpha.needsUpdate = true;
+            }
+            var angleFactor = this.geometry.attributes.angleFactor.array;
+            for (var i = 0; i < this.totalParticles; i++) {
+                angleFactor[i] =
+                    Math.acos(( 0.0 * this.windVector.x + 1.0 * this.windVector.y ) /
+                        ( 1.0 * Math.sqrt(this.windVector.x * this.windVector.x + this.windVector.y * this.windVector.y) )
+                    );
+                if (this.windVector.x > 0) {
+                    angleFactor[i] *= 1.0;
+                } else {
+                    angleFactor[i] *= -1.0;
+                }
+            }
+            this.geometry.attributes.angleFactor.needsUpdate = true;
+        }
+
+     /*   var angleFactor = this.geometry.attributes.angleFactor.array;
         for (var i = 0, i3 = 0; i < this.totalParticles; i++, i3 += 3) {
-
-            var a = this.positionsWWWW[i3 + 0];
-            var b = this.positionsWWWW[i3 + 1];
-            var c = this.positionsWWWW[i3 + 2];
-            var pulseFactorX = Math.sin(a * deltaTime * 0.1) * this.pulseFactor + 1;
-            var pulseFactorY = Math.sin(b * deltaTime * 0.1) * this.pulseFactor + 1;
-            var pulseFactorZ = Math.sin(c * deltaTime * 0.1) * this.pulseFactor + 1;
-
-
-            pos[i3 + 0] += this.positionsWWWW[i3 + 0] * pulseFactorX *
-                this.windVector.x;
-            pos[i3 + 1] += this.positionsWWWW[i3 + 1] * pulseFactorY *
-                this.windVector.y;
-            pos[i3 + 2] += this.positionsWWWW[i3 + 2] * pulseFactorZ *
-                this.windVector.z;
-
-            var Rend = this.endR;
-            var rPosition = Math.sqrt(Math.pow(pos[i3 + 0] + this.xCoord, 2) + Math.pow(pos[i3 + 1] + this.yCoord, 2) + Math.pow(pos[i3 + 2] + this.zCoord, 2));
-            if (rPosition > Rend) {
-                alpha[i] -= this.combustion;
-                sizes[i] -= this.combustion;
-            }
-
-            if (alpha[i] <= 0.0) {
-                alpha[i] = 1.0;
-                sizes[i] = this.sizesBegin[i];
-                pos[i3 + 0] = this.posBegin[i3 + 0];
-                pos[i3 + 1] = this.posBegin[i3 + 1];
-                pos[i3 + 2] = this.posBegin[i3 + 2];
-            }
-            angleFactor[ i ] =
-                Math.acos(  ( 0.0 * this.windVector.x + 1.0 * this.windVector.y ) /
+            angleFactor[i] =
+                Math.acos(( 0.0 * this.windVector.x + 1.0 * this.windVector.y ) /
                     ( 1.0 * Math.sqrt(this.windVector.x * this.windVector.x + this.windVector.y * this.windVector.y) )
                 );
-
             if (this.windVector.x > 0) {
-                angleFactor[ i ] *= 1.0;
+                angleFactor[i] *= 1.0;
             } else {
-                angleFactor[ i ] *= -1.0;
+                angleFactor[i] *= -1.0;
             }
         }
-        this.geometry.attributes.position.needsUpdate = true;
-        this.geometry.attributes.size.needsUpdate = true;
-        this.geometry.attributes.customAlpha.needsUpdate = true;
-        this.geometry.attributes.angleFactor.needsUpdate = true;
+        this.geometry.attributes.angleFactor.needsUpdate = true;*/
     }
 };
 
 FireParticles.prototype.start = function()
 {
+    this.checkNumParticles = 0;
     this.particleSystem.visible = true;
     this.material.uniforms['started'].value = 1;
+    this.boolEnd = false;
+    var alpha = this.geometry.attributes.customAlpha.array;
+    for (var i = 0, i3 = 0; i < this.totalParticles; i++, i3 += 3) {
+        alpha[i] = 1.0;
+        this.boolEndArray[i] = false;
+    }
+    this.geometry.attributes.customAlpha.needsUpdate = true;
 };
 
 FireParticles.prototype.stop = function()
 {
-    this.particleSystem.visible = false;
-    this.material.uniforms['started'].value = 0;
+    this.boolEnd = true;
+   /* var pos = this.geometry.attributes.position.array;
+    for (var i = 0, i3 = 0; i < this.totalParticles; i++, i3 += 3) {
+            pos[i3 + 0] = this.posBegin[i3 + 0];
+            pos[i3 + 1] = this.posBegin[i3 + 1];
+            pos[i3 + 2] = this.posBegin[i3 + 2];
+    }
+    this.geometry.attributes.position.needsUpdate = true;*/
+  //  this.particleSystem.visible = false;
+  //  this.material.uniforms['started'].value = 0;
 };
