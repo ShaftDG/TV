@@ -44,7 +44,7 @@ function ExplodeParticles(explodeOption, textureProvider)
     var fragmentShader = rectOutShader.fragmentShader;
 
     this.uniforms = rectOutShader.uniforms;
-    this.uniforms.color.value = new THREE.Color( "#939aff" );
+    this.uniforms.color.value = new THREE.Color( "#7866ff" );
     this.uniforms.texture.value = new THREE.TextureLoader().load("textures/sprites/spark13.png");
 
    // this.uniforms.texture.value = this.textureProvider.getTexture("spark1.png");
@@ -54,7 +54,7 @@ function ExplodeParticles(explodeOption, textureProvider)
         fragmentShader: fragmentShader,
         transparent: true,
         blending:       THREE.AdditiveBlending,
-       depthTest:      false,
+        depthWrite:      false,
     } );
 
     for ( var i = 0, i3 = 0; i < this.totalParticles; i ++, i3 += 3 ) {
@@ -137,6 +137,7 @@ ExplodeParticles.prototype.updateParticles = function(time, deltaTime)
  //   var sizes = this.geometry.attributes.size.array;
     var alpha = this.geometry.attributes.customAlpha.array;
     var pos = this.geometry.attributes.position.array;
+    var totalParticles = 0;
     for ( var i = 0, i3 = 0; i < this.totalParticles; i ++, i3 += 3 )  {
 
         var a = this.positionsWWWW[i3 + 0] + 1 ;
@@ -161,6 +162,10 @@ ExplodeParticles.prototype.updateParticles = function(time, deltaTime)
             pos[i3 + 0] = this.posBegin[ i3 + 0 ];
             pos[i3 + 1] = this.posBegin[ i3 + 1 ];
             pos[i3 + 2] = this.posBegin[ i3 + 2 ];
+            totalParticles++;
+            if (totalParticles >= this.totalParticles) {
+                this.stop();
+            }
         }
     }
     this.geometry.attributes.position.needsUpdate = true;

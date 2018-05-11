@@ -94,10 +94,13 @@ FlameBonfire.prototype.stop = function () {
     this.ball.visible = false;
     this.tonguesOfFireParticles.stop();
     this.originFireParticles.stop();
+
     this.explodeParticles.start();
 };
 
 FlameBonfire.prototype.start = function () {
+    this.explodeParticles.stop();
+
     this.tonguesOfFireParticles.start();
     this.originFireParticles.start();
     this.ball.visible = true;
