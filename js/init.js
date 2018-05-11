@@ -154,7 +154,7 @@ function init() {
         map: textureLoader.load("textures/background/back2.jpg")
     });
     var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.z = -170;
+    mesh.position.z = -150;
     scene.add(mesh);
 ////////////////////////////////////////////
     /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
@@ -518,7 +518,7 @@ function animate() {
             if (totalFreeSpin.position.x <= 60.0) {
                 totalFreeSpin.position.x = 60.0;
             } else {
-                totalFreeSpin.position.x -= deltaTime * 50.0*speedFactor;
+                totalFreeSpin.position.x -= deltaTime * 35.0*speedFactor;
             }
         /*    if (totalFreeSpin.position.y <= 12.0) {
                 totalFreeSpin.position.y = 12.0;
@@ -578,10 +578,10 @@ function animate() {
         } else {
             totalFreeSpin.rotation.y += deltaTime*0.45*speedFactor;
         }
-        if (totalFreeSpin.position.x >= 140.0) {
-            totalFreeSpin.position.x = 140.0;
+        if (totalFreeSpin.position.x >= 120.0) {
+            totalFreeSpin.position.x = 120.0;
         } else {
-            totalFreeSpin.position.x += deltaTime * 50.0*speedFactor;
+            totalFreeSpin.position.x += deltaTime * 30.0*speedFactor;
         }
        /* if (totalFreeSpin.position.y >= 22.0) {
             totalFreeSpin.position.y = 22.0;
