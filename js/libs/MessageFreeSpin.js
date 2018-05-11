@@ -262,6 +262,11 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.add(this.rayParent);
 }
 
+function removeObject( object ) {
+    this.getObjectByName(object.name).geometry.dispose();
+    this.remove(scene.getObjectByName(object.name));
+}
+
 function parseString(stringIn, stringPattern) {
     var str = stringIn;
     var strPattern = stringPattern;
@@ -514,10 +519,11 @@ MessageFreeSpin.prototype.start = function() {
     });
 };
 
-MessageFreeSpin.prototype.update = function(deltaTime) {
+MessageFreeSpin.prototype.update = function(time, deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
     this.materialHoloFreeSpin.uniforms.time.value += deltaTime;
+
     if (this.StartStopSwitch) {
 
         this.setString(this.k);

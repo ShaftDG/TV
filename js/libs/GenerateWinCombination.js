@@ -39,7 +39,7 @@ function  GenerateWinCombination(numCilinder, numPlayingSymbPerCilinder, totalSy
     this.numFreeSpinSymb = 0;
     this.numFreeSpin = 0;
     this.boolFreeSpin = false;
-
+    this.numFreeSpinToRound = 2;
 
     this.r = [
         [ 3, 3, 3, 2, 0, 2, 2, 7, 5, 5, 6, 6, 6, 5, 5, 5, 1, 1, 4, 1, 4, 4, 4, 3, 0 ],
@@ -120,7 +120,7 @@ GenerateWinCombination.prototype.generate = function() {
     console.log("=================================");
     if (this.numFreeSpinSymb >= 1) {
         this.boolFreeSpin = true;
-        this.numFreeSpin += 2;
+        this.numFreeSpin += this.numFreeSpinToRound;
         this.boolPlusFreeSpin = true;
         console.log("FreeSpin: Yes - ", this.numFreeSpin);
         console.log("this.moveArrayFreeSpinSymb", this.moveArrayFreeSpinSymb);

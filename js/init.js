@@ -465,12 +465,12 @@ function animate() {
         totalRound2D.setNumber(0);
         boolUpdateScore = false;
     }
-
-    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && !slot.genArraySymb.boolPlusFreeSpin) {
+    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinPlus) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
-       // totalFreeSpin.start();
-    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpin) {
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinMinus) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinBoforePlus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin - slot.genArraySymb.numFreeSpinToRound);
     } else  if (!slot.boolFreeSpin) {
         totalFreeSpin.stop();
     }
@@ -486,7 +486,7 @@ function animate() {
     totalRound2D.update(deltaTime * 1.2);
     totalScore2D.update(deltaTime * 1.2);
     totalBet.update(deltaTime * 1.2);
-    totalFreeSpin.update(deltaTime * 1.2);
+    totalFreeSpin.update(deltaTimeElapsed, deltaTime * 1.2);
 ////////////////////////////////////////////////////////////
     var speedFactor = 2.0;
     if (slot.genArraySymb.numFreeSpin > 0) {

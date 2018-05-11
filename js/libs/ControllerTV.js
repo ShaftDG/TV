@@ -71,7 +71,9 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 
     this.boolMoveFreeSpin = false;
     this.boolMoveBackFreeSpin = false;
-    this.switchNumFreeSpin = false;
+    this.switchNumFreeSpinMinus = false;
+    this.switchNumFreeSpinPlus = false;
+    this.switchNumFreeSpinBoforePlus = false;
 
     this.animationEnded = false;
 
@@ -606,7 +608,9 @@ ControllerTV.prototype.setBeginSettings = function() {
     this.boolEndAnimation = false;
     this.boolStartTimer = true;
     this.animationEnded = false;
-    this.switchNumFreeSpin = false;
+    this.switchNumFreeSpinMinus = false;
+    this.switchNumFreeSpinPlus = false;
+    this.switchNumFreeSpinBoforePlus = false;
     this.boolUpdateParticles = false;
  //   this.boolForceStop = false;
   //  this.boolShowLine = false;
@@ -828,7 +832,9 @@ ControllerTV.prototype.stopStartRotateSymbFreeSpin = function () {
             } else {
                 this.genArraySymb.numFreeSpin -= 1;
                 if (!this.genArraySymb.boolPlusFreeSpin) {
-                    this.switchNumFreeSpin = true;
+                    this.switchNumFreeSpinMinus = true;
+                } else {
+                    this.switchNumFreeSpinBoforePlus = true;
                 }
             }
             this.autoPlayStart = true;
@@ -1602,7 +1608,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
         if (this.children[i].name == "tv") {
             this.children[i].updateWithTime(deltaTimeElapsed, deltaTime);
         } else if (this.children[i].name == "fire") {
-                this.children[i].updateWithTime(deltaTimeElapsed);
+                this.children[i].updateWithTime(deltaTimeElapsed, deltaTimeElapsed);
         }
     }
 
@@ -1611,9 +1617,9 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
         for (var i = 0; i < this.numLineTV; i++) {
             if (this.particlesArray[i].scaled) {
                 var d = this.setMotionVector(this.particlesArray[i].position, new THREE.Vector3(75, 12, 10));
-                if (this.particlesArray[i].position.x >= 70) {
+                if (this.particlesArray[i].position.x >= 72) {
                     this.particlesArray[i].stop();
-                    this.switchNumFreeSpin = true;
+                    this.switchNumFreeSpinPlus = true;
                     // this.particlesArray[i].scaled = false;
                 } else {
                     this.particlesArray[i].position.x -= d.x * 2.5;

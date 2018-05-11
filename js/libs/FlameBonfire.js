@@ -49,6 +49,29 @@ function FlameBonfire(optionsFire, loadingManager, isMobile) {
     this.ball.visible = false;
     //  mesh.position.copy(this.flameParticlesFreeSpin.position);
     this.add(this.ball);
+////////////////////////////////////////
+    var explodeOption = {
+        leftBottom: {
+            x: 0,
+            y: 0
+        },
+        rightTop: {
+            x: 20,
+            y: 20
+        },
+        zCoord: 0,
+        totalParticles: 250,
+        sccaleSizeParticles: 20,
+        beginRadius: 1,
+        endRadius: 10,
+        combustion: 0.25,
+        movementSpeed: 4.2,
+        pulseFactor: 0.8
+    };
+    this.explodeParticles = new ExplodeParticles(explodeOption);
+    // this.explodeParticles.start();
+    this.explodeParticles.name = "explodeParticles";
+    this.add(this.explodeParticles);
 }
 
 FlameBonfire.prototype = Object.create( THREE.Object3D.prototype );
@@ -71,6 +94,7 @@ FlameBonfire.prototype.stop = function () {
     this.ball.visible = false;
     this.tonguesOfFireParticles.stop();
     this.originFireParticles.stop();
+    this.explodeParticles.start();
 };
 
 FlameBonfire.prototype.start = function () {
@@ -79,9 +103,11 @@ FlameBonfire.prototype.start = function () {
     this.ball.visible = true;
 };
 
-FlameBonfire.prototype.updateWithTime = function ( deltaTime ) {
+FlameBonfire.prototype.updateWithTime = function (time, deltaTime ) {
     this.materialHolo.uniforms.time.value = deltaTime;
     this.tonguesOfFireParticles.updateParticles( deltaTime );
     this.originFireParticles.updateParticles( deltaTime );
+
+    this.explodeParticles.updateParticles(time, deltaTime);
 
 };
