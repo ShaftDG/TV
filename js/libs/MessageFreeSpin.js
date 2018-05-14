@@ -5,9 +5,13 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
 
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
+    this.resolutionPaused = false;
+    this.resolutionStop = false;
 
     this.col = col;
     this.row = row;
+
+    this.mixers = [];
 
     this.withoutSwitchNumber = false;
     this.speedSwitchNumber = speedSwitchNumber;
@@ -72,6 +76,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             fragmentShader: fragmentShader,
             transparent: true,
             blending:       THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
             //depthTest:      false,
             //depthWrite:      false,
         } );
@@ -103,7 +108,8 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         mesh.name = "meshPlane";
         this.groupNumbers.add(mesh);
     }
-    this.groupNumbers.position.z = 6.5;
+    //this.groupNumbers.position.z = 123;
+
     this.add( this.groupNumbers );
     this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
 
@@ -194,21 +200,22 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
         transparent: true,
-        //side: THREE.DoubleSide,
+        side: THREE.DoubleSide,
         blending:       THREE.AdditiveBlending,
         //depthTest:      false,
         //depthWrite:      false,
     } );
     var material = this.material;
-    var OBJobject = "holoProjFreeSpin.obj";
+    var OBJobject = "holoProjFreeSpin.fbx";
     var holoParent = new THREE.Object3D;
-    var loaderOBJ = new THREE.OBJLoader( loadingManager );
+    var loaderOBJ = new THREE.FBXLoader( loadingManager );
     loaderOBJ.load("obj/" + OBJobject, function (object) {
         object.traverse(function (child) {
             if (child.isMesh) {
                 if (child.name == "corps") {
                     child.material = materialCorps;
                     //child.material.color = new THREE.Color("#111d5c");
+                  //  child.children[0].material = material;
                 } else if (child.name == "linz") {
                     child.material = materialHolo;
                //     child.visible = false;
@@ -221,7 +228,36 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.material = material;
                   //  child.visible = false;
                     //   child.material.color = new THREE.Color("#027500");
-                } else {
+                } else if (child.name == "disc_inner") {
+                    child.material = material;
+                    //child.material.color = new THREE.Color("#ff0100");
+                } else if (child.name == "сylinder") {
+                    //child.material = material;
+                    child.material.color = new THREE.Color("#040b25");
+                } else if (child.name == "hole_wall") {
+                    //child.material = material;
+                    child.material.color = new THREE.Color("#222636");
+                } else if (child.name == "rotator") {
+                    //child.material = material;
+                    child.material.color = new THREE.Color("#222636");
+                } else if (child.name == "plane") {
+                    //child.material = material;
+                    child.material.map = textureLoader.load("textures/background/back2.jpg");
+                    child.material.map.repeat = new THREE.Vector2(1.5,1.3);
+                    child.material.map.wrapS =  child.material.map.wrapT = THREE.MirroredRepeatWrapping;
+                   // child.material.color = new THREE.Color("#10131e");
+                } else if ( child.name == "disc0" ||
+                            child.name == "disc1" ||
+                            child.name == "disc2" ||
+                            child.name == "disc3" ||
+                            child.name == "disc4" ||
+                            child.name == "disc5" ||
+                            child.name == "disc6" ||
+                            child.name == "disc7" ) {
+                    //child.material = material;
+                    child.material.color = new THREE.Color("#434300");
+                }  else {
+                    //child.material = materialCorps;
                     child.material.color = new THREE.Color("#ff0100");
                 }
                 /*    mesh.castShadow = true;
@@ -236,35 +272,11 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             }
         });
     });
-    holoParent.scale.set(1.0, 1.0, 1.0);
-    holoParent.rotation.z = Math.PI / 10.0;
+    holoParent.scale.set(0.0125, 0.0125, 0.0125);
+    holoParent.rotation.y = Math.PI;
   //  holoParent.position.z = -3.75;
     this.holoParent = holoParent;
     this.add(holoParent);
-
-    ////////////////////////////////////////////
-    this.rayParent = new THREE.Object3D;
-    var geometry = new THREE.CylinderBufferGeometry(14, 6, 0, 24, 1.0, true);
-    geometry.rotateX(-Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    this.rayParent.add(mesh);
-
-    var geometry = new THREE.CylinderBufferGeometry(14, 5, 0, 24, 1.0, true);
-    geometry.rotateX(-Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    this.rayParent.add(mesh);
-
-    var geometry = new THREE.CylinderBufferGeometry(14, 4, 0, 24, 1.0, true);
-    geometry.rotateX(-Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    this.rayParent.add(mesh);
-   // this.rayParent.visible = false;
-    this.add(this.rayParent);
-}
-
-function removeObject( object ) {
-    this.getObjectByName(object.name).geometry.dispose();
-    this.remove(scene.getObjectByName(object.name));
 }
 
 function parseString(stringIn, stringPattern) {
@@ -386,6 +398,36 @@ function arraySymbs(col, row) {
 
 MessageFreeSpin.prototype = Object.create(THREE.Object3D.prototype);
 MessageFreeSpin.prototype.constructor = MessageFreeSpin;
+
+MessageFreeSpin.prototype.addAnimation = function() {
+
+        var child = this.holoParent.children[0];
+        child.mixer = new THREE.AnimationMixer(child);
+        this.mixers.push(child.mixer);
+        this.action = child.mixer.clipAction(child.animations[0]);
+       // this.action.repetitions = 1;
+        this.action.setDuration(3.0)/*.play()*/;
+       // this.action.clampWhenFinished = true;
+        this.action.loop = THREE.LoopOnce;
+      //  this.action.loop = THREE.LoopPingPong;
+    //this.action.loop = THREE.LoopRepeat;
+  //  this.action.play();
+};
+
+MessageFreeSpin.prototype.startAnimation = function () {
+    this.action.play();
+    this.resolutionPaused = true;
+};
+
+MessageFreeSpin.prototype.stopAnimation = function () {
+    this.action.stop();
+    this.resolutionPaused = false;
+};
+
+MessageFreeSpin.prototype.startAnimationAfterPause = function () {
+    this.action.paused = false;
+    this.resolutionStop = true;
+};
 
 MessageFreeSpin.prototype.setNumber = function(number) {
     this.number = number;
@@ -523,6 +565,23 @@ MessageFreeSpin.prototype.update = function(time, deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
     this.materialHoloFreeSpin.uniforms.time.value += deltaTime;
+
+     if ( this.mixers.length > 0 ) {
+        for ( var i = 0; i < this.mixers.length; i ++ ) {
+            this.mixers[ i ].update( deltaTime );
+
+        }
+     }
+
+        if (this.action.time >= 1.0 && this.resolutionPaused) {
+            this.action.paused = true;
+            this.resolutionPaused = false;
+        }
+
+        if (this.action.time >= 2.0 && this.resolutionStop) {
+            this.action.stop();
+            this.resolutionStop = false;
+        }
 
     if (this.StartStopSwitch) {
 

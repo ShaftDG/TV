@@ -118,6 +118,7 @@ function init() {
         RESOURCES_LOADED = true;
 
         slot.addAnimation();
+        totalFreeSpin.addAnimation();
       //  button.addAnimation();
         // tv.addAnimation();
     };
@@ -148,14 +149,14 @@ function init() {
     // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
-    var geometry = new THREE.PlaneBufferGeometry(512, 256);
+  /*  var geometry = new THREE.PlaneBufferGeometry(512, 256);
     geometry.rotateX(-Math.PI*2.0);
     var material = new THREE.MeshPhongMaterial({
         map: textureLoader.load("textures/background/back2.jpg")
     });
     var mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = -150;
-    scene.add(mesh);
+    scene.add(mesh);*/
 ////////////////////////////////////////////
     /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
       startStopButton.name = "startStopButton";
@@ -297,10 +298,10 @@ function init() {
     stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalFreeSpin = new MessageFreeSpin(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 10, 10, -0.75, 0.01);
+    totalFreeSpin = new MessageFreeSpin(-4, 0, 123, textureLoader, stringPattern, 5, 2, stringIn, "centre", 10, 10, -0.75, 0.01);
     totalFreeSpin.position.y = 12 /*+ 10*/;
-    totalFreeSpin.position.x = 160;
-    totalFreeSpin.position.z = 40;
+    totalFreeSpin.position.x = 70;
+    totalFreeSpin.position.z = -45;
     // totalBet.rotation.x = -Math.PI/2;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
     totalFreeSpin.setBeginNumber(0);
@@ -510,7 +511,8 @@ function animate() {
                 slot.position.z += deltaTime * 20.0*speedFactor;
             }
             ///////////////////
-            if (totalFreeSpin.rotation.y <= -Math.PI / 4) {
+            totalFreeSpin.startAnimation();
+        /*    if (totalFreeSpin.rotation.y <= -Math.PI / 4) {
                 totalFreeSpin.rotation.y = -Math.PI / 4;
             } else {
                 totalFreeSpin.rotation.y -= deltaTime*0.45*speedFactor;
@@ -519,7 +521,7 @@ function animate() {
                 totalFreeSpin.position.x = 60.0;
             } else {
                 totalFreeSpin.position.x -= deltaTime * 35.0*speedFactor;
-            }
+            }*/
         /*    if (totalFreeSpin.position.y <= 12.0) {
                 totalFreeSpin.position.y = 12.0;
             } else {
@@ -573,7 +575,8 @@ function animate() {
             slot.position.z -= deltaTime * 20.0*speedFactor;
         }
         //////////////////////////
-        if (totalFreeSpin.rotation.y >= 0.0) {
+        totalFreeSpin.startAnimationAfterPause();
+       /* if (totalFreeSpin.rotation.y >= 0.0) {
             totalFreeSpin.rotation.y = 0.0;
         } else {
             totalFreeSpin.rotation.y += deltaTime*0.45*speedFactor;
@@ -582,7 +585,7 @@ function animate() {
             totalFreeSpin.position.x = 120.0;
         } else {
             totalFreeSpin.position.x += deltaTime * 30.0*speedFactor;
-        }
+        }*/
        /* if (totalFreeSpin.position.y >= 22.0) {
             totalFreeSpin.position.y = 22.0;
         } else {

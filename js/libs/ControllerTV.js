@@ -1515,14 +1515,14 @@ ControllerTV.prototype.animationFreeSpinSymb = function (deltaTime) {
                     this.particlesArray[i].position.z += 30;
                     var pos = new THREE.Vector3(0, 0, 0);
                     pos.copy(this.particlesArray[i].position);
-                    var vec3 = this.setMotionVector(pos, new THREE.Vector3(75, 12, 10));
+                    var vec3 = this.setMotionVector(pos, new THREE.Vector3(85, 12, 10));
                     this.particlesArray[i].setWindVector(vec3);
                     this.particlesArray[i].children[2].position.x = -vec3.x*4.5;
-                    if (vec3.y > 0) {
-                        this.particlesArray[i].children[2].position.y = vec3.y*4.5;
-                    } else {
+                  //  if (vec3.y > 0) {
+                  //      this.particlesArray[i].children[2].position.y = vec3.y*4.5;
+               //     } else {
                         this.particlesArray[i].children[2].position.y = -vec3.y*4.5;
-                    }
+                 //   }
                     this.particlesArray[i].children[2].position.z = -vec3.z*4.5;
                 } else {
                     this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
@@ -1616,7 +1616,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
         var numParticlesVisible = 0;
         for (var i = 0; i < this.numLineTV; i++) {
             if (this.particlesArray[i].scaled) {
-                var d = this.setMotionVector(this.particlesArray[i].position, new THREE.Vector3(75, 12, 10));
+                var d = this.setMotionVector(this.particlesArray[i].position, new THREE.Vector3(85, 13, 10));
                 if (this.particlesArray[i].position.x >= 72) {
                     this.particlesArray[i].stop();
                     this.switchNumFreeSpinPlus = true;
