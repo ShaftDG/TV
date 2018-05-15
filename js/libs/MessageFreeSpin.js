@@ -231,7 +231,13 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                 } else if (child.name == "disc_inner") {
                     child.material = material;
                     //child.material.color = new THREE.Color("#ff0100");
-                } else if (child.name == "сylinder") {
+                } else if (child.name == "root_hand") {
+                    //child.material = material;
+                    child.material.color = new THREE.Color("#040b25");
+                } else if (child.name == "hand1") {
+                    //child.material = material;
+                    child.material.color = new THREE.Color("#040b25");
+                } else if (child.name == "hand2") {
                     //child.material = material;
                     child.material.color = new THREE.Color("#040b25");
                 } else if (child.name == "hole_wall") {
@@ -272,7 +278,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             }
         });
     });
-    holoParent.scale.set(0.0125, 0.0125, 0.0125);
+   // holoParent.scale.set(0.0125, 0.0125, 0.0125);
     holoParent.rotation.y = Math.PI;
   //  holoParent.position.z = -3.75;
     this.holoParent = holoParent;
@@ -406,7 +412,7 @@ MessageFreeSpin.prototype.addAnimation = function() {
         this.mixers.push(child.mixer);
         this.action = child.mixer.clipAction(child.animations[0]);
        // this.action.repetitions = 1;
-        this.action.setDuration(3.0)/*.play()*/;
+        this.action.setDuration(3.5)/*.play()*/;
        // this.action.clampWhenFinished = true;
         this.action.loop = THREE.LoopOnce;
       //  this.action.loop = THREE.LoopPingPong;

@@ -298,7 +298,7 @@ function init() {
     stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalFreeSpin = new MessageFreeSpin(-4, 0, 123, textureLoader, stringPattern, 5, 2, stringIn, "centre", 10, 10, -0.75, 0.01);
+    totalFreeSpin = new MessageFreeSpin(-3.5, 0, 85, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01);
     totalFreeSpin.position.y = 12 /*+ 10*/;
     totalFreeSpin.position.x = 70;
     totalFreeSpin.position.z = -45;
@@ -308,7 +308,7 @@ function init() {
     totalFreeSpin.setNumber(0);
     totalFreeSpin.stop();
     //cameraParent.add(totalRound2D);
-    totalFreeSpin.scale.set(0.7, 0.7, 0.7);
+ //   totalFreeSpin.scale.set(0.7, 0.7, 0.7);
   //  totalFreeSpin.rotation.y = -Math.PI / 5;
     scene.add(totalFreeSpin);
 //////////////////////////////////////////////////
