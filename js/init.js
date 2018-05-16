@@ -2,7 +2,7 @@ var container;
 
 var boolControls = false;
 
-var camera, scene, renderer, controls;
+var camera, cubeCamera, scene, renderer, controls;
 var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot;
@@ -141,6 +141,9 @@ function init() {
     //scene.fog = new THREE.FogExp2( "#e8ede5", 0.1 );
     scene.add(cameraParent);
 ////////////////////////////////////////////
+    // CUBE CAMERA
+    //cubeCamera = new THREE.CubeCamera( 1, 10000, 128 );
+////////////////////////////////////////////
     sunlight = new SunLight(loadingManager, false);
     scene.add(sunlight);
 ////////////////////////////////////////////
@@ -149,14 +152,14 @@ function init() {
     // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
-  /*  var geometry = new THREE.PlaneBufferGeometry(512, 256);
+    var geometry = new THREE.PlaneBufferGeometry(512, 256);
     geometry.rotateX(-Math.PI*2.0);
     var material = new THREE.MeshPhongMaterial({
         map: textureLoader.load("textures/background/back2.jpg")
     });
     var mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = -150;
-    scene.add(mesh);*/
+    scene.add(mesh);
 ////////////////////////////////////////////
     /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
       startStopButton.name = "startStopButton";
@@ -707,6 +710,10 @@ function animate() {
 }
 
 function render() {
+    // render cube map
+  //  totalFreeSpin.visible = false;
+  //  cubeCamera.update( renderer, scene );
+ //   totalFreeSpin.visible = true;
     renderer.render( scene, camera );
 }
 
