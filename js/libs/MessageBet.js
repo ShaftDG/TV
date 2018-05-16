@@ -60,7 +60,7 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
                 USE_SCANLINE  : true
             },
             uniforms: {
-                color: { value : new THREE.Vector3(4, 3, 2) },
+                color: { value : new THREE.Vector3(2, 3, 2) },
                 s_texture:   { value: textureLoader.load("textures/background/display.png") },
                 f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
                 noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },

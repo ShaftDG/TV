@@ -233,25 +233,28 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     //child.material.color = new THREE.Color("#ff0100");
                 } else if (child.name == "root_hand") {
                     //child.material = material;
-                    child.material.color = new THREE.Color("#040b25");
+                    child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "hand1") {
                     //child.material = material;
-                    child.material.color = new THREE.Color("#040b25");
+                    child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "hand2") {
                     //child.material = material;
-                    child.material.color = new THREE.Color("#040b25");
+                    child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "hole_wall") {
                     //child.material = material;
-                    child.material.color = new THREE.Color("#222636");
+                    child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "rotator") {
                     //child.material = material;
-                    child.material.color = new THREE.Color("#222636");
+                    child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "plane") {
                     //child.material = material;
-                    child.material.map = textureLoader.load("textures/background/back2.jpg");
-                    child.material.map.repeat = new THREE.Vector2(1.5,1.3);
-                    child.material.map.wrapS =  child.material.map.wrapT = THREE.MirroredRepeatWrapping;
-                   // child.material.color = new THREE.Color("#10131e");
+                    child.material.map = textureLoader.load("textures/wall/wall.jpg");
+                    child.material.map.repeat = new THREE.Vector2(6,7);
+                    child.material.map.wrapS =  child.material.map.wrapT = THREE.RepeatWrapping;
+                    child.material.normalMap = textureLoader.load("textures/wall/wall_normal.png");
+                    child.material.normalMap.repeat = new THREE.Vector2(6,7);
+                    child.material.normalMap.wrapS =  child.material.normalMap.wrapT = THREE.RepeatWrapping;
+                    child.material.color = new THREE.Color("#838383");
                 } else if ( child.name == "disc0" ||
                             child.name == "disc1" ||
                             child.name == "disc2" ||
@@ -261,7 +264,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                             child.name == "disc6" ||
                             child.name == "disc7" ) {
                     //child.material = material;
-                    child.material.color = new THREE.Color("#434300");
+                    child.material.color = new THREE.Color("#2e2e2e");
                 }  else {
                     //child.material = materialCorps;
                     child.material.color = new THREE.Color("#ff0100");

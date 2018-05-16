@@ -392,6 +392,7 @@ function animate() {
         if (slot.autoPlayStart) {
             slot.autoPlayStart = false;
             button.stopColor();
+            sunlight.setStopButtonlight();
             boolStartColor = true;
             if (!slot.boolFreeSpin) {
                 totalScore2D.setNumber(slot.getTotalScore());
@@ -407,6 +408,7 @@ function animate() {
             if (boolStartColor) {
                 boolStartColor = false;
                 button.startColor();
+                sunlight.setStartButtonlight();
             }
             if (!slot.boolFreeSpin) {
                 if (totalRound2D.boolEndOfCount) {
@@ -478,6 +480,7 @@ function animate() {
 
     if (slot.boolChangeStopToStart && boolStartStop) {
        button.startColor();
+       sunlight.setStartButtonlight();
        boolStartStop = false;
     }
 ////////////////////////////////////////////////////////////
@@ -543,6 +546,7 @@ function animate() {
             } else {
                 totalScore2D.position.y -= deltaTime * 30.0*speedFactor;
             }
+            sunlight.setPositionTotalScorelight(totalScore2D.position);
             ///////////////////
             if (totalBet.rotation.y >= Math.PI) {
                 totalBet.rotation.y = Math.PI;
@@ -607,6 +611,7 @@ function animate() {
         } else {
             totalScore2D.position.y += deltaTime * 30.0*speedFactor;
         }
+        sunlight.setPositionTotalScorelight(totalScore2D.position);
         //////////////////////////
         if (totalBet.rotation.y <= 0) {
             totalBet.rotation.y = 0;
@@ -731,6 +736,7 @@ function onKeyDown ( event ) {
                 totalScore2D.setNumber(totalScore);
                 if (!boolStartStop) {
                     button.stopColor();
+                    sunlight.setStopButtonlight();
                     totalRound2D.setBeginNumber(0);
                     totalRound2D.stop();
                     if (!totalRound2D.nameSlot.visible) {
@@ -740,12 +746,14 @@ function onKeyDown ( event ) {
                     boolStartStop = true;
                 } else if (slot.boolChangeStopToStart) {
                     button.startColor();
+                    sunlight.setStartButtonlight();
                     boolStartStop = false;
                 }
             } else {
                 slot.stopStartRotateSymbFreeSpin();
                 if (!boolStartStop) {
                     button.stopColor();
+                    sunlight.setStopButtonlight();
              //       totalRound2D.setBeginNumber(0);
               //      totalRound2D.stop();
               //      if (!totalRound2D.nameSlot.visible) {
@@ -755,6 +763,7 @@ function onKeyDown ( event ) {
                     boolStartStop = true;
                 } else if (slot.boolChangeStopToStart) {
                     button.startColor();
+                    sunlight.setStartButtonlight();
                     boolStartStop = false;
                 }
             }
@@ -816,6 +825,7 @@ function onDocumentMouseDown( event ) {
                 totalScore2D.setNumber(totalScore);
                 if (!boolStartStop) {
                     button.stopColor();
+                    sunlight.setStopButtonlight();
                     totalRound2D.setBeginNumber(0);
                     totalRound2D.stop();
                     if (!totalRound2D.nameSlot.visible) {
@@ -825,12 +835,14 @@ function onDocumentMouseDown( event ) {
                     boolStartStop = true;
                 } else if (slot.boolChangeStopToStart) {
                     button.startColor();
+                    sunlight.setStartButtonlight();
                     boolStartStop = false;
                 }
             } else {
                 slot.stopStartRotateSymbFreeSpin();
                 if (!boolStartStop) {
                     button.stopColor();
+                    sunlight.setStopButtonlight();
                     //       totalRound2D.setBeginNumber(0);
                     //      totalRound2D.stop();
                     //      if (!totalRound2D.nameSlot.visible) {
@@ -840,6 +852,7 @@ function onDocumentMouseDown( event ) {
                     boolStartStop = true;
                 } else if (slot.boolChangeStopToStart) {
                     button.startColor();
+                    sunlight.setStartButtonlight();
                     boolStartStop = false;
                 }
             }
