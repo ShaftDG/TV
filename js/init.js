@@ -347,7 +347,7 @@ function init() {
         renderer.autoClear = false;
         effectController = {
             focus: 140.0,
-            aperture: 10,
+            aperture: 5,
             maxblur: 1.0
         };
         matChanger = function (effectController) {
@@ -560,8 +560,8 @@ function animate() {
                 } else {
                     effectController.focus -= deltaTime * 20;
                 }
-                if (effectController.aperture >= 15) {
-                    effectController.aperture = 15;
+                if (effectController.aperture >= 10) {
+                    effectController.aperture = 10;
                 } else {
                     effectController.aperture += deltaTime * 20;
                 }
@@ -638,8 +638,8 @@ function animate() {
             } else {
                 effectController.focus += deltaTime * 20;
             }
-            if (effectController.aperture <= 10) {
-                effectController.aperture = 10;
+            if (effectController.aperture <= 5) {
+                effectController.aperture = 5;
             } else {
                 effectController.aperture -= deltaTime * 20;
             }
