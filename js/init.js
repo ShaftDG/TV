@@ -2,6 +2,9 @@ var container;
 
 var boolControls = false;
 
+var postprocessing = {};
+var matChanger, effectController;
+
 var camera, cubeCamera, scene, renderer, controls;
 var cameraParent = new THREE.Object3D;
 
@@ -144,7 +147,7 @@ function init() {
     // CUBE CAMERA
     //cubeCamera = new THREE.CubeCamera( 1, 10000, 128 );
 ////////////////////////////////////////////
-    sunlight = new SunLight(loadingManager, false);
+    sunlight = new SunLight(loadingManager, isMobile);
     scene.add(sunlight);
 ////////////////////////////////////////////
     slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
@@ -152,14 +155,14 @@ function init() {
     // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
 ////////////////////////////////////////////
-    var geometry = new THREE.PlaneBufferGeometry(512, 256);
+   /* var geometry = new THREE.PlaneBufferGeometry(512, 256);
     geometry.rotateX(-Math.PI*2.0);
     var material = new THREE.MeshPhongMaterial({
         map: textureLoader.load("textures/background/back2.jpg")
     });
     var mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = -150;
-    scene.add(mesh);
+    scene.add(mesh);*/
 ////////////////////////////////////////////
     /*  startStopButton = new ButtonKey(140, -40, 10, "start", textureLoader, false);
       startStopButton.name = "startStopButton";
@@ -336,8 +339,24 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     // renderer.setClearColor("#dcf6ff");
     renderer.physicallyBasedShading = true;
-
     renderer.setSize( window.innerWidth, window.innerHeight );
+
+    if (!isMobile) {
+        scene.matrixAutoUpdate = false;
+        initPostprocessing();
+        renderer.autoClear = false;
+        effectController = {
+            focus: 140.0,
+            aperture: 10,
+            maxblur: 1.0
+        };
+        matChanger = function (effectController) {
+            postprocessing.bokeh.uniforms["focus"].value = effectController.focus;
+            postprocessing.bokeh.uniforms["aperture"].value = effectController.aperture * 0.00001;
+            postprocessing.bokeh.uniforms["maxblur"].value = effectController.maxblur;
+        };
+        matChanger(effectController);
+    }
     container.appendChild( renderer.domElement );
 
     if (boolControls) {
@@ -361,6 +380,23 @@ function init() {
     document.addEventListener( 'keydown', onKeyDown, false );
     window.addEventListener( 'resize', onWindowResize, false );
     animate();
+}
+
+function initPostprocessing() {
+    var renderPass = new THREE.RenderPass( scene, camera );
+    var bokehPass = new THREE.BokehPass( scene, camera, {
+        focus: 		1.0,
+        aperture:	0.025,
+        maxblur:	1.0,
+        width: window.innerWidth,
+        height: window.innerHeight
+    } );
+    bokehPass.renderToScreen = true;
+    var composer = new THREE.EffectComposer( renderer );
+    composer.addPass( renderPass );
+    composer.addPass( bokehPass );
+    postprocessing.composer = composer;
+    postprocessing.bokeh = bokehPass;
 }
 
 function onWindowResize() {
@@ -518,6 +554,19 @@ function animate() {
             }
             ///////////////////
             totalFreeSpin.startAnimation();
+            if (!isMobile) {
+                if (effectController.focus <= 120) {
+                    effectController.focus = 120;
+                } else {
+                    effectController.focus -= deltaTime * 20;
+                }
+                if (effectController.aperture >= 15) {
+                    effectController.aperture = 15;
+                } else {
+                    effectController.aperture += deltaTime * 20;
+                }
+                matChanger(effectController);
+            }
         /*    if (totalFreeSpin.rotation.y <= -Math.PI / 4) {
                 totalFreeSpin.rotation.y = -Math.PI / 4;
             } else {
@@ -583,6 +632,19 @@ function animate() {
         }
         //////////////////////////
         totalFreeSpin.startAnimationAfterPause();
+        if (!isMobile) {
+            if (effectController.focus >= 140) {
+                effectController.focus = 140;
+            } else {
+                effectController.focus += deltaTime * 20;
+            }
+            if (effectController.aperture <= 10) {
+                effectController.aperture = 10;
+            } else {
+                effectController.aperture -= deltaTime * 20;
+            }
+            matChanger(effectController);
+        }
        /* if (totalFreeSpin.rotation.y >= 0.0) {
             totalFreeSpin.rotation.y = 0.0;
         } else {
@@ -714,7 +776,11 @@ function render() {
   //  totalFreeSpin.visible = false;
   //  cubeCamera.update( renderer, scene );
  //   totalFreeSpin.visible = true;
-    renderer.render( scene, camera );
+    if (!isMobile) {
+        postprocessing.composer.render(0.1);
+    } else {
+        renderer.render( scene, camera );
+    }
 }
 
 function onKeyDown ( event ) {

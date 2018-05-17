@@ -65,7 +65,7 @@ function Button3D(textureLoader, isMobile) {
             boolGlitch:  { value: false },
             start:   { value: 0.01 },
             end:   { value: 0.05 },
-            alpha:   { value: 0.5 },
+            alpha:   { value: 0.01 },
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
