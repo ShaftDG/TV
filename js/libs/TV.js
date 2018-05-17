@@ -148,7 +148,7 @@ function TV(textureLoader, align, isMobile)
     } );
     for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
         this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
-   }
+    }
 
     this.materialDisplay.uniforms.f_texture.value.wrapS = this.materialDisplay.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
     this.materialDisplay.uniforms.s_texture.value.wrapS = this.materialDisplay.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;

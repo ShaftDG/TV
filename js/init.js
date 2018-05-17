@@ -62,6 +62,9 @@ shaders.load( 'fragmentShaderFireParticles' , 'fragmentShFireParticles' , 'fragm
 shaders.load( 'vertexShaderWideScreen' , 'vertexShWideScreen' , 'vertex' );
 shaders.load( 'fragmentShaderWideScreen' , 'fragmentShWideScreen' , 'fragment' );
 
+shaders.load( 'vertexShaderWideScreenBackground' , 'vertexShWideScreenBackground' , 'vertex' );
+shaders.load( 'fragmentShaderWideScreenBackground' , 'fragmentShWideScreenBackground' , 'fragment' );
+
 shaders.load( 'vertexShaderProjector' , 'vertexShProjector' , 'vertex' );
 shaders.load( 'fragmentShaderProjector' , 'fragmentShProjector' , 'fragment' );
 
@@ -560,11 +563,11 @@ function animate() {
                 } else {
                     effectController.focus -= deltaTime * 20;
                 }
-                if (effectController.aperture >= 10) {
+              /*  if (effectController.aperture >= 10) {
                     effectController.aperture = 10;
                 } else {
                     effectController.aperture += deltaTime * 20;
-                }
+                }*/
                 matChanger(effectController);
             }
         /*    if (totalFreeSpin.rotation.y <= -Math.PI / 4) {
@@ -638,11 +641,11 @@ function animate() {
             } else {
                 effectController.focus += deltaTime * 20;
             }
-            if (effectController.aperture <= 5) {
+           /* if (effectController.aperture <= 5) {
                 effectController.aperture = 5;
             } else {
                 effectController.aperture -= deltaTime * 20;
-            }
+            }*/
             matChanger(effectController);
         }
        /* if (totalFreeSpin.rotation.y >= 0.0) {

@@ -230,6 +230,58 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.materialHoloFreeSpin.uniforms.s_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
     this.materialHoloFreeSpin.uniforms.noise_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHoloFreeSpin = this.materialHoloFreeSpin;
+    ////////////////////////////////////////////
+    this.arrayTexturesSymb = [
+        textureLoader.load("textures/numbers/symb_1.png"),
+        textureLoader.load("textures/numbers/symb_2.png"),
+        textureLoader.load("textures/numbers/symb_3.png"),
+        textureLoader.load("textures/numbers/symb_4.png"),
+        textureLoader.load("textures/numbers/symb_5.png"),
+        textureLoader.load("textures/numbers/symb_6.png"),
+        textureLoader.load("textures/numbers/symb_7.png"),
+        textureLoader.load("textures/numbers/symb_8.png")
+    ];
+    var vertexShader = shaders.vertexShaders.vertexShWideScreenBackground;
+    var fragmentShader = shaders.fragmentShaders.fragmentShWideScreenBackground;
+    this.materialDisplay =	new THREE.ShaderMaterial({
+        defines         : {
+            //   USE_OFF       : false,
+            //   USE_GLITCH    : false,
+            USE_SCANLINE  : true,
+            NUMSYMB       : 8,
+            INDEX_TEXTURE : 3,
+        },
+        uniforms: {
+            colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
+            //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
+            arrayTexture: { value: this.arrayTexturesSymb },
+            f_texture:   { value: textureLoader.load("textures/background/display.png") },
+            s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
+            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            time: { value: 0.0 },
+            timeRotate: { value: 0.0 },
+            rateFactor:   { value: 0.8 },
+            speedFactor:   { value: 0.5 },
+            boolRotate: { value: true },
+            boolHolo: { value: true },
+            boolOffSymb: { value: false },
+            textureIndex: { value: 1.0 },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        // transparent: true,
+        // blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+    for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
+        this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
+    }
+
+    this.materialDisplay.uniforms.f_texture.value.wrapS = this.materialDisplay.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+    this.materialDisplay.uniforms.s_texture.value.wrapS = this.materialDisplay.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+    this.materialDisplay.uniforms.noise_texture.value.wrapS = this.materialDisplay.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
+    var materialDisplay = this.materialDisplay;
     ///////////////////////////////////////////
     var vertexShader = shaders.vertexShaders.vertexShProjector;
     var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
@@ -321,6 +373,16 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.material = materialPanel;
                     //  child.add( cubeCamera );
                     // child.material.color = new THREE.Color("#111013");
+                } else if (child.name == "display" ||
+                    child.name == "display1" ||
+                    child.name == "display2" ||
+                    child.name == "display3" ||
+                    child.name == "display4" ||
+                    child.name == "display5"
+                ) {
+                    child.material = materialDisplay;
+                    //  child.add( cubeCamera );
+                    //child.material.color = new THREE.Color("#ff1400");
                 } else {
                     //child.material = materialCorps;
                     child.material.color = new THREE.Color("#303030");
@@ -630,7 +692,8 @@ MessageFreeSpin.prototype.update = function(time, deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
     this.materialHoloFreeSpin.uniforms.time.value += deltaTime;
-
+    this.materialDisplay.uniforms.time.value = time;
+    this.materialDisplay.uniforms.timeRotate.value = time;
      if ( this.mixers.length > 0 ) {
         for ( var i = 0; i < this.mixers.length; i ++ ) {
             this.mixers[ i ].update( deltaTime );
