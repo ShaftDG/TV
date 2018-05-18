@@ -157,37 +157,28 @@ function TV(textureLoader, align, isMobile)
     var materialPanel = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Metallic.png"),
+        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
         metalness: 0.5,
         roughnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/tv/tvCRT_monitor_Normal.png"),
     });
     var materialHand1 = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#787878"),
         map: textureLoader.load("textures/tv/tvCRT_bracket_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Metallic.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Roughness.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/tv/tvCRT_bracket_Normal.png"),
     });
-    var materialHand2 = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/tv/tv_hand2_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tv_hand2_Metallic.png"),
-        metalness: 0.5,
-        roughnessMap: textureLoader.load("textures/tv/tv_hand2_Roughness.png"),
-        roughness: 0.5,
-        normalMap: textureLoader.load("textures/tv/tv_hand2_Normal.png"),
-    });
     var materialRoot = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a5a5a5"),
+      //  color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/tv/tv_root_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tv_root_Metallic.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/tv/tv_root_Roughness.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/tv/tv_root_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/tv/tv_root_Normal.png"),
     });
     var tvParent = new THREE.Object3D;

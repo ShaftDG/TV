@@ -249,7 +249,7 @@ function init() {
     totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
     totalRound2D.position.y = 45 /*+ 10*/;
     totalRound2D.position.z = 25;
-    totalRound2D.rotation.x = 0.5;
+    totalRound2D.rotation.x = 0.4;
     // totalRound2D.rotation.x = -60 * Math.PI / 180;
   //  totalRound2D.setString(stringIn);
     totalRound2D.setBeginNumber(0);
