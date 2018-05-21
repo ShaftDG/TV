@@ -594,12 +594,17 @@ function animate() {
             if (totalScore2D.rotation.x <= -Math.PI) {
                 totalScore2D.rotation.x = -Math.PI;
             } else {
-                totalScore2D.rotation.x -= deltaTime * 0.5 * speedFactor;
+                totalScore2D.rotation.x -= deltaTime * 1.0 * speedFactor;
             }
-            if (totalScore2D.position.y <= -70) {
+            /*if (totalScore2D.position.y <= -70) {
                 totalScore2D.position.y = -70;
             } else {
                 totalScore2D.position.y -= deltaTime * 30.0*speedFactor;
+            }*/
+            if (totalScore2D.position.z >= 80) {
+                totalScore2D.position.z = 80;
+            } else {
+                totalScore2D.position.z += deltaTime * 30.0*speedFactor;
             }
             sunlight.setPositionTotalScorelight(totalScore2D.position);
             ///////////////////
@@ -609,11 +614,12 @@ function animate() {
                 totalBet.rotation.y += deltaTime * 1.0 * speedFactor;
             }
             ///////////////////
-            if (buttonHoloBet.position.y <= -70) {
+            buttonHoloBet.children[0].children[0].children[0].visible = false;
+           /* if (buttonHoloBet.position.y <= -70) {
                 buttonHoloBet.position.y = -70;
             } else {
                 buttonHoloBet.position.y -= deltaTime * 30.0*speedFactor;
-            }
+            }*/
         }
     } else if (slot.genArraySymb.numFreeSpin <= 0 && !slot.boolFreeSpin) {
         if (slot.position.x >= 0.0) {
@@ -672,12 +678,17 @@ function animate() {
         if (totalScore2D.rotation.x >= -Math.PI/2) {
             totalScore2D.rotation.x = -Math.PI/2;
         } else {
-            totalScore2D.rotation.x += deltaTime * 0.5 * speedFactor;
+            totalScore2D.rotation.x += deltaTime * 1.0 * speedFactor;
         }
-        if (totalScore2D.position.y >= -42) {
+       /* if (totalScore2D.position.y >= -42) {
             totalScore2D.position.y = -42;
         } else {
             totalScore2D.position.y += deltaTime * 30.0*speedFactor;
+        }*/
+        if (totalScore2D.position.z <= 25) {
+            totalScore2D.position.z = 25;
+        } else {
+            totalScore2D.position.z -= deltaTime * 30.0*speedFactor;
         }
         sunlight.setPositionTotalScorelight(totalScore2D.position);
         //////////////////////////
@@ -687,11 +698,12 @@ function animate() {
             totalBet.rotation.y -= deltaTime * 1.0 * speedFactor;
         }
         ///////////////////
-        if (buttonHoloBet.position.y >= -46) {
+        buttonHoloBet.children[0].children[0].children[0].visible = true;
+       /* if (buttonHoloBet.position.y >= -46) {
             buttonHoloBet.position.y = -46;
         } else {
             buttonHoloBet.position.y += deltaTime * 30.0*speedFactor;
-        }
+        }*/
     }
     /* if (slot.getBoolEndAnimation()) {
          boolStartStop = false;

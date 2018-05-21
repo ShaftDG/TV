@@ -157,10 +157,10 @@ function TV(textureLoader, align, isMobile)
     var materialPanel = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Metallic.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/tv/tvCRT_monitor_Normal.png"),
     });
     var materialHand1 = new THREE.MeshStandardMaterial({
@@ -175,7 +175,7 @@ function TV(textureLoader, align, isMobile)
     var materialRoot = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/tv/tv_root_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tv_root_Roughness.png"),
+        metalnessMap: textureLoader.load("textures/tv/tv_root_Metallic.png"),
         metalness: 1.0,
         roughnessMap: textureLoader.load("textures/tv/tv_root_Roughness.png"),
         roughness: 1.0,

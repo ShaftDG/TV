@@ -40,13 +40,26 @@ function SunLight(loadingManager, isMobile) {
         // leftPointlight.position.set( -50, 50, 150 );
         //  this.add( leftPointlight );
     } else {
-        this.buttonStartPointlight = new THREE.PointLight("#8dff94", 1.5, 200, 2);
+        this.buttonStartPointlight = new THREE.PointLight("#4aff5d", 1.5, 200, 2);
         this.buttonStartPointlight.position.set(60, -25, 15);
         this.add(this.buttonStartPointlight);
 
         var roomPointlight = new THREE.PointLight("#fdffd5", 1.5, 200, 2);
         roomPointlight.position.set(-65, 65, -70);
         this.add(roomPointlight);
+        // var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
+        var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
+        var material = new THREE.MeshPhongMaterial({color: new THREE.Color("#fff3e7")});
+        var lamp = new THREE.Mesh(geometry, material);
+        lamp.position.copy(roomPointlight.position);
+        this.add(lamp);
+
+        var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
+        var material = new THREE.MeshPhongMaterial({color: new THREE.Color("#fff3e7")});
+        var lamp = new THREE.Mesh(geometry, material);
+        lamp.position.copy(roomPointlight.position);
+        lamp.position.z += 50;
+        this.add(lamp);
 
         var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.5, 100, 2);
         totalRoundPointlight.position.set(0, 45, 70);
@@ -60,12 +73,7 @@ function SunLight(loadingManager, isMobile) {
         totalBetPointlight.position.set(-65, -23, 10);
         this.add(totalBetPointlight);
 
-      // var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
-        var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
-        var material = new THREE.MeshPhongMaterial({color: new THREE.Color("#fff3e7")});
-        this.ball = new THREE.Mesh(geometry, material);
-        this.ball.position.copy(roomPointlight.position);
-        this.add(this.ball);
+
     }
 
 //Create a helper for the shadow camera (optional)
@@ -78,13 +86,13 @@ SunLight.prototype.constructor = SunLight;
 
 SunLight.prototype.setStopButtonlight = function () {
     if (!this.isMobile) {
-        this.buttonStartPointlight.color = new THREE.Color("#ffa498");
+        this.buttonStartPointlight.color = new THREE.Color("#ff6e58");
     }
 };
 
 SunLight.prototype.setStartButtonlight = function () {
     if (!this.isMobile) {
-        this.buttonStartPointlight.color = new THREE.Color("#8dff94");
+        this.buttonStartPointlight.color = new THREE.Color("#4aff5d");
     }
 };
 
