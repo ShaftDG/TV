@@ -44,24 +44,30 @@ function SunLight(loadingManager, isMobile) {
         this.buttonStartPointlight.position.set(60, -25, 15);
         this.add(this.buttonStartPointlight);
 
-        var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.5, 200, 2);
-        totalRoundPointlight.position.set(0, 45, 25);
+        var roomPointlight = new THREE.PointLight("#fdffd5", 1.5, 200, 2);
+        roomPointlight.position.set(-65, 65, -70);
+        this.add(roomPointlight);
+
+        var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.5, 100, 2);
+        totalRoundPointlight.position.set(0, 45, 70);
         this.add(totalRoundPointlight);
 
         this.totalScorePointlight = new THREE.PointLight("#ff5f58", 1.5, 100, 2);
         this.totalScorePointlight.position.set(0, -42, 70);
         this.add(this.totalScorePointlight);
 
-        var totalBetPointlight = new THREE.PointLight("#f9adff", 1.5, 100, 2);
+        var totalBetPointlight = new THREE.PointLight("#f9adff", 1.5, 50, 2);
         totalBetPointlight.position.set(-65, -23, 10);
         this.add(totalBetPointlight);
 
-        var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
-        var material = new THREE.MeshPhongMaterial({color: new THREE.Color("#ff000f")});
+      // var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
+        var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
+        var material = new THREE.MeshPhongMaterial({color: new THREE.Color("#fff3e7")});
         this.ball = new THREE.Mesh(geometry, material);
-        this.ball.position.copy(totalBetPointlight.position);
+        this.ball.position.copy(roomPointlight.position);
+        this.add(this.ball);
     }
-   // this.add(this.ball);
+
 //Create a helper for the shadow camera (optional)
    /*  var helper = new THREE.CameraHelper( this.dirLight.shadow.camera );
      this.add( helper );*/

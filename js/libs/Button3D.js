@@ -8,12 +8,12 @@ function Button3D(textureLoader, isMobile) {
     this.dt = 0.0;
 
     var materialCorps = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#b8b5b8"),
+       // color: new THREE.Color("#b8b5b8"),
         map: textureLoader.load("textures/button/button_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/button/button_corps_Metallic.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/button/button_corps_Roughness.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/button/button_corps_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/button/button_corps_Normal.png"),
     });
     ///////////////////////////////////////////////////////

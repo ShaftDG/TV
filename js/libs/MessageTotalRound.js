@@ -147,21 +147,21 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
 
 ///////////////////////////////////////////
     var materialCorps = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a5a5a5"),
+      //  color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/holoProj/holoProj_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Metallic.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Roughness.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/holoProj/holoProj_corps_Normal.png"),
     });
     var materialCorpsLinz = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a5a5a5"),
+      //  color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/holoProj/holoProj_corpsLinz_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Metallic.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Roughness.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Normal.png"),
     });
     ///////////////////////////////////////////////////////

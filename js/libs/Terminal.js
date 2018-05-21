@@ -6,12 +6,12 @@ function Terminal(textureLoader, isMobile) {
     this.mixers = [];
 
     var materialTerminal = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#858385"),
+      //  color: new THREE.Color("#858385"),
         map: textureLoader.load("textures/terminal/terminal_terminal_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/terminal/terminal_terminal_Metallic.png"),
-        metalness: 0.5,
+        metalnessMap: textureLoader.load("textures/terminal/terminal_terminal_Roughness.png"),
+        metalness: 1.0,
         roughnessMap: textureLoader.load("textures/terminal/terminal_terminal_Roughness.png"),
-        roughness: 0.5,
+        roughness: 1.0,
         normalMap: textureLoader.load("textures/terminal/terminal_terminal_Normal.png"),
     });
     ///////////////////////////////////////////////////////

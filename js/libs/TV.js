@@ -155,16 +155,16 @@ function TV(textureLoader, align, isMobile)
     this.materialDisplay.uniforms.noise_texture.value.wrapS = this.materialDisplay.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
     var materialDisplay = this.materialDisplay;
     var materialPanel = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a5a5a5"),
+      //  color: new THREE.Color("#a5a5a5"),
         map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
         metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
         metalness: 0.5,
         roughnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
-        roughness: 1.0,
+        roughness: 0.5,
         normalMap: textureLoader.load("textures/tv/tvCRT_monitor_Normal.png"),
     });
     var materialHand1 = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#787878"),
+     //   color: new THREE.Color("#787878"),
         map: textureLoader.load("textures/tv/tvCRT_bracket_BaseColor.png"),
         metalnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Roughness.png"),
         metalness: 1.0,
