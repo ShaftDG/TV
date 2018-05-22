@@ -111,7 +111,7 @@ FlameBonfire.prototype.switchOff = function () {
     this.tonguesOfFireParticles.switchOff();
     this.originFireParticles.switchOff();
 
-    this.explodeParticles.stop();
+   // this.explodeParticles.stop();
 };
 
 FlameBonfire.prototype.updateWithTime = function (time, deltaTime ) {
