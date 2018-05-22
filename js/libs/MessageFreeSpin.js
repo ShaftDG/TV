@@ -1,4 +1,4 @@
-function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
+function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber, isMobile) {
     THREE.Object3D.apply(this);
 
     this.name = "MessageFreeSpin";
@@ -10,7 +10,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
 
     this.col = col;
     this.row = row;
-
+    this.isMobile = isMobile;
     this.mixers = [];
 
     this.withoutSwitchNumber = false;
@@ -186,127 +186,186 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     var materialPanel = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#a0a0a0"),
         map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Metallic.png"),
+        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
         metalness: 1.0,
         roughnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
         roughness: 1.0,
         normalMap: textureLoader.load("textures/tv/tvCRT_monitor_Normal.png"),
     });
-/*ceiling
-  left_right_walls
-      column
-       diagonal
-       back_wall1
-      back_wall2
-       floor*/
-    var materialCeiling = new THREE.MeshStandardMaterial({
-      //  color: new THREE.Color("#dddddd"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Metallic.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialSideWalls = new THREE.MeshStandardMaterial({
-        //  color: new THREE.Color("#dddddd"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Roughness.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialColumn = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#7c7c7c"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_column_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Metallic.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialDiagonal = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#7c7c7c"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Metallic.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialBackWall1 = new THREE.MeshStandardMaterial({
-        //  color: new THREE.Color("#dddddd"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Roughness.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialBackWall2 = new THREE.MeshStandardMaterial({
-        //  color: new THREE.Color("#dddddd"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Roughness.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialFloor = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#616161"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Metallic.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialTubes = new THREE.MeshStandardMaterial({
-        //  color: new THREE.Color("#dddddd"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Roughness.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
-    var materialTable = new THREE.MeshStandardMaterial({
-        //  color: new THREE.Color("#dddddd"),
-        //  refractionRatio: 0.05,
-        // envMap: cubeCamera.renderTarget.texture,
-        metalness: 1.0,
-        roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_table_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Metallic.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Normal.png"),
-        //  side: THREE.DoubleSide
-    });
+    if (this.isMobile) {
+        var materialMobileBackGround = new THREE.MeshPhongMaterial({
+            map: textureLoader.load("textures/background/holoProjFreeSpinMobile.png"),
+            shininess: 0
+        });
+    } else {
+        /*ceiling
+          left_right_walls
+              column
+               diagonal
+               back_wall1
+              back_wall2
+               floor*/
+        var materialCeiling = new THREE.MeshStandardMaterial({
+            color: new THREE.Color("#505050"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialSideWalls = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Roughness.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialColumn = new THREE.MeshStandardMaterial({
+            color: new THREE.Color("#9c9c9c"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_column_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Roughness.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialDiagonal = new THREE.MeshStandardMaterial({
+            color: new THREE.Color("#7c7c7c"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialBackWall1 = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Roughness.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialBackWall2 = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Roughness.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialFloor = new THREE.MeshStandardMaterial({
+            color: new THREE.Color("#616161"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialTubes = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Roughness.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        var materialTable = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 0.5,
+            map: textureLoader.load("textures/freespin/holoProjFreeSpin_table_BaseColor.png"),
+            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Normal.png"),
+            //  side: THREE.DoubleSide
+        });
+        ////////////////////////////////////////////
+        this.arrayTexturesSymb = [
+            textureLoader.load("textures/numbers/symb_1.png"),
+            textureLoader.load("textures/numbers/symb_2.png"),
+            textureLoader.load("textures/numbers/symb_3.png"),
+            textureLoader.load("textures/numbers/symb_4.png"),
+            textureLoader.load("textures/numbers/symb_5.png"),
+            textureLoader.load("textures/numbers/symb_6.png"),
+            textureLoader.load("textures/numbers/symb_7.png"),
+            textureLoader.load("textures/numbers/symb_8.png")
+        ];
+        var vertexShader = shaders.vertexShaders.vertexShWideScreenBackground;
+        var fragmentShader = shaders.fragmentShaders.fragmentShWideScreenBackground;
+        this.materialDisplay =	new THREE.ShaderMaterial({
+            defines         : {
+                //   USE_OFF       : false,
+                //   USE_GLITCH    : false,
+                USE_SCANLINE  : true,
+                NUMSYMB       : 8,
+                INDEX_TEXTURE : 3,
+            },
+            uniforms: {
+                colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
+                //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
+                arrayTexture: { value: this.arrayTexturesSymb },
+                f_texture:   { value: textureLoader.load("textures/background/display.png") },
+                s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
+                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                time: { value: 0.0 },
+                timeRotate: { value: 0.0 },
+                rateFactor:   { value: 0.8 },
+                speedFactor:   { value: 0.5 },
+                boolRotate: { value: true },
+                boolHolo: { value: true },
+                boolOffSymb: { value: false },
+                textureIndex: { value: 1.0 },
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            // transparent: true,
+            // blending:       THREE.AdditiveBlending,
+            //depthTest:      false,
+            //depthWrite:      false,
+        } );
+        for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
+            this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
+        }
+
+        this.materialDisplay.uniforms.f_texture.value.wrapS = this.materialDisplay.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+        this.materialDisplay.uniforms.s_texture.value.wrapS = this.materialDisplay.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+        this.materialDisplay.uniforms.noise_texture.value.wrapS = this.materialDisplay.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
+        var materialDisplay = this.materialDisplay;
+    }
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
     var  fragmentShader = shaders.fragmentShaders.fragmentShHologram;
@@ -369,58 +428,6 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.materialHoloFreeSpin.uniforms.s_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
     this.materialHoloFreeSpin.uniforms.noise_texture.value.wrapS =  this.materialHoloFreeSpin.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHoloFreeSpin = this.materialHoloFreeSpin;
-    ////////////////////////////////////////////
-    this.arrayTexturesSymb = [
-        textureLoader.load("textures/numbers/symb_1.png"),
-        textureLoader.load("textures/numbers/symb_2.png"),
-        textureLoader.load("textures/numbers/symb_3.png"),
-        textureLoader.load("textures/numbers/symb_4.png"),
-        textureLoader.load("textures/numbers/symb_5.png"),
-        textureLoader.load("textures/numbers/symb_6.png"),
-        textureLoader.load("textures/numbers/symb_7.png"),
-        textureLoader.load("textures/numbers/symb_8.png")
-    ];
-    var vertexShader = shaders.vertexShaders.vertexShWideScreenBackground;
-    var fragmentShader = shaders.fragmentShaders.fragmentShWideScreenBackground;
-    this.materialDisplay =	new THREE.ShaderMaterial({
-        defines         : {
-            //   USE_OFF       : false,
-            //   USE_GLITCH    : false,
-            USE_SCANLINE  : true,
-            NUMSYMB       : 8,
-            INDEX_TEXTURE : 3,
-        },
-        uniforms: {
-            colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
-            //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
-            arrayTexture: { value: this.arrayTexturesSymb },
-            f_texture:   { value: textureLoader.load("textures/background/display.png") },
-            s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
-            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            time: { value: 0.0 },
-            timeRotate: { value: 0.0 },
-            rateFactor:   { value: 0.8 },
-            speedFactor:   { value: 0.5 },
-            boolRotate: { value: true },
-            boolHolo: { value: true },
-            boolOffSymb: { value: false },
-            textureIndex: { value: 1.0 },
-        },
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        // transparent: true,
-        // blending:       THREE.AdditiveBlending,
-        //depthTest:      false,
-        //depthWrite:      false,
-    } );
-    for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
-        this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
-    }
-
-    this.materialDisplay.uniforms.f_texture.value.wrapS = this.materialDisplay.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
-    this.materialDisplay.uniforms.s_texture.value.wrapS = this.materialDisplay.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
-    this.materialDisplay.uniforms.noise_texture.value.wrapS = this.materialDisplay.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
-    var materialDisplay = this.materialDisplay;
     ///////////////////////////////////////////
     var vertexShader = shaders.vertexShaders.vertexShProjector;
     var fragmentShader = shaders.fragmentShaders.fragmentShProjector;
@@ -441,7 +448,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         //depthWrite:      false,
     } );
     var material = this.material;
-    var OBJobject = "holoProjFreeSpin.fbx";
+    var OBJobject = "";
+    if (this.isMobile) {
+        OBJobject = "holoProjFreeSpinMobile.fbx";
+    } else {
+        OBJobject = "holoProjFreeSpin.fbx";
+    }
     var holoParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
     loaderOBJ.load("obj/" + OBJobject, function (object) {
@@ -449,39 +461,27 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             if (child.isMesh) {
                 if (child.name == "corps") {
                     child.material = materialCorps;
-                    //child.material.color = new THREE.Color("#111d5c");
-                  //  child.children[0].material = material;
                 } else if (child.name == "linz") {
                     child.material = materialHolo;
-               //     child.visible = false;
-                    //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "disc") {
                     child.material = materialHoloFreeSpin;
-                 //   child.visible = false;
-                    //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "disc_light") {
                     child.material = material;
-                  //  child.visible = false;
-                    //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "disc_inner") {
                     child.material = material;
-                    //child.material.color = new THREE.Color("#ff0100");
                 } else if (child.name == "root_hand") {
                     child.material = materialRootHand;
-                    //child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "hand1") {
                     child.material = materialHand1;
-                    //child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "hand2") {
                     child.material = materialHand2;
-                  //  child.add( cubeCamera );
-                   // child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "hole_wall") {
                     child.material = materialHole;
-                   // child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "rotator") {
                     //child.material = material;
                     child.material.color = new THREE.Color("#111013");
+                } else if (child.name == "plane_mobile") {
+                    child.material = materialMobileBackGround;
                 } else if (child.name == "ceiling") {
                     child.material = materialCeiling;
                 } else if (child.name == "side_walls") {
@@ -500,6 +500,8 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.material = materialTubes;
                 } else if (child.name == "table") {
                     child.material = materialTable;
+                } else if (child.name == "cable") {
+                    child.material = materialTable;
                 } else if ( child.name == "disc0" ||
                             child.name == "disc1" ||
                             child.name == "disc2" ||
@@ -509,7 +511,6 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                             child.name == "disc6" ||
                             child.name == "disc7" ) {
                     child.material = materialDisc;
-                    //child.material.color = new THREE.Color("#2e2e2e");
                 } else if (child.name == "monitor" ||
                     child.name == "monitor1" ||
                     child.name == "monitor2" ||
@@ -518,8 +519,6 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.name == "monitor5"
                           ) {
                     child.material = materialPanel;
-                    //  child.add( cubeCamera );
-                    // child.material.color = new THREE.Color("#111013");
                 } else if (child.name == "display" ||
                     child.name == "display1" ||
                     child.name == "display2" ||
@@ -528,27 +527,16 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.name == "display5"
                 ) {
                     child.material = materialDisplay;
-                    //  child.add( cubeCamera );
-                    //child.material.color = new THREE.Color("#ff1400");
                 } else {
-                    //child.material = materialCorps;
                     child.material.color = new THREE.Color("#303030");
                 }
-                /*    mesh.castShadow = true;
-                    //mesh.receiveShadow = true;
-                    var distanceMaterial = new THREE.MeshDistanceMaterial( {
-                        alphaMap: material.alphaMap,
-                        alphaTest: material.alphaTest
-                    } );
-                    mesh.customDistanceMaterial = distanceMaterial;*/
-                // console.log(object);
+                    child.castShadow = true;
+                    child.receiveShadow = true;
                 holoParent.add(object);
             }
         });
     });
-   // holoParent.scale.set(0.0125, 0.0125, 0.0125);
     holoParent.rotation.y = Math.PI;
-  //  holoParent.position.z = -3.75;
     this.holoParent = holoParent;
     this.add(holoParent);
 }
@@ -717,6 +705,8 @@ MessageFreeSpin.prototype.setBeginNumber = function(number) {
 MessageFreeSpin.prototype.setString = function(number) {
     if (number > -1) {
         this.start();
+      //  this.stopAnimation();
+        this.startAnimation();
         var stringIn = number.toString();
         if (stringIn.length > this.groupNumbers.children.length) {
             var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
@@ -839,8 +829,10 @@ MessageFreeSpin.prototype.update = function(time, deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
     this.materialHoloFreeSpin.uniforms.time.value += deltaTime;
-    this.materialDisplay.uniforms.time.value = time;
-    this.materialDisplay.uniforms.timeRotate.value = time;
+    if (!this.isMobile) {
+        this.materialDisplay.uniforms.time.value = time;
+        this.materialDisplay.uniforms.timeRotate.value = time;
+    }
      if ( this.mixers.length > 0 ) {
         for ( var i = 0; i < this.mixers.length; i ++ ) {
             this.mixers[ i ].update( deltaTime );

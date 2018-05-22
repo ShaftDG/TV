@@ -79,6 +79,7 @@ shaders.load( 'fragmentShaderLoader' , 'fragmentShLoader' , 'fragment' );
 
 function init() {
     isMobile = new DetectedMobile().getIsMobile();
+   // isMobile = true;
 
     loadingScreen = {
         scene: new THREE.Scene(),
@@ -153,7 +154,7 @@ function init() {
     sunlight = new SunLight(loadingManager, isMobile);
     scene.add(sunlight);
 ////////////////////////////////////////////
-    slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, false);
+    slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, isMobile);
     slot.position.y = 11.0;
     // slot.scale.set(2.1, 2.1, 2.1);
     scene.add(slot);
@@ -307,7 +308,7 @@ function init() {
     stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalFreeSpin = new MessageFreeSpin(-3.5, 0, 85, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01);
+    totalFreeSpin = new MessageFreeSpin(-3.5, 0, 85, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
     totalFreeSpin.position.y = 12 /*+ 10*/;
     totalFreeSpin.position.x = 70;
     totalFreeSpin.position.z = -45;

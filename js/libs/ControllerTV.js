@@ -94,40 +94,75 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
         cylinder.position.x =(0 - length / 2) + this.widthTV/2 + this.widthTV * i + this.distanceBetweenTV * i;
         this.add(cylinder);
     }*/
-
+if (isMobile) {
     var optionsTonguesOfFire = {
-        xCoord:                 0,
-        yCoord:                 0,
-        zCoord:                 0,
-        totalParticles:         20,
-        scaleSizeParticles:     95,
-        distortFlame:           1.8,
-        distortAlpha:           1.4,
-        beginRadius:            0.2,
-        endRadius:              10.0,
-        combustion:             0.1,
-        movementSpeed:          4.0,
-        pulseFactor:            1.0,
-        boolBlending:           true,
-        flameSpeed:             2.0
+        xCoord: 0,
+        yCoord: 0,
+        zCoord: 0,
+        totalParticles: 5,
+        scaleSizeParticles: 60,
+        distortFlame: 1.8,
+        distortAlpha: 1.4,
+        beginRadius: 0.2,
+        endRadius: 10.0,
+        combustion: 0.1,
+        movementSpeed: 4.0,
+        pulseFactor: 1.0,
+        boolBlending: true,
+        flameSpeed: 2.0
     };
 
     var optionsOriginFire = {
-        xCoord:                 0,
-        yCoord:                 0,
-        zCoord:                 0,
-        totalParticles:         5,
-        scaleSizeParticles:     140,
-        distortFlame:           1.4,
-        distortAlpha:           1.4,
-        beginRadius:            0.2,
-        endRadius:              100.0,
-        combustion:             0.013,
-        movementSpeed:          0.0,
-        pulseFactor:            0.0,
-        boolBlending:           true,
-        flameSpeed:             2.0
+        xCoord: 0,
+        yCoord: 0,
+        zCoord: 0,
+        totalParticles: 1,
+        scaleSizeParticles: 100,
+        distortFlame: 1.4,
+        distortAlpha: 1.4,
+        beginRadius: 0.2,
+        endRadius: 100.0,
+        combustion: 0.013,
+        movementSpeed: 0.0,
+        pulseFactor: 0.0,
+        boolBlending: true,
+        flameSpeed: 2.0
     };
+} else {
+    var optionsTonguesOfFire = {
+        xCoord: 0,
+        yCoord: 0,
+        zCoord: 0,
+        totalParticles: 20,
+        scaleSizeParticles: 95,
+        distortFlame: 1.8,
+        distortAlpha: 1.4,
+        beginRadius: 0.2,
+        endRadius: 10.0,
+        combustion: 0.1,
+        movementSpeed: 4.0,
+        pulseFactor: 1.0,
+        boolBlending: true,
+        flameSpeed: 2.0
+    };
+
+    var optionsOriginFire = {
+        xCoord: 0,
+        yCoord: 0,
+        zCoord: 0,
+        totalParticles: 5,
+        scaleSizeParticles: 140,
+        distortFlame: 1.4,
+        distortAlpha: 1.4,
+        beginRadius: 0.2,
+        endRadius: 100.0,
+        combustion: 0.013,
+        movementSpeed: 0.0,
+        pulseFactor: 0.0,
+        boolBlending: true,
+        flameSpeed: 2.0
+    };
+}
     var optionsOriginFireParticles = {
         xCoord:              optionsOriginFire.xCoord,
         yCoord:              optionsOriginFire.yCoord,
@@ -633,6 +668,7 @@ ControllerTV.prototype.setBeginSettings = function() {
     }*/
     for (var i = 0; i < this.numLineTV; i++) {
         this.particlesArray[i].scaled = false;
+        this.particlesArray[i].switchOff();
     }
 };
 
@@ -1622,9 +1658,9 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                     this.switchNumFreeSpinPlus = true;
                     // this.particlesArray[i].scaled = false;
                 } else {
-                    this.particlesArray[i].position.x -= d.x * 2.5;
-                    this.particlesArray[i].position.y -= d.y * 2.5;
-                    this.particlesArray[i].position.z -= d.z * 2.5;
+                    this.particlesArray[i].position.x -= d.x * 200.0 * deltaTime;
+                    this.particlesArray[i].position.y -= d.y * 200.0 * deltaTime;
+                    this.particlesArray[i].position.z -= d.z * 200.0 * deltaTime;
                 }
             }
             if (!this.particlesArray[i].children[2].visible) {

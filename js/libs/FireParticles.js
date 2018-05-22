@@ -329,3 +329,17 @@ FireParticles.prototype.stop = function()
   //  this.particleSystem.visible = false;
   //  this.material.uniforms['started'].value = 0;
 };
+
+FireParticles.prototype.switchOff = function()
+{
+    this.boolEnd = true;
+     var pos = this.geometry.attributes.position.array;
+     for (var i = 0, i3 = 0; i < this.totalParticles; i++, i3 += 3) {
+             pos[i3 + 0] = this.posBegin[i3 + 0];
+             pos[i3 + 1] = this.posBegin[i3 + 1];
+             pos[i3 + 2] = this.posBegin[i3 + 2];
+     }
+     this.geometry.attributes.position.needsUpdate = true;
+    this.particleSystem.visible = false;
+    this.material.uniforms['started'].value = 0;
+};

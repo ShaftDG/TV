@@ -106,6 +106,14 @@ FlameBonfire.prototype.start = function () {
     this.ball.visible = true;
 };
 
+FlameBonfire.prototype.switchOff = function () {
+    this.ball.visible = false;
+    this.tonguesOfFireParticles.switchOff();
+    this.originFireParticles.switchOff();
+
+    this.explodeParticles.stop();
+};
+
 FlameBonfire.prototype.updateWithTime = function (time, deltaTime ) {
     this.materialHolo.uniforms.time.value = deltaTime;
     this.tonguesOfFireParticles.updateParticles( deltaTime );
