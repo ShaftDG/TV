@@ -43,6 +43,10 @@ function SunLight(loadingManager, isMobile) {
         // leftPointlight.position.set( -50, 50, 150 );
         //  this.add( leftPointlight );
     } else {
+        var roomPointlight = new THREE.PointLight("#fdffd5", 2.0, 300, 2);
+        roomPointlight.position.set(0, 0, 150);
+        this.add(roomPointlight);
+
         this.buttonStartPointlight = new THREE.PointLight("#4aff5d", 1.0, 100, 2);
         this.buttonStartPointlight.castShadow = true;
         this.buttonStartPointlight.shadow.camera.near = 1;

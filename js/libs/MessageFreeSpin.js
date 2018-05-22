@@ -184,7 +184,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         //  side: THREE.DoubleSide
     });
     var materialPanel = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#a0a0a0"),
+        color: new THREE.Color("#4b4b4b"),
         map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
         metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
         metalness: 1.0,

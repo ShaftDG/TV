@@ -166,7 +166,7 @@ function TV(textureLoader, align, isMobile)
     var materialHand1 = new THREE.MeshStandardMaterial({
      //   color: new THREE.Color("#787878"),
         map: textureLoader.load("textures/tv/tvCRT_bracket_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Roughness.png"),
+        metalnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Metallic.png"),
         metalness: 1.0,
         roughnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Roughness.png"),
         roughness: 1.0,
