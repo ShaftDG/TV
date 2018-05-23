@@ -17,6 +17,7 @@ uniform int textureIndex;
 uniform bool boolRotate;
 uniform bool boolHolo;
 uniform bool boolOffSymb;
+uniform bool boolFlow;
 
 varying vec2 vUv;
 
@@ -120,7 +121,13 @@ vec4 getSampleFromArray(sampler2D arrayTexture[NUMSYMB], int ndx, vec2 uv) {
          c = vec3(0.0);
       }
 
-      vec4 newcolor = texture2D(f_texture, vec2(uv.x, uv.y - time)  );
+      float t = 0.0;
+      if (boolFlow) {
+        t = -time * speedFactor;
+      } else {
+        t = floor(time* speedFactor*10.0)*0.05;
+      }
+      vec4 newcolor = texture2D( f_texture, vec2(uv.x, uv.y + t) );
 
       float incrustation = chromaKey(c);
       c = max(mix(c, vec3(0.0), incrustation)*1.2, newcolor.rgb*0.8);

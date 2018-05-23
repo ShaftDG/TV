@@ -3,14 +3,14 @@ function SunLight(loadingManager, isMobile) {
     this.name = "SunLight";
 
     //Ambient light
-    this.ambient = new THREE.AmbientLight( "#9fb5b6" , 1.0 );
+    this.ambient = new THREE.AmbientLight( "#b2b6a9" );
     this.add( this.ambient );
     //Hemisphere light
-    var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.5 );
+   /* var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1.0 );
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
     hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
     hemiLight.position.set( 0, 50, 50 );
-    this.add( hemiLight );
+    this.add( hemiLight );*/
     //Directional light
     this.isMobile = isMobile;
     if (this.isMobile) {
@@ -64,9 +64,10 @@ function SunLight(loadingManager, isMobile) {
         this.add(roomPointlight);
         // var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
         var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
-        var material = new THREE.MeshPhongMaterial({
-            color: new THREE.Color("#fff3e7"),
-            emissive: 100
+        var material = new THREE.MeshLambertMaterial({
+          //  color: new THREE.Color("#fff3e7"),
+            emissive: new THREE.Color("#fff3e7"),
+            emissiveIntensity: 1,
         });
         var lamp = new THREE.Mesh(geometry, material);
         lamp.position.copy(roomPointlight.position);
@@ -74,9 +75,10 @@ function SunLight(loadingManager, isMobile) {
         this.add(lamp);
 
         var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
-        var material = new THREE.MeshPhongMaterial({
-            color: new THREE.Color("#fff3e7"),
-            emissive: 100
+        var material = new THREE.MeshLambertMaterial({
+          //  color: new THREE.Color("#fff3e7"),
+            emissive: new THREE.Color("#fff3e7"),
+            emissiveIntensity: 1,
         });
         var lamp = new THREE.Mesh(geometry, material);
         lamp.position.copy(roomPointlight.position);

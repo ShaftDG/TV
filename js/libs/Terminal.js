@@ -7,12 +7,14 @@ function Terminal(textureLoader, isMobile) {
 
     var materialTerminal = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#858385"),
-        map: textureLoader.load("textures/terminal/terminal_terminal_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/terminal/terminal_terminal_Roughness.png"),
+        map: textureLoader.load("textures/terminal/terminal_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/terminal/terminal_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/terminal/terminal_terminal_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/terminal/terminal_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/terminal/terminal_terminal_Normal.png"),
+        normalMap: textureLoader.load("textures/terminal/terminal_Normal.png"),
+        bumpMap: textureLoader.load("textures/terminal/terminal_Height.png"),
+        aoMap: textureLoader.load("textures/terminal/terminal_Mixed_AO.png")
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;

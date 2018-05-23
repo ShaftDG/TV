@@ -109,22 +109,26 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
 
 ///////////////////////////////////////////
     var materialCorps = new THREE.MeshStandardMaterial({
-      //  color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/holoProj/holoProj_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Roughness.png"),
+        //  color: new THREE.Color("#a5a5a5"),
+        map: textureLoader.load("textures/holoProj/corps_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/holoProj/corps_Height.png"),
+        metalnessMap: textureLoader.load("textures/holoProj/corps_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/holoProj/holoProj_corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/holoProj/corps_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/holoProj/holoProj_corps_Normal.png"),
+        normalMap: textureLoader.load("textures/holoProj/corps_Normal.png"),
+        // aoMap: textureLoader.load("textures/holoProj/corps_Mixed_AO.png"),
     });
     var materialCorpsLinz = new THREE.MeshStandardMaterial({
-       // color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/holoProj/holoProj_corpsLinz_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Roughness.png"),
+        //  color: new THREE.Color("#a5a5a5"),
+        map: textureLoader.load("textures/holoProj/corpsLinz_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/holoProj/corpsLinz_Height.png"),
+        metalnessMap: textureLoader.load("textures/holoProj/corpsLinz_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/holoProj/corpsLinz_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/holoProj/holoProj_corpsLinz_Normal.png"),
+        normalMap: textureLoader.load("textures/holoProj/corpsLinz_Normal.png"),
+        aoMap: textureLoader.load("textures/holoProj/corpsLinz_Mixed_AO.png"),
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -173,7 +177,7 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
                     //   child.material.color = new THREE.Color("#027500");
                 } else if (child.name == "corpsLinz") {
                     child.material = materialCorpsLinz;
-                    child.material.color = new THREE.Color("#377075");
+                 //   child.material.color = new THREE.Color("#377075");
                 } else {
                     child.material.color = new THREE.Color("#ff0100");
                 }

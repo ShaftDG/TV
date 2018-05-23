@@ -149,7 +149,7 @@ function init() {
     scene.add(cameraParent);
 ////////////////////////////////////////////
     // CUBE CAMERA
-    //cubeCamera = new THREE.CubeCamera( 1, 10000, 128 );
+   // cubeCamera = new THREE.CubeCamera( 1, 10000, 128 );
 ////////////////////////////////////////////
     sunlight = new SunLight(loadingManager, isMobile);
     scene.add(sunlight);
@@ -308,7 +308,7 @@ function init() {
     stringPattern = "0123456789";
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalFreeSpin = new MessageFreeSpin(-3.5, 0, 85, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
+    totalFreeSpin = new MessageFreeSpin(-4.0, 0, 87, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
     totalFreeSpin.position.y = 12 /*+ 10*/;
     totalFreeSpin.position.x = 70;
     totalFreeSpin.position.z = -45;
@@ -351,7 +351,7 @@ function init() {
         renderer.autoClear = false;
         effectController = {
             focus: 140.0,
-            aperture: 5,
+            aperture: 1,
             maxblur: 1.0
         };
         matChanger = function (effectController) {
@@ -788,15 +788,15 @@ function animate() {
 }
 
 function render() {
-    // render cube map
-  //  totalFreeSpin.visible = false;
-  //  cubeCamera.update( renderer, scene );
- //   totalFreeSpin.visible = true;
-    if (!isMobile) {
-        postprocessing.composer.render(0.1);
-    } else {
+   // if (!isMobile) {
+        // render cube map
+      //  slot.visible = false;
+      //  cubeCamera.update( renderer, scene );
+      //  slot.visible = true;
+     //   postprocessing.composer.render(0.1);
+  //  } else {
         renderer.render( scene, camera );
-    }
+   // }
 }
 
 function onKeyDown ( event ) {

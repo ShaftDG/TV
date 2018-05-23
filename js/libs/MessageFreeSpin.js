@@ -44,119 +44,58 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
 
     this.distanceBetweenCharacters = distanceBetweenCharacters;
 
-    var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
-    var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
-
-    for (var j = 0; j < this.arrayNumbers.length; j++ ) {
-        var uv = new Float32Array( 8 );
-        for (var i = 0; i < uv.length; i++) {
-            uv[i] = this.arraySymb[ this.arrayNumbers[j] ] [i];
-        }
-        var geometry = new THREE.PlaneBufferGeometry(this.widthCharacter, this.heightCharacter);
-        //   geometry.rotateX(Math.PI / 2.0);
-        geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
-        geometry.attributes.uv.needsUpdate = true;
-
-        var materialHolo =	new THREE.ShaderMaterial({
-            defines         : {
-                USE_HOLO      : true,
-                USE_OFF_SYMB  : false,
-                USE_SCANLINE  : true
-            },
-            uniforms: {
-                color: { value : new THREE.Vector3(4, 3, 2) },
-                s_texture:   { value: textureLoader.load("textures/background/display.png") },
-                f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
-                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-                time: { value: 0.0 },
-                rateFactor:   { value: 1.0 },
-                boolGlitch:  { value: false },
-            },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-            transparent: true,
-            blending:       THREE.AdditiveBlending,
-            side: THREE.DoubleSide,
-            //depthTest:      false,
-            //depthWrite:      false,
-        } );
-
-        materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
-        materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
-        materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
-
-        /*  var material = new THREE.MeshBasicMaterial({
-              color: "#f9eba0",
-              map: textureLoader.load('textures/winplane/numbers1.png'),
-              //normalMap: textureLoader.load('textures/winplane/numbers1_normal.jpg'),
-              //normalScale: new THREE.Vector2(0.4, 0.4),
-             // emissive: "#0e0b0b",
-             // specular: "#14160f",
-            //  shininess: 30
-             // transparent: true,
-            //  blending:       THREE.AdditiveBlending,
-           //   depthWrite:      false,
-             // depthTest:       false,
-             // alphaTest: 0.5
-          });
-         // if (!isMobile) {
-           //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
-            //  material.normalScale = new THREE.Vector2(0.4, 0.4);
-        //  }*/
-        var mesh = new THREE.Mesh(geometry, materialHolo);
-        //mesh.visible = false;
-        mesh.name = "meshPlane";
-        this.groupNumbers.add(mesh);
-    }
-    //this.groupNumbers.position.z = 123;
-
-    this.add( this.groupNumbers );
-    this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
-
 ///////////////////////////////////////////
     var materialCorps = new THREE.MeshStandardMaterial({
     //    color: new THREE.Color("#a5a5a5"),
       //  refractionRatio: 0.5,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_Metallic.png"),
+        map: textureLoader.load("textures/freespin/corps_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/corps_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/freespin/corps_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_corps_Normal.png"),
+        normalMap: textureLoader.load("textures/freespin/corps_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/corps_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/corps_Mixed_AO.png"),
         side: THREE.DoubleSide
     });
     var materialRootHand = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#7a7a7a"),
         //  refractionRatio: 0.5,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_Metallic.png"),
+        map: textureLoader.load("textures/freespin/root_hand_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/root_hand_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/freespin/root_hand_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_Normal.png"),
+        normalMap: textureLoader.load("textures/freespin/root_hand_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/root_hand_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/root_hand_Mixed_AO.png"),
         //  side: THREE.DoubleSide
     });
     var materialHand1 = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#7a7a7a"),
       //  refractionRatio: 0.5,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_Metallic.png"),
+        map: textureLoader.load("textures/freespin/hand1_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/hand1_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/freespin/hand1_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand1_Normal.png"),
+        normalMap: textureLoader.load("textures/freespin/hand1_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/hand1_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/hand1_Mixed_AO.png"),
       //  side: THREE.DoubleSide
     });
     var materialHand2 = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#7a7a7a"),
       //  refractionRatio: 0.05,
        // envMap: cubeCamera.renderTarget.texture,
+        map: textureLoader.load("textures/freespin/hand2_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/hand2_Metallic.png"),
         metalness: 1.0,
+        roughnessMap: textureLoader.load("textures/freespin/hand2_Roughness.png"),
         roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_hand2_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand2_Metallic.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand2_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hand2_Normal.png"),
+        normalMap: textureLoader.load("textures/freespin/hand2_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/hand2_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/hand2_Mixed_AO.png"),
       //  side: THREE.DoubleSide
     });
     var materialDisc = new THREE.MeshStandardMaterial({
@@ -165,10 +104,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         // envMap: cubeCamera.renderTarget.texture,
         metalness: 1.0,
         roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_disc_1_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_disc_1_Roughness.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_disc_1_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_disc_1_Normal.png"),
+        map: textureLoader.load("textures/freespin/disc_1_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/disc_1_Metallic.png"),
+        roughnessMap: textureLoader.load("textures/freespin/disc_1_Roughness.png"),
+        normalMap: textureLoader.load("textures/freespin/disc_1_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/disc_1_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/disc_1_Mixed_AO.png"),
         //  side: THREE.DoubleSide
     });
     var materialHole = new THREE.MeshStandardMaterial({
@@ -177,21 +118,71 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         // envMap: cubeCamera.renderTarget.texture,
         metalness: 1.0,
         roughness: 1.0,
-        map: textureLoader.load("textures/freespin/holoProjFreeSpin_hole_wall_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hole_wall_Roughness.png"),
-        roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hole_wall_Roughness.png"),
-        normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_hole_wall_Normal.png"),
+        map: textureLoader.load("textures/freespin/hole_wall_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/hole_wall_Metallic.png"),
+        roughnessMap: textureLoader.load("textures/freespin/hole_wall_Roughness.png"),
+        normalMap: textureLoader.load("textures/freespin/hole_wall_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/hole_wall_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/hole_wall_Mixed_AO.png"),
+        //  side: THREE.DoubleSide
+    });
+    var materialConsole = new THREE.MeshStandardMaterial({
+        //color: new THREE.Color("#707070"),
+        //  refractionRatio: 0.05,
+        // envMap: cubeCamera.renderTarget.texture,
+        metalness: 1.0,
+        roughness: 1.0,
+        map: textureLoader.load("textures/freespin/panel_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/freespin/panel_Metallic.png"),
+        roughnessMap: textureLoader.load("textures/freespin/panel_Roughness.png"),
+        normalMap: textureLoader.load("textures/freespin/panel_Normal.png"),
+        bumpMap: textureLoader.load("textures/freespin/panel_Height.png"),
+        aoMap: textureLoader.load("textures/freespin/panel_Mixed_AO.png"),
         //  side: THREE.DoubleSide
     });
     var materialPanel = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#4b4b4b"),
-        map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
+        //  color: new THREE.Color("#a5a5a5"),
+        map: textureLoader.load("textures/tv/monitor_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/tv/monitor_Height.png"),
+        metalnessMap: textureLoader.load("textures/tv/monitor_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/tv/monitor_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/tv/tvCRT_monitor_Normal.png"),
+        normalMap: textureLoader.load("textures/tv/monitor_Normal.png"),
+        aoMap: textureLoader.load("textures/tv/monitor_Mixed_AO.png")
     });
+    ///////////////////////////////////////////////////////
+    var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
+    var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
+    this.materialHoloHole =	new THREE.ShaderMaterial({
+        defines         : {
+            USE_GLITCH    : true,
+            USE_HOLO      : true,
+            USE_OFF_SYMB  : false,
+            USE_SCANLINE  : true
+        },
+        uniforms: {
+            color: { value : new THREE.Vector3(10, 3, 3) },
+            s_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/button/console_password.png") },
+            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            time: { value: 0.0 },
+            rateFactor:   { value: 1.0 },
+            boolGlitch:  { value: false },
+            boolOn:  { value: false },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        transparent: true,
+        blending:       THREE.AdditiveBlending,
+        //depthTest:      false,
+        //depthWrite:      false,
+    } );
+
+    this.materialHoloHole.uniforms.f_texture.value.wrapS = this.materialHoloHole.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+    this.materialHoloHole.uniforms.s_texture.value.wrapS = this.materialHoloHole.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+    this.materialHoloHole.uniforms.noise_texture.value.wrapS = this.materialHoloHole.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
+    var materialHoloHole = this.materialHoloHole;
     if (this.isMobile) {
         var materialMobileBackGround = new THREE.MeshPhongMaterial({
             map: textureLoader.load("textures/background/holoProjFreeSpinMobile.png"),
@@ -206,15 +197,17 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
               back_wall2
                floor*/
         var materialCeiling = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("#505050"),
+          //  color: new THREE.Color("#505050"),
             //  refractionRatio: 0.05,
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Metallic.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_ceiling_Normal.png"),
+            map: textureLoader.load("textures/freespin/ceiling_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/ceiling_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/ceiling_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/ceiling_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/ceiling_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/ceiling_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialSideWalls = new THREE.MeshStandardMaterial({
@@ -222,11 +215,13 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             //  refractionRatio: 0.05,
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
-            roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Roughness.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_side_walls_Normal.png"),
+            roughness: 0.5,
+            map: textureLoader.load("textures/freespin/side_walls_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/side_walls_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/side_walls_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/side_walls_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/side_walls_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/side_walls_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialColumn = new THREE.MeshStandardMaterial({
@@ -235,22 +230,26 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_column_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Roughness.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_column_Normal.png"),
+            map: textureLoader.load("textures/freespin/column_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/column_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/column_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/column_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/column_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/column_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialDiagonal = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("#7c7c7c"),
+           // color: new THREE.Color("#7c7c7c"),
             //  refractionRatio: 0.05,
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Metallic.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_diagonal_Normal.png"),
+            map: textureLoader.load("textures/freespin/diagonal_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/diagonal_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/diagonal_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/diagonal_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/diagonal_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/diagonal_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialBackWall1 = new THREE.MeshStandardMaterial({
@@ -259,10 +258,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Roughness.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall1_Normal.png"),
+            map: textureLoader.load("textures/freespin/back_wall1_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/back_wall1_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/back_wall1_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/back_wall1_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/back_wall1_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/back_wall1_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialBackWall2 = new THREE.MeshStandardMaterial({
@@ -271,10 +272,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Roughness.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_back_wall2_Normal.png"),
+            map: textureLoader.load("textures/freespin/back_wall2_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/back_wall2_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/back_wall2_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/back_wall2_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/back_wall2_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/back_wall2_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialFloor = new THREE.MeshStandardMaterial({
@@ -283,10 +286,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Metallic.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_floor_Normal.png"),
+            map: textureLoader.load("textures/freespin/floor_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/floor_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/floor_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/floor_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/floor_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/floor_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialTubes = new THREE.MeshStandardMaterial({
@@ -295,10 +300,12 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
             roughness: 1.0,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Roughness.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_tubes_Normal.png"),
+            map: textureLoader.load("textures/freespin/tubes_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/tubes_Roughness.png"),
+            roughnessMap: textureLoader.load("textures/freespin/tubes_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/tubes_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/tubes_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/tubes_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         var materialTable = new THREE.MeshStandardMaterial({
@@ -306,11 +313,13 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             //  refractionRatio: 0.05,
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
-            roughness: 0.5,
-            map: textureLoader.load("textures/freespin/holoProjFreeSpin_table_BaseColor.png"),
-            metalnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Metallic.png"),
-            roughnessMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Roughness.png"),
-            normalMap: textureLoader.load("textures/freespin/holoProjFreeSpin_table_Normal.png"),
+            roughness: 1.0,
+            map: textureLoader.load("textures/freespin/table_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/freespin/table_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/freespin/table_Roughness.png"),
+            normalMap: textureLoader.load("textures/freespin/table_Normal.png"),
+            bumpMap: textureLoader.load("textures/freespin/table_Height.png"),
+            aoMap: textureLoader.load("textures/freespin/table_Mixed_AO.png")
             //  side: THREE.DoubleSide
         });
         ////////////////////////////////////////////
@@ -348,6 +357,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                 boolRotate: { value: true },
                 boolHolo: { value: true },
                 boolOffSymb: { value: false },
+                boolFlow: { value: true },
                 textureIndex: { value: 1.0 },
             },
             vertexShader: vertexShader,
@@ -365,6 +375,88 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
         this.materialDisplay.uniforms.s_texture.value.wrapS = this.materialDisplay.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
         this.materialDisplay.uniforms.noise_texture.value.wrapS = this.materialDisplay.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
         var materialDisplay = this.materialDisplay;
+
+        this.materialDisplay1 =	new THREE.ShaderMaterial({
+            defines         : {
+                //   USE_OFF       : false,
+                //   USE_GLITCH    : false,
+                USE_SCANLINE  : true,
+                NUMSYMB       : 8,
+                INDEX_TEXTURE : 3,
+            },
+            uniforms: {
+                colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
+                //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
+                arrayTexture: { value: this.arrayTexturesSymb },
+                f_texture:   { value: textureLoader.load("textures/background/code.png") },
+                s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
+                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                time: { value: 0.0 },
+                timeRotate: { value: 0.0 },
+                rateFactor:   { value: 0.8 },
+                speedFactor:   { value: 0.25 },
+                boolRotate: { value: true },
+                boolHolo: { value: true },
+                boolOffSymb: { value: true },
+                boolFlow: { value: false },
+                textureIndex: { value: 1.0 },
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            // transparent: true,
+            // blending:       THREE.AdditiveBlending,
+            //depthTest:      false,
+            //depthWrite:      false,
+        } );
+        for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
+            this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
+        }
+
+        this.materialDisplay1.uniforms.f_texture.value.wrapS = this.materialDisplay1.uniforms.f_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+        this.materialDisplay1.uniforms.s_texture.value.wrapS = this.materialDisplay1.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+        this.materialDisplay1.uniforms.noise_texture.value.wrapS = this.materialDisplay1.uniforms.noise_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+        var materialDisplay1 = this.materialDisplay1;
+
+        this.materialDisplay2 =	new THREE.ShaderMaterial({
+            defines         : {
+                //   USE_OFF       : false,
+                //   USE_GLITCH    : false,
+                USE_SCANLINE  : true,
+                NUMSYMB       : 8,
+                INDEX_TEXTURE : 3,
+            },
+            uniforms: {
+                colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
+                //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
+                arrayTexture: { value: this.arrayTexturesSymb },
+                f_texture:   { value: textureLoader.load("textures/background/code1.png") },
+                s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
+                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                time: { value: 0.0 },
+                timeRotate: { value: 0.0 },
+                rateFactor:   { value: 0.8 },
+                speedFactor:   { value: 0.25 },
+                boolRotate: { value: true },
+                boolHolo: { value: true },
+                boolOffSymb: { value: true },
+                boolFlow: { value: false },
+                textureIndex: { value: 1.0 },
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            // transparent: true,
+            // blending:       THREE.AdditiveBlending,
+            //depthTest:      false,
+            //depthWrite:      false,
+        } );
+        for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
+            this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
+        }
+
+        this.materialDisplay2.uniforms.f_texture.value.wrapS = this.materialDisplay2.uniforms.f_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+        this.materialDisplay2.uniforms.s_texture.value.wrapS = this.materialDisplay2.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+        this.materialDisplay2.uniforms.noise_texture.value.wrapS = this.materialDisplay2.uniforms.noise_texture.value.wrapT = THREE.MirroredRepeatWrapping;
+        var materialDisplay2 = this.materialDisplay2;
     }
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -477,6 +569,10 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.material = materialHand2;
                 } else if (child.name == "hole_wall") {
                     child.material = materialHole;
+                } else if (child.name == "panel") {
+                    child.material = materialConsole;
+                } else if (child.name == "dis_panel") {
+                    child.material = materialHoloHole;
                 } else if (child.name == "rotator") {
                     //child.material = material;
                     child.material.color = new THREE.Color("#111013");
@@ -519,14 +615,30 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
                     child.name == "monitor5"
                           ) {
                     child.material = materialPanel;
-                } else if (child.name == "display" ||
-                    child.name == "display1" ||
-                    child.name == "display2" ||
-                    child.name == "display3" ||
-                    child.name == "display4" ||
-                    child.name == "display5"
+                } else if (//child.name == "display" ||
+                   // child.name == "display1" ||
+                 //   child.name == "display2" ||
+                  //  child.name == "display3" ||
+                    child.name == "display4" //||
+                   // child.name == "display5"
                 ) {
                     child.material = materialDisplay;
+                } else if (child.name == "display" ||
+                  //  child.name == "display1" ||
+                    child.name == "display2" //||
+                  //  child.name == "display3"   ||
+                 //   child.name == "display4" ||
+                  //  child.name == "display5"
+                ) {
+                    child.material = materialDisplay1;
+                } else if (//child.name == "display" ||
+                    child.name == "display1" ||
+                 //   child.name == "display2" ||
+                    child.name == "display3" ||
+                //   child.name == "display4" ||
+                    child.name == "display5"
+                ) {
+                    child.material = materialDisplay2;
                 } else {
                     child.material.color = new THREE.Color("#303030");
                 }
@@ -539,6 +651,76 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     holoParent.rotation.y = Math.PI;
     this.holoParent = holoParent;
     this.add(holoParent);
+////////////////////////////////////
+    var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
+    var fragmentShader = shaders.fragmentShaders.fragmentShTotalHologram;
+
+    for (var j = 0; j < this.arrayNumbers.length; j++ ) {
+        var uv = new Float32Array( 8 );
+        for (var i = 0; i < uv.length; i++) {
+            uv[i] = this.arraySymb[ this.arrayNumbers[j] ] [i];
+        }
+        var geometry = new THREE.PlaneBufferGeometry(this.widthCharacter, this.heightCharacter);
+        //   geometry.rotateX(Math.PI / 2.0);
+        geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
+        geometry.attributes.uv.needsUpdate = true;
+
+        var materialHolo =	new THREE.ShaderMaterial({
+            defines         : {
+                USE_HOLO      : true,
+                USE_OFF_SYMB  : false,
+                USE_SCANLINE  : true
+            },
+            uniforms: {
+                color: { value : new THREE.Vector3(4, 3, 2) },
+                s_texture:   { value: textureLoader.load("textures/background/display.png") },
+                f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
+                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                time: { value: 0.0 },
+                rateFactor:   { value: 1.0 },
+                boolGlitch:  { value: false },
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: true,
+            blending:       THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            //depthTest:      false,
+            //depthWrite:      false,
+        } );
+
+        materialHolo.uniforms.f_texture.value.wrapS = materialHolo.uniforms.f_texture.value.wrapT = THREE.RepeatWrapping;
+        materialHolo.uniforms.s_texture.value.wrapS = materialHolo.uniforms.s_texture.value.wrapT = THREE.RepeatWrapping;
+        materialHolo.uniforms.noise_texture.value.wrapS = materialHolo.uniforms.noise_texture.value.wrapT = THREE.RepeatWrapping;
+
+        /*  var material = new THREE.MeshBasicMaterial({
+              color: "#f9eba0",
+              map: textureLoader.load('textures/winplane/numbers1.png'),
+              //normalMap: textureLoader.load('textures/winplane/numbers1_normal.jpg'),
+              //normalScale: new THREE.Vector2(0.4, 0.4),
+             // emissive: "#0e0b0b",
+             // specular: "#14160f",
+            //  shininess: 30
+             // transparent: true,
+            //  blending:       THREE.AdditiveBlending,
+           //   depthWrite:      false,
+             // depthTest:       false,
+             // alphaTest: 0.5
+          });
+         // if (!isMobile) {
+           //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
+            //  material.normalScale = new THREE.Vector2(0.4, 0.4);
+        //  }*/
+        var mesh = new THREE.Mesh(geometry, materialHolo);
+        //mesh.visible = false;
+        mesh.name = "meshPlane";
+        this.groupNumbers.add(mesh);
+    }
+    //this.groupNumbers.position.z = 123;
+
+    this.add( this.groupNumbers );
+    this.groupNumbers.position.x = this.posX + (this.arrayNumbers.length - 1) * this.widthCharacter * 0.5 + (this.arrayNumbers.length - 1) * this.distanceBetweenCharacters * 0.5;//12.8 character width; 0,7 distance between charact
+
 }
 
 function parseString(stringIn, stringPattern) {
@@ -828,10 +1010,17 @@ MessageFreeSpin.prototype.start = function() {
 MessageFreeSpin.prototype.update = function(time, deltaTime) {
     this.material.uniforms.time.value += deltaTime;
     this.materialHolo.uniforms.time.value += deltaTime;
+    this.materialHoloHole.uniforms.time.value += deltaTime;
     this.materialHoloFreeSpin.uniforms.time.value += deltaTime;
     if (!this.isMobile) {
         this.materialDisplay.uniforms.time.value = time;
         this.materialDisplay.uniforms.timeRotate.value = time;
+
+        this.materialDisplay1.uniforms.time.value = time;
+        this.materialDisplay1.uniforms.timeRotate.value = time;
+
+        this.materialDisplay2.uniforms.time.value = time;
+        this.materialDisplay2.uniforms.timeRotate.value = time;
     }
      if ( this.mixers.length > 0 ) {
         for ( var i = 0; i < this.mixers.length; i ++ ) {

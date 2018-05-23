@@ -10,13 +10,15 @@ function ButtonHolo(textureButton, textureLoader, isMobile) {
     this.boolOnOffSwitch = false;
 
     var materialCorps = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#b8b5b8"),
-        map: textureLoader.load("textures/button/buttonHolo_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/button/buttonHolo_corps_Metallic.png"),
-        metalness: 0.5,
-        roughnessMap: textureLoader.load("textures/button/buttonHolo_corps_Roughness.png"),
-        roughness: 0.5,
-        normalMap: textureLoader.load("textures/button/buttonHolo_corps_Normal.png"),
+        // color: new THREE.Color("#b8b5b8"),
+        map: textureLoader.load("textures/button/holo_corps_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/button/holo_corps_Metallic.png"),
+        metalness: 1.0,
+        roughnessMap: textureLoader.load("textures/button/holo_corps_Roughness.png"),
+        roughness: 1.0,
+        normalMap: textureLoader.load("textures/button/holo_corps_Normal.png"),
+        aoMap: textureLoader.load("textures/button/holo_corps_Mixed_AO.png"),
+        bumpMap: textureLoader.load("textures/button/holo_corps_Height.png"),
     });
     ///////////////////////////////////////////////////////
     var vertexShader = shaders.vertexShaders.vertexShTotalHologram;

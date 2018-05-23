@@ -156,31 +156,31 @@ function TV(textureLoader, align, isMobile)
     var materialDisplay = this.materialDisplay;
     var materialPanel = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/tv/tvCRT_monitor_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Metallic.png"),
+        map: textureLoader.load("textures/tv/monitor_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/tv/monitor_Height.png"),
+        metalnessMap: textureLoader.load("textures/tv/monitor_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/tv/tvCRT_monitor_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/tv/monitor_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/tv/tvCRT_monitor_Normal.png"),
+        normalMap: textureLoader.load("textures/tv/monitor_Normal.png"),
+        aoMap: textureLoader.load("textures/tv/monitor_Mixed_AO.png"),
+        //aoMapIntensity: 0.5,
+      //  envMap: cubeCamera.renderTarget.texture
     });
     var materialHand1 = new THREE.MeshStandardMaterial({
      //   color: new THREE.Color("#787878"),
-        map: textureLoader.load("textures/tv/tvCRT_bracket_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Metallic.png"),
+        map: textureLoader.load("textures/tv/bracket_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/tv/bracket_Height.png"),
+        metalnessMap: textureLoader.load("textures/tv/bracket_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/tv/tvCRT_bracket_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/tv/bracket_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/tv/tvCRT_bracket_Normal.png"),
+        normalMap: textureLoader.load("textures/tv/bracket_Normal.png"),
+        aoMap: textureLoader.load("textures/tv/bracket_Mixed_AO.png"),
+        //aoMapIntensity: 0.5,
+     //   envMap: cubeCamera.renderTarget.texture
     });
-    var materialRoot = new THREE.MeshStandardMaterial({
-      //  color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/tv/tv_root_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/tv/tv_root_Metallic.png"),
-        metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/tv/tv_root_Roughness.png"),
-        roughness: 1.0,
-        normalMap: textureLoader.load("textures/tv/tv_root_Normal.png"),
-    });
+
     var tvParent = new THREE.Object3D;
 
     var FBXobject = "tvCRT.fbx";
@@ -195,14 +195,15 @@ function TV(textureLoader, align, isMobile)
                   //  child.material.color = new THREE.Color("#485675");
                 } else if (child.name == "monitor") {
                     child.material = materialPanel;
+                   // child.add( cubeCamera );
                 } else if (child.name == "bracket") {
                     child.material = materialHand1;
               //      child.material = materialHand2;
                 } else if (child.name == "cron") {
                     child.material = materialHand1;
                 } else {
-                    child.material = materialRoot;
-                   // child.material.color = new THREE.Color("#535353");
+                   // child.material = materialRoot;
+                    child.material.color = new THREE.Color("#ff0000");
                 }
                 /*    mesh.castShadow = true;
                     //mesh.receiveShadow = true;

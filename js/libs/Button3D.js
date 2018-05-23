@@ -9,12 +9,14 @@ function Button3D(textureLoader, isMobile) {
 
     var materialCorps = new THREE.MeshStandardMaterial({
        // color: new THREE.Color("#b8b5b8"),
-        map: textureLoader.load("textures/button/button_corps_BaseColor.png"),
-        metalnessMap: textureLoader.load("textures/button/button_corps_Roughness.png"),
+        map: textureLoader.load("textures/button/corps_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/button/corps_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/button/button_corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/button/corps_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/button/button_corps_Normal.png"),
+        normalMap: textureLoader.load("textures/button/corps_Normal.png"),
+        aoMap: textureLoader.load("textures/button/corps_Mixed_AO.png"),
+        bumpMap: textureLoader.load("textures/button/corps_Height.png"),
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
