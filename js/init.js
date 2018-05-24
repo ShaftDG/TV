@@ -578,15 +578,15 @@ function animate() {
 }
 
 function render() {
-    if (!isMobile) {
+  //  if (!isMobile) {
         // render cube map
       //  slot.visible = false;
       //  cubeCamera.update( renderer, scene );
       //  slot.visible = true;
-        postprocessing.composer.render(0.1);
-    } else {
+    //    postprocessing.composer.render(0.1);
+  //  } else {
         renderer.render( scene, camera );
-    }
+   // }
 }
 
 function onKeyDown ( event ) {

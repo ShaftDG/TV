@@ -3,7 +3,7 @@ function SunLight(loadingManager, isMobile) {
     this.name = "SunLight";
 
     //Ambient light
-    this.ambient = new THREE.AmbientLight( "#b2b6a9" );
+    this.ambient = new THREE.AmbientLight( "#76796f" );
     this.add( this.ambient );
     //Hemisphere light
    /* var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1.0 );
@@ -14,7 +14,7 @@ function SunLight(loadingManager, isMobile) {
     //Directional light
     this.isMobile = isMobile;
     if (this.isMobile) {
-        var roomPointlight = new THREE.PointLight("#fdffd5", 1.5, 300, 2);
+        var roomPointlight = new THREE.PointLight("#fdffd5", 3.0, 250, 2);
         roomPointlight.position.set(0, 0, 150);
         this.add(roomPointlight);
        /* this.dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
@@ -43,7 +43,7 @@ function SunLight(loadingManager, isMobile) {
         // leftPointlight.position.set( -50, 50, 150 );
         //  this.add( leftPointlight );
     } else {
-        var roomPointlight = new THREE.PointLight("#fdffd5", 2.0, 300, 2);
+        var roomPointlight = new THREE.PointLight("#fdffd5", 2.5, 250, 2);
         roomPointlight.position.set(0, 0, 150);
         this.add(roomPointlight);
 
@@ -55,7 +55,7 @@ function SunLight(loadingManager, isMobile) {
         this.buttonStartPointlight.position.set(60, -25, 15);
         this.add(this.buttonStartPointlight);
 
-        var roomPointlight = new THREE.PointLight("#fdffd5", 1.0, 200, 2);
+        var roomPointlight = new THREE.PointLight("#fdffd5", 0.5, 100, 2);
         roomPointlight.position.set(-65, 64, -70);
         roomPointlight.castShadow = true;
         roomPointlight.shadow.camera.near = 1;
@@ -67,7 +67,7 @@ function SunLight(loadingManager, isMobile) {
         var material = new THREE.MeshLambertMaterial({
           //  color: new THREE.Color("#fff3e7"),
             emissive: new THREE.Color("#fff3e7"),
-            emissiveIntensity: 1,
+            emissiveIntensity: 0.4,
         });
         var lamp = new THREE.Mesh(geometry, material);
         lamp.position.copy(roomPointlight.position);
@@ -78,7 +78,7 @@ function SunLight(loadingManager, isMobile) {
         var material = new THREE.MeshLambertMaterial({
           //  color: new THREE.Color("#fff3e7"),
             emissive: new THREE.Color("#fff3e7"),
-            emissiveIntensity: 1,
+            emissiveIntensity: 0.4,
         });
         var lamp = new THREE.Mesh(geometry, material);
         lamp.position.copy(roomPointlight.position);
@@ -86,7 +86,7 @@ function SunLight(loadingManager, isMobile) {
         lamp.position.y += 2.5;
         this.add(lamp);
 
-        var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.0, 100, 2);
+        var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.5, 100, 2);
         totalRoundPointlight.position.set(0, 45, 70);
         this.add(totalRoundPointlight);
 
