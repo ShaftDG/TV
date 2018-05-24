@@ -12,6 +12,8 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.f = 0;
     this.g = 0;
 
+    this.endPosition = new THREE.Vector3(77, 12, 12);
+
     this.d = new THREE.Vector3(0,0,0);
 
     this.posX = posX;
@@ -318,11 +320,11 @@ ControllerTV.prototype.setMotionVector = function(beginPosition, endPosition) {
                         beginPosition.z - endPosition.z
         );
 
-    var modA = Math.sqrt( vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
-    var inversModA = 1.0 / modA;
-    vector.x *= inversModA;
-    vector.y *= inversModA;
-    vector.z *= inversModA;
+    var length = Math.sqrt( vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+    var inversLength  = 1.0 / length;
+    vector.x *= inversLength;
+    vector.y *= inversLength;
+    vector.z *= inversLength;
 return vector;
 };
 
@@ -1555,20 +1557,18 @@ ControllerTV.prototype.animationFreeSpinSymb = function (deltaTime) {
                     this.tvArray[j][i].symbsParent.visible = true;
                     this.tvArray[j][i].startAnimation();
                     this.boolMoveFront = false;
-                    this.particlesArray[i].position.copy(this.tvArray[j][i].position);
-                    this.particlesArray[i].position.y -= 7;
-                    this.particlesArray[i].position.z += 30;
-                    var pos = new THREE.Vector3(0, 0, 0);
-                    pos.copy(this.particlesArray[i].position);
-                    var vec3 = this.setMotionVector(pos, new THREE.Vector3(85, 12, 10));
+                    this.particlesArray[i].position.x = this.tvArray[j][i].position.x;
+                    this.particlesArray[i].position.y = this.tvArray[j][i].position.y - 7;
+                    this.particlesArray[i].position.z = this.tvArray[j][i].position.z + 30;
+                    var vec3 = this.setMotionVector(this.particlesArray[i].position, this.endPosition);
                     this.particlesArray[i].setWindVector(vec3);
-                    this.particlesArray[i].children[2].position.x = -vec3.x*4.5;
-                  //  if (vec3.y > 0) {
-                  //      this.particlesArray[i].children[2].position.y = vec3.y*4.5;
-               //     } else {
-                        this.particlesArray[i].children[2].position.y = -vec3.y*4.5;
-                 //   }
-                    this.particlesArray[i].children[2].position.z = -vec3.z*4.5;
+                    this.particlesArray[i].children[1].position.x = +vec3.x*4.5;
+                    this.particlesArray[i].children[1].position.y = +vec3.y*4.5;
+                    this.particlesArray[i].children[1].position.z = +vec3.z*4.5;
+
+                    this.particlesArray[i].children[0].position.x = +vec3.x*4.5;
+                    this.particlesArray[i].children[0].position.y = +vec3.y*4.5;
+                    this.particlesArray[i].children[0].position.z = +vec3.z*4.5;
                 } else {
                     this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
                 }
@@ -1661,9 +1661,16 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
         var numParticlesVisible = 0;
         for (var i = 0; i < this.numLineTV; i++) {
             if (this.particlesArray[i].scaled) {
-                var d = this.setMotionVector(this.particlesArray[i].position, new THREE.Vector3(85, 13, 10));
-                if (this.particlesArray[i].position.x >= 72) {
+
+                var d = this.setMotionVector(this.particlesArray[i].position, this.endPosition);
+                if (Math.sqrt(this.particlesArray[i].position.x * this.particlesArray[i].position.x +
+                              this.particlesArray[i].position.y * this.particlesArray[i].position.y +
+                              this.particlesArray[i].position.z * this.particlesArray[i].position.z) >=
+                                    Math.sqrt(this.endPosition.x * this.endPosition.x +
+                                              this.endPosition.y * this.endPosition.y +
+                                              this.endPosition.z * this.endPosition.z)) {
                     this.particlesArray[i].stop();
+                    console.log("!!!!!!", this.particlesArray[i].position );
                     this.switchNumFreeSpinPlus = true;
                     this.resolutionStart = true;
                     // this.particlesArray[i].scaled = false;
