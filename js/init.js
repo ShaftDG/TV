@@ -257,16 +257,20 @@ function init() {
     scene.add(terminal);
 ///////////////////////////////////////////////
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
+    renderer = new THREE.WebGLRenderer({ precision: "highp" });
+    if (isMobile) {
+        renderer.antialias = false;
+    } else {
+        renderer.antialias = true;
+        renderer.physicallyBasedShading = true;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMapAutoUpdate = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.shadowMap.shadowMapSoft = true;
+    }
     renderer.sortObjects = false;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMapAutoUpdate = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.shadowMap.shadowMapSoft = true;
-    renderer.physicallyBasedShading = true;
     renderer.setPixelRatio( window.devicePixelRatio );
     // renderer.setClearColor("#dcf6ff");
-    renderer.physicallyBasedShading = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     if (!isMobile) {

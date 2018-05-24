@@ -226,7 +226,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
             //  side: THREE.DoubleSide
         });
         var materialColumn = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("#9c9c9c"),
+            color: new THREE.Color("#707070"),
             //  refractionRatio: 0.05,
             // envMap: cubeCamera.renderTarget.texture,
             metalness: 1.0,
