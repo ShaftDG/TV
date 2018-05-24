@@ -6,6 +6,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
     this.resolutionPaused = false;
+    this.resolutionRevers = false;
     this.resolutionStop = false;
 
     this.col = col;
@@ -859,8 +860,12 @@ MessageFreeSpin.prototype.addAnimation = function() {
 };
 
 MessageFreeSpin.prototype.startAnimation = function () {
-    this.action.play();
-    this.resolutionPaused = true;
+    if (this.action.time > 1.0 && this.action.time < 2.0) {
+        this.reversAnimation();
+    } else {
+        this.action.play();
+        this.resolutionPaused = true;
+    }
 };
 
 MessageFreeSpin.prototype.stopAnimation = function () {
@@ -871,6 +876,11 @@ MessageFreeSpin.prototype.stopAnimation = function () {
 MessageFreeSpin.prototype.startAnimationAfterPause = function () {
     this.action.paused = false;
     this.resolutionStop = true;
+};
+
+MessageFreeSpin.prototype.reversAnimation = function () {
+  //  this.action.paused = false;
+    this.resolutionRevers = true;
 };
 
 MessageFreeSpin.prototype.setNumber = function(number) {
@@ -1022,14 +1032,15 @@ MessageFreeSpin.prototype.update = function(time, deltaTime) {
         this.materialDisplay2.uniforms.time.value = time;
         this.materialDisplay2.uniforms.timeRotate.value = time;
     }
-     if ( this.mixers.length > 0 ) {
-        for ( var i = 0; i < this.mixers.length; i ++ ) {
-            this.mixers[ i ].update( deltaTime );
-
+    if (!this.resolutionRevers) {
+        if (this.mixers.length > 0) {
+            for (var i = 0; i < this.mixers.length; i++) {
+                this.mixers[i].update(deltaTime);
+            }
         }
-     }
 
         if (this.action.time >= 1.0 && this.resolutionPaused) {
+            this.action.time = 1.0;
             this.action.paused = true;
             this.resolutionPaused = false;
         }
@@ -1038,6 +1049,27 @@ MessageFreeSpin.prototype.update = function(time, deltaTime) {
             this.action.stop();
             this.resolutionStop = false;
         }
+    } else {
+        if (this.mixers.length > 0) {
+            for (var i = 0; i < this.mixers.length; i++) {
+                this.mixers[i].update(-deltaTime);
+            }
+        }
+
+        if (this.action.time <= 1.0 && this.resolutionPaused) {
+           // this.action.time = 1.0;
+            this.action.paused = true;
+            this.resolutionPaused = false;
+            this.resolutionRevers = false;
+        }
+
+        if (this.action.time <= 0.0 && this.resolutionStop) {
+            this.action.stop();
+            this.resolutionStop = false;
+            this.resolutionRevers = false;
+        }
+    }
+
 
     if (this.StartStopSwitch) {
 

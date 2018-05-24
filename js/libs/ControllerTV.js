@@ -73,7 +73,8 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.boolMoveBackFreeSpin = false;
     this.switchNumFreeSpinMinus = false;
     this.switchNumFreeSpinPlus = false;
-    this.switchNumFreeSpinBoforePlus = false;
+    this.switchNumFreeSpinBeforePlus = false;
+    this.resolutionStart = false;
 
     this.animationEnded = false;
 
@@ -645,8 +646,9 @@ ControllerTV.prototype.setBeginSettings = function() {
     this.animationEnded = false;
     this.switchNumFreeSpinMinus = false;
     this.switchNumFreeSpinPlus = false;
-    this.switchNumFreeSpinBoforePlus = false;
+    this.switchNumFreeSpinBeforePlus = false;
     this.boolUpdateParticles = false;
+    this.resolutionStart = true;
  //   this.boolForceStop = false;
   //  this.boolShowLine = false;
     this.k = 0;
@@ -836,6 +838,9 @@ ControllerTV.prototype.stopStartRotateSymb = function () {
             this.autoPlayStart = true;
             this.autoPlayStop = false;
 
+            if (this.genArraySymb.boolPlusFreeSpin) {
+                this.resolutionStart = false;
+            }
         }
     }
 };
@@ -845,36 +850,40 @@ ControllerTV.prototype.stopStartRotateSymbFreeSpin = function () {
     if ( this.boolRotate ) {
         this.stop();
     } else {
-        if ( this.boolEndAnimation ) {
-            for (var i = 0; i < this.numLineTV; i++) {
-                for (var j = 0; j < this.numTVperLine; j++) {
-                    this.tvArray[j][i].stopAnimation();
-                    this.tvArray[i][j].startRotateSymb();
-                    this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
-                 //   var holoSymb = this.tvArray[j][i].getFreeSpinSymb();
-                //    holoSymb.scale.set(1.0, 1.0, 1.0);
-               //     holoSymb.visible = true;
-                    this.tvArray[j][i].materialDisplay.needsUpdate = true;
+        if (this.resolutionStart) {
+            if (this.boolEndAnimation) {
+                for (var i = 0; i < this.numLineTV; i++) {
+                    for (var j = 0; j < this.numTVperLine; j++) {
+                        this.tvArray[j][i].stopAnimation();
+                        this.tvArray[i][j].startRotateSymb();
+                        this.tvArray[j][i].materialDisplay.uniforms.boolHolo.value = false;
+                        //   var holoSymb = this.tvArray[j][i].getFreeSpinSymb();
+                        //    holoSymb.scale.set(1.0, 1.0, 1.0);
+                        //     holoSymb.visible = true;
+                        this.tvArray[j][i].materialDisplay.needsUpdate = true;
+                    }
                 }
-            }
-            this.start();
-            this.boolRotate = true;
-            this.canStop = true;
+                this.start();
+                this.boolRotate = true;
+                this.canStop = true;
 
-            if (this.genArraySymb.numFreeSpin <= 0) {
-                this.genArraySymb.boolFreeSpin = false;
-                this.boolFreeSpin = false;
-                this.genArraySymb.numFreeSpin = 0;
-            } else {
-                this.genArraySymb.numFreeSpin -= 1;
-                if (!this.genArraySymb.boolPlusFreeSpin) {
-                    this.switchNumFreeSpinMinus = true;
+                this.autoPlayStart = true;
+                this.autoPlayStop = false;
+
+                if (this.genArraySymb.numFreeSpin <= 0) {
+                    this.genArraySymb.boolFreeSpin = false;
+                    this.boolFreeSpin = false;
+                    this.genArraySymb.numFreeSpin = 0;
                 } else {
-                    this.switchNumFreeSpinBoforePlus = true;
+                    this.genArraySymb.numFreeSpin -= 1;
+                    if (!this.genArraySymb.boolPlusFreeSpin) {
+                        this.switchNumFreeSpinMinus = true;
+                    } else {
+                        this.switchNumFreeSpinBeforePlus = true;
+                        this.resolutionStart = false;
+                    }
                 }
             }
-            this.autoPlayStart = true;
-            this.autoPlayStop = false;
         }
     }
 };
@@ -1656,6 +1665,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                 if (this.particlesArray[i].position.x >= 72) {
                     this.particlesArray[i].stop();
                     this.switchNumFreeSpinPlus = true;
+                    this.resolutionStart = true;
                     // this.particlesArray[i].scaled = false;
                 } else {
                     this.particlesArray[i].position.x -= d.x * 200.0 * deltaTime;
