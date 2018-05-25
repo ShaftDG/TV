@@ -151,6 +151,10 @@ function TV(textureLoader, align, isMobile)
         //depthTest:      false,
         //depthWrite:      false,
     } );
+    if (isMobile) {
+        this.materialDisplay.defines.USE_SCANLINE = false;
+    }
+
     for (var i = 0; i < this.arrayTexturesSymb.length; i++) {
         this.arrayTexturesSymb[i].wrapS = this.arrayTexturesSymb[i].wrapT = THREE.RepeatWrapping;
     }

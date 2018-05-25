@@ -147,7 +147,18 @@ float sharpness = 100.0;
     float alpha = clamp( leftRight + upDown, 0.0, 1.0 );
 
 //gl_FragColor
-vec4 colorBack = vec4(1.0);
+    vec2 quv = vUv - 0.5;
+    vec3 color_back = vec3(0.9, 1.0, 0.95);
+    float start = 0.0;
+    float end = 0.7;
+    float al = 1.0;
+    float power = 1.0;
+    float rim = pow(
+        smoothstep(start, end, 1.0 - dot(length(quv), 1.0)),
+        power
+    );
+    vec4 colorBack = vec4( clamp(rim, 0.0, 1.0) * al * color_back, 1.0 );
+//vec4 colorBack = vec4(1.0);
 vec4 colorMain = getSampleFromArray(arrayTexture, int(textureIndex), vec2(vUv.x, vUv.y + t));
 vec4 colorSecond = getSampleFromArray(arrayTexture, int(textureIndex) >= 7 ? 0 : int(textureIndex) + 1, vec2(vUv.x, vUv.y + t));
 
@@ -231,7 +242,7 @@ gl_FragColor = mixBack;
 #ifdef USE_SCANLINE
 
 	      vec2 q = vUv;
-          uv = 0.5 + (q-0.5)*(0.75 /*+ 0.1*sin(0.752*time)*/);
+          uv = 0.5 + (q-0.5)*(0.75 + 0.1*sin(0.752*time));
 
           vec3 oricol = gl_FragColor.rgb;
           vec3 col;

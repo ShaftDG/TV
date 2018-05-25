@@ -4,11 +4,6 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 
     this.textureLoader = textureLoader;
 
-    this.stringInsert = "";
-    if (isMobile) {
-        this.stringInsert = "mobile/";
-    }
-    
     this.dt = 0;
     this.dt1 = 0;
     this.dt2 = 0;
@@ -17,7 +12,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.f = 0;
     this.g = 0;
     if (isMobile) {
-        this.endPosition = new THREE.Vector3(67, 5, 12);
+        this.endPosition = new THREE.Vector3(65, 5, 12);
     } else {
         this.endPosition = new THREE.Vector3(77, 12, 12);
     }
@@ -178,7 +173,7 @@ if (isMobile) {
         xCoord:              optionsOriginFire.xCoord,
         yCoord:              optionsOriginFire.yCoord,
         zCoord:              optionsOriginFire.zCoord,
-        noiseTexture:        textureLoader.load("textures/" + this.stringInsert + "sprites/originFire.png"),
+        noiseTexture:        textureLoader.load("textures/sprites/originFire.png"),
         windVector:          new THREE.Vector3(-1.0, 0.0, 0.0),
         totalParticles:      optionsOriginFire.totalParticles,
         scaleSizeParticles:  optionsOriginFire.scaleSizeParticles,
@@ -196,7 +191,7 @@ if (isMobile) {
         xCoord:                 optionsTonguesOfFire.xCoord,
         yCoord:                 optionsTonguesOfFire.yCoord,
         zCoord:                 optionsTonguesOfFire.zCoord,
-        noiseTexture:           textureLoader.load("textures/" + this.stringInsert + "sprites/originFire.png"),
+        noiseTexture:           textureLoader.load("textures/sprites/originFire.png"),
         windVector:             new THREE.Vector3(-1.0, 0.0, 0.0),
         totalParticles:         optionsTonguesOfFire.totalParticles,
         scaleSizeParticles:     optionsTonguesOfFire.scaleSizeParticles,
