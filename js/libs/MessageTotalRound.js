@@ -1,4 +1,4 @@
-function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber) {
+function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, row, stringIn,  alignment, widthCharacter, heightCharacter,  distanceBetweenCharacters, speedSwitchNumber, isMobile) {
     THREE.Object3D.apply(this);
 
     this.name = "MessageTotalRound";
@@ -6,6 +6,11 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.StartStopSwitch = false;
     this.OnOffSwitch = false;
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.boolEndOfCount = false;
 
     this.withoutSwitchNumber = false;
@@ -54,9 +59,9 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         },
         uniforms: {
             color: { value : new THREE.Vector3(10, 3, 3) },
-            s_texture:   { value: textureLoader.load("textures/background/display.png") },
-            f_texture:   { value: textureLoader.load("textures/winplane/nameSlot.png") },
-            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "winplane/nameSlot.png") },
+            noise_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
             time: { value: 0.0 },
             rateFactor:   { value: 1.0 },
             boolGlitch:  { value: true },
@@ -100,9 +105,9 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
             },
             uniforms: {
                 color: { value : new THREE.Vector3(10, 3, 3) },
-                s_texture:   { value: textureLoader.load("textures/background/display.png") },
-                f_texture:   { value: textureLoader.load("textures/winplane/numbers1.png") },
-                noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+                s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
+                f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "winplane/numbers1.png") },
+                noise_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
                 time: { value: 0.0 },
                 rateFactor:   { value: 1.0 },
                 boolGlitch:  { value: false },
@@ -121,8 +126,8 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
 
       /*  var material = new THREE.MeshBasicMaterial({
             color: "#f9eba0",
-            map: textureLoader.load('textures/winplane/numbers1.png'),
-            //normalMap: textureLoader.load('textures/winplane/numbers1_normal.jpg'),
+            map: textureLoader.load('textures/" + this.stringInsert + "winplane/numbers1.png'),
+            //normalMap: textureLoader.load('textures/" + this.stringInsert + "winplane/numbers1_normal.jpg'),
             //normalScale: new THREE.Vector2(0.4, 0.4),
            // emissive: "#0e0b0b",
            // specular: "#14160f",
@@ -134,7 +139,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
            // alphaTest: 0.5
         });
        // if (!isMobile) {
-         //   material.normalMap = textureLoader.load('textures/winplane/numbers1_normal.jpg');
+         //   material.normalMap = textureLoader.load('textures/" + this.stringInsert + "winplane/numbers1_normal.jpg');
           //  material.normalScale = new THREE.Vector2(0.4, 0.4);
       //  }*/
         var mesh = new THREE.Mesh(geometry, materialHolo);
@@ -148,25 +153,25 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
 ///////////////////////////////////////////
     var materialCorps = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/holoProj/corps_Base_Color.png"),
-        bumpMap: textureLoader.load("textures/holoProj/corps_Height.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/corps_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Height.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/holoProj/corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/holoProj/corps_Normal.png"),
-       // aoMap: textureLoader.load("textures/holoProj/corps_Mixed_AO.png"),
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Normal.png"),
+       // aoMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Mixed_AO.png"),
     });
     var materialCorpsLinz = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/holoProj/corpsLinz_Base_Color.png"),
-        bumpMap: textureLoader.load("textures/holoProj/corpsLinz_Height.png"),
-        metalnessMap: textureLoader.load("textures/holoProj/corpsLinz_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "holoProj/corpsLinz_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corpsLinz_Height.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corpsLinz_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/holoProj/corpsLinz_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corpsLinz_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/holoProj/corpsLinz_Normal.png"),
-        aoMap: textureLoader.load("textures/holoProj/corpsLinz_Mixed_AO.png"),
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corpsLinz_Normal.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corpsLinz_Mixed_AO.png"),
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -178,9 +183,9 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         },
         uniforms: {
             color: { value : new THREE.Color("#7373ff") },
-            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
-            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
             boolGlitch:  { value: false },
@@ -201,7 +206,12 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.materialHolo.uniforms.s_texture.value.wrapS = this.materialHolo.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
     this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHolo = this.materialHolo;
-    var OBJobject = "holoProj.obj";
+    var OBJobject = "";
+    if (isMobile) {
+        OBJobject = "holoProjMobile.obj";
+    } else {
+        OBJobject = "holoProj.obj";
+    }
     var holoParent = new THREE.Object3D;
     var loaderOBJ = new THREE.OBJLoader( loadingManager );
     loaderOBJ.load("obj/" + OBJobject, function (object) {
@@ -254,34 +264,41 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         //depthTest:      false,
         //depthWrite:      false,
     } );
+    if (isMobile) {
+        this.material.uniforms.rayBrightness.value = 17;
+    }
     ////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(2, 6, 45, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(-Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.x = 35-12.5;
-    this.add(mesh);
+    if (!isMobile) {
+        var geometry = new THREE.CylinderBufferGeometry(2, 6, 45, 10, 1.0, true);
+        //geometry.rotateX(-Math.PI / 2.0);
+        geometry.rotateZ(-Math.PI / 2.0);
+        var mesh = new THREE.Mesh(geometry, this.material);
+        mesh.position.x = 35 - 12.5;
+        this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 6, 45, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.x = -35+12.5;
-    this.add(mesh);
-    ////////////////////////////////////////////
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 40, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(-Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.x = 35-10;
-    this.add(mesh);
+        var geometry = new THREE.CylinderBufferGeometry(2, 6, 45, 10, 1.0, true);
+        //geometry.rotateX(-Math.PI / 2.0);
+        geometry.rotateZ(Math.PI / 2.0);
+        var mesh = new THREE.Mesh(geometry, this.material);
+        mesh.position.x = -35 + 12.5;
+        this.add(mesh);
+        ////////////////////////////////////////////
+        var geometry = new THREE.CylinderBufferGeometry(2, 7, 40, 10, 1.0, true);
+        //geometry.rotateX(-Math.PI / 2.0);
+        geometry.rotateZ(-Math.PI / 2.0);
+        var mesh = new THREE.Mesh(geometry, this.material);
+        mesh.position.x = 35 - 10;
+        this.add(mesh);
 
-    var geometry = new THREE.CylinderBufferGeometry(2, 7, 40, 10, 1.0, true);
-    //geometry.rotateX(-Math.PI / 2.0);
-    geometry.rotateZ(Math.PI / 2.0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.x = -35+10;
-    this.add(mesh);
+        var geometry = new THREE.CylinderBufferGeometry(2, 7, 40, 10, 1.0, true);
+        //geometry.rotateX(-Math.PI / 2.0);
+        geometry.rotateZ(Math.PI / 2.0);
+        var mesh = new THREE.Mesh(geometry, this.material);
+        mesh.position.x = -35 + 10;
+        this.add(mesh);
+    } else {
+        this.material.uniforms.rayBrightness.value = 14;
+    }
     ///////////////////////////////////////////////
     var geometry = new THREE.CylinderBufferGeometry(2, 8, 25, 10, 1.0, true);
     //geometry.rotateX(-Math.PI / 2.0);

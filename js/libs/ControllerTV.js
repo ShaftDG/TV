@@ -4,6 +4,11 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
 
     this.textureLoader = textureLoader;
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.dt = 0;
     this.dt1 = 0;
     this.dt2 = 0;
@@ -11,8 +16,11 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.k = 0;
     this.f = 0;
     this.g = 0;
-
-    this.endPosition = new THREE.Vector3(77, 12, 12);
+    if (isMobile) {
+        this.endPosition = new THREE.Vector3(67, 5, 12);
+    } else {
+        this.endPosition = new THREE.Vector3(77, 12, 12);
+    }
 
     this.d = new THREE.Vector3(0,0,0);
 
@@ -170,7 +178,7 @@ if (isMobile) {
         xCoord:              optionsOriginFire.xCoord,
         yCoord:              optionsOriginFire.yCoord,
         zCoord:              optionsOriginFire.zCoord,
-        noiseTexture:        textureLoader.load("textures/sprites/originFire.png"),
+        noiseTexture:        textureLoader.load("textures/" + this.stringInsert + "sprites/originFire.png"),
         windVector:          new THREE.Vector3(-1.0, 0.0, 0.0),
         totalParticles:      optionsOriginFire.totalParticles,
         scaleSizeParticles:  optionsOriginFire.scaleSizeParticles,
@@ -188,7 +196,7 @@ if (isMobile) {
         xCoord:                 optionsTonguesOfFire.xCoord,
         yCoord:                 optionsTonguesOfFire.yCoord,
         zCoord:                 optionsTonguesOfFire.zCoord,
-        noiseTexture:           textureLoader.load("textures/sprites/originFire.png"),
+        noiseTexture:           textureLoader.load("textures/" + this.stringInsert + "sprites/originFire.png"),
         windVector:             new THREE.Vector3(-1.0, 0.0, 0.0),
         totalParticles:         optionsTonguesOfFire.totalParticles,
         scaleSizeParticles:     optionsTonguesOfFire.scaleSizeParticles,
@@ -216,6 +224,9 @@ if (isMobile) {
 
     var lengthX = (this.numTVperLine - 1) * (this.distanceBetweenTVX);
     var lengthY = (this.numTVperLine - 1) * (this.distanceBetweenTVY);
+    if (isMobile) {
+
+    } else {}
     for (var i = 0; i < this.numLineTV; i++) {
         for (var j = 0; j < this.numTVperLine; j++) {
             if ( i == 0 ) {
@@ -279,7 +290,6 @@ if (isMobile) {
             tv.stopRotateSymb( Math.round( Math.random() * 7.0 ) );
             tv.name = "tv";
             this.tvArray[i][j] = tv;
-
         }
     }
     for (var i = 0; i < this.particlesArray.length; i++) {

@@ -5,18 +5,23 @@ function Button3D(textureLoader, isMobile) {
 
     this.mixers = [];
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+
     this.dt = 0.0;
 
     var materialCorps = new THREE.MeshStandardMaterial({
        // color: new THREE.Color("#b8b5b8"),
-        map: textureLoader.load("textures/button/corps_Base_Color.png"),
-        metalnessMap: textureLoader.load("textures/button/corps_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "button/corps_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "button/corps_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/button/corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "button/corps_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/button/corps_Normal.png"),
-        aoMap: textureLoader.load("textures/button/corps_Mixed_AO.png"),
-        bumpMap: textureLoader.load("textures/button/corps_Height.png"),
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "button/corps_Normal.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "button/corps_Mixed_AO.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "button/corps_Height.png"),
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -28,9 +33,9 @@ function Button3D(textureLoader, isMobile) {
         },
         uniforms: {
             color: { value : new THREE.Color("#97ff85") },
-            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
-            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
             boolGlitch:  { value: false },
@@ -59,9 +64,9 @@ function Button3D(textureLoader, isMobile) {
         },
         uniforms: {
             color: { value : new THREE.Color("#97ff85") },
-            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
-            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
             boolGlitch:  { value: false },
@@ -82,6 +87,9 @@ function Button3D(textureLoader, isMobile) {
     this.materialHoloPlane.uniforms.s_texture.value.wrapS = this.materialHoloPlane.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
     this.materialHoloPlane.uniforms.t_texture.value.wrapS = this.materialHoloPlane.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHoloPlane = this.materialHoloPlane;
+    if (isMobile) {
+        this.materialHoloPlane.uniforms.alpha.value = 0.5;
+    }
     ////////////////////////////////////////
     var buttonParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );

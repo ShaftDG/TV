@@ -56,8 +56,8 @@ function FireParticles(fireOption, textureLoader)
         uniforms: {
             posParent: { value: new THREE.Vector3(this.xCoord, this.yCoord, this.zCoord) },
             color:     { value: new THREE.Color( "#ffffff" ) },
-            //texture:   { value: textureLoader.load("textures/sprites/spark13.png") },
-            // noiseTexture:   { value: textureLoader.load("textures/sprites/noise.jpg") },
+            //texture:   { value: textureLoader.load("textures/" + this.stringInsert + "sprites/spark13.png") },
+            // noiseTexture:   { value: textureLoader.load("textures/" + this.stringInsert + "sprites/noise.jpg") },
             noiseTexture:   { value: this.noiseTexture },
             time: { value: 1.0 },
             started:   { value: 0 }

@@ -27,6 +27,11 @@ function ExplodeParticles(explodeOption, textureProvider)
 
     this.textureProvider = textureProvider;
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.geometry = new THREE.BufferGeometry();
 
     this.positionsWWWW = new Float32Array( this.totalParticles * 3 );
@@ -45,7 +50,7 @@ function ExplodeParticles(explodeOption, textureProvider)
 
     this.uniforms = rectOutShader.uniforms;
     this.uniforms.color.value = new THREE.Color( "#7866ff" );
-    this.uniforms.texture.value = new THREE.TextureLoader().load("textures/sprites/spark13.png");
+    this.uniforms.texture.value = new THREE.TextureLoader().load("textures/" + this.stringInsert + "sprites/spark13.png");
 
    // this.uniforms.texture.value = this.textureProvider.getTexture("spark1.png");
     //this.uniforms.texture.value.wrapS = this.uniforms.texture.value.wrapT = THREE.MirroredRepeatWrapping;

@@ -2,6 +2,11 @@ function FlameBonfire(optionsFire, loadingManager, isMobile) {
     THREE.Object3D.apply(this);
     this.name = "FlameBonfire";
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.tonguesOfFireParticles = new FireParticles(optionsFire.optionsTonguesOfFireParticles, textureLoader);
     this.tonguesOfFireParticles.name = "tonguesOfFireParticles";
     this.add(this.tonguesOfFireParticles);
@@ -19,9 +24,9 @@ function FlameBonfire(optionsFire, loadingManager, isMobile) {
         },
         uniforms: {
             color: { value : new THREE.Color("#a8a1ff") },
-            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
-            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
             boolGlitch:  { value: false },

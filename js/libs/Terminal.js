@@ -3,18 +3,23 @@ function Terminal(textureLoader, isMobile) {
     this.name = "Terminal";
     this.textureLoader = textureLoader;
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.mixers = [];
 
     var materialTerminal = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#858385"),
-        map: textureLoader.load("textures/terminal/terminal_Base_Color.png"),
-        metalnessMap: textureLoader.load("textures/terminal/terminal_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "terminal/terminal_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "terminal/terminal_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/terminal/terminal_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "terminal/terminal_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/terminal/terminal_Normal.png"),
-        bumpMap: textureLoader.load("textures/terminal/terminal_Height.png"),
-        aoMap: textureLoader.load("textures/terminal/terminal_Mixed_AO.png")
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "terminal/terminal_Normal.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "terminal/terminal_Height.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "terminal/terminal_Mixed_AO.png")
     });
     ///////////////////////////////////////////////////////
     var  vertexShader = shaders.vertexShaders.vertexShHologram;
@@ -26,9 +31,9 @@ function Terminal(textureLoader, isMobile) {
         },
         uniforms: {
             color: { value : new THREE.Color("#97ff85") },
-            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
-            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
 
@@ -50,9 +55,15 @@ function Terminal(textureLoader, isMobile) {
     this.materialHolo.uniforms.t_texture.value.wrapS = this.materialHolo.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHolo = this.materialHolo;
     ////////////////////////////////////////
+    var fileOBJ = "";
+    if (isMobile) {
+        fileOBJ = "terminalMobile.fbx";
+    } else {
+        fileOBJ = "terminal.fbx";
+    }
     var terminalParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
-    loaderOBJ.load("obj/terminal.fbx", function (object) {
+    loaderOBJ.load("obj/" + fileOBJ, function (object) {
 
         object.traverse(function (child) {
             if (child.isMesh) {

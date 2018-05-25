@@ -3,6 +3,11 @@ function ButtonKey(posX, posY, posZ, direction, textureLoader, isMobile) {
     this.name = "ButtonKey";
     this.textureLoader = textureLoader;
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.posX = posX;
     this.posY = posY;
     this.posZ = posZ;
@@ -30,10 +35,10 @@ function ButtonKey(posX, posY, posZ, direction, textureLoader, isMobile) {
         // wireframe: true
     });
 
-    this.startTexture = this.textureLoader.load("textures/button/start.png");
-    this.stopTexture = this.textureLoader.load("textures/button/stop.png");
-    this.fullscreenTexture = this.textureLoader.load("textures/button/buttonFullScreen.png");
-    this.fullscreenCancelTexture = this.textureLoader.load("textures/button/buttonFullScreenCancel.png");
+    this.startTexture = this.textureLoader.load("textures/" + this.stringInsert + "button/start.png");
+    this.stopTexture = this.textureLoader.load("textures/" + this.stringInsert + "button/stop.png");
+    this.fullscreenTexture = this.textureLoader.load("textures/" + this.stringInsert + "button/buttonFullScreen.png");
+    this.fullscreenCancelTexture = this.textureLoader.load("textures/" + this.stringInsert + "button/buttonFullScreenCancel.png");
 
     if (direction == "start") {
         materialPhong1.map = this.startTexture;

@@ -39,6 +39,7 @@ var totalRound2D, totalScore2D, totalBet, totalFreeSpin;
 var boolStopScore = false;
 var boolStartColor = false;
 var isMobile;
+var stringInsert = "";
 
 var textureLoader;
 var loadingManager = null;
@@ -70,9 +71,776 @@ shaders.load( 'fragmentShaderHologram' , 'fragmentShHologram' , 'fragment' );
 shaders.load( 'vertexShaderLoader' , 'vertexShLoader' , 'vertex' );
 shaders.load( 'fragmentShaderLoader' , 'fragmentShLoader' , 'fragment' );
 
+function desktop() {
+    slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, isMobile);
+    slot.position.y = 11.0;
+    // slot.scale.set(2.1, 2.1, 2.1);
+    scene.add(slot);
+////////////////////////////////////////////
+    textureFullScreen = textureLoader.load("textures/" + stringInsert + "button/buttonFullScreen.png");
+    textureFullScreenCancel = textureLoader.load("textures/" + stringInsert + "button/buttonFullScreenCancel.png");
+    buttonHoloFullScreen = new ButtonHolo(textureFullScreen, textureLoader, isMobile);
+    buttonHoloFullScreen.name = "buttonHoloFullScreen";
+    buttonHoloFullScreen.position.set(48, 45, 28);
+    buttonHoloFullScreen.scale.set(0.1, 0.1, 0.1);
+    groupButton.add(buttonHoloFullScreen);
+///////////////////////////////////////////////
+    var textureAutoPlay = textureLoader.load("textures/" + stringInsert + "button/buttonAutoPlay.png");
+    buttonHoloAutoPlay = new ButtonHolo(textureAutoPlay, textureLoader, isMobile);
+    buttonHoloAutoPlay.name = "buttonHoloAutoPlay";
+    buttonHoloAutoPlay.position.set(60, -46, 27);
+    buttonHoloAutoPlay.scale.set(0.15, 0.15, 0.15);
+    groupButton.add(buttonHoloAutoPlay);
+////////////////////////////////////////////
+    var textureBet = textureLoader.load("textures/" + stringInsert + "button/buttonBet.png");
+    buttonHoloBet = new ButtonHolo(textureBet, textureLoader, isMobile);
+    buttonHoloBet.name = "buttonHoloBet";
+    buttonHoloBet.position.set(-60, -46, 19);
+    buttonHoloBet.scale.set(0.2, 0.2, 0.2);
+    groupButton.add(buttonHoloBet);
+////////////////////////////////////////////
+    button = new Button3D(textureLoader, isMobile);
+    button.name = "buttonStartStop";
+    button.position.set(60, -30, 14.0);
+    button.scale.set(0.2, 0.2, 0.2);
+    button.rotation.x = Math.PI/10;
+    groupButton.add(button);
+    groupButton.name = "groupButton";
+    scene.add(groupButton);
+///////////////////////////////////////////////
+    //var stringIn = totalScore.toString();
+    var stringIn = "000000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    var stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01, isMobile);
+    totalRound2D.position.y = 45 /*+ 10*/;
+    totalRound2D.position.z = 30;
+    totalRound2D.rotation.x = 0.32;
+    totalRound2D.setBeginNumber(0);
+    totalRound2D.setNumber(0);
+    totalRound2D.stop();
+    totalRound2D.scale.set(0.7, 0.7, 0.7);
+    scene.add(totalRound2D);
+////////////////////////////////////////////
+    stringIn = "000000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01, isMobile);
+    totalScore2D.position.y = -38 /*+ 10*/;
+    totalScore2D.position.z = 40;
+    totalScore2D.rotation.x = -0.3;
+    var totalScore = slot.getTotalScore();
+    totalScore2D.setBeginNumber(totalScore);
+    totalScore2D.setNumber(totalScore);
+    totalScore2D.scale.set(0.7, 0.7, 0.7);
+    scene.add(totalScore2D);
+////////////////////////////////////////////
+    stringIn = "00000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalBet = new MessageBet(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01, isMobile);
+    totalBet.position.y = -23.5 /*+ 10*/;
+    totalBet.position.x = -65;
+    totalBet.position.z = 5;
+    var bet = slot.getBet();
+    totalBet.setBeginNumber(0);
+    totalBet.setNumber(bet);
+    totalBet.scale.set(0.7, 0.7, 0.7);
+    scene.add(totalBet);
+////////////////////////////////////////////
+    stringIn = "00000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalFreeSpin = new MessageFreeSpin(-4.0, 0, 87, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
+    totalFreeSpin.position.y = 12 /*+ 10*/;
+    totalFreeSpin.position.x = 70;
+    totalFreeSpin.position.z = -45;
+    totalFreeSpin.setBeginNumber(0);
+    totalFreeSpin.setNumber(0);
+    totalFreeSpin.stop();
+    scene.add(totalFreeSpin);
+//////////////////////////////////////////////////
+    terminal = new Terminal(textureLoader, isMobile);
+    terminal.name = "terminal";
+    terminal.position.set(0, -40.0, 5.0);
+    terminal.scale.set(0.2, 0.2, 0.2);
+    //  terminal.rotation.set(0.5, 0.0, 0.3);
+    //terminal.rotation.x = Math.PI/9;
+    // terminal.rotation.y = Math.PI/6;
+    //  terminal.rotation.z = Math.PI/6;
+    scene.add(terminal);
+///////////////////////////////////////////////
+}
+
+function updateDesktop(deltaTime, deltaTimeElapsed) {
+    if (slot.autoPlay) {
+        if (slot.autoPlayStart) {
+            slot.autoPlayStart = false;
+            button.stopColor();
+            sunlight.setStopButtonlight();
+            boolStartColor = true;
+            if (!slot.boolFreeSpin) {
+                totalScore2D.setNumber(slot.getTotalScore());
+                slot.autoPlayStart = false;
+                if (!totalRound2D.nameSlot.visible) {
+                    totalRound2D.visibleSlotName();
+                }
+                totalRound2D.setBeginNumber(0);
+                totalRound2D.stop();
+            }
+        }
+        if (slot.autoPlayStop) {
+            if (boolStartColor) {
+                boolStartColor = false;
+                button.startColor();
+                sunlight.setStartButtonlight();
+            }
+            if (!slot.boolFreeSpin) {
+                if (totalRound2D.boolEndOfCount) {
+                    dt += deltaTime;
+                }
+                if (slot.getTotalSum() > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.getTotalSum());
+                }
+            } else {
+                if (slot.totalRoundFreeSpin > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                    boolUpdateScore = true;
+                } else {
+                    if (totalRound2D.boolEndOfCount) {
+                        dt += deltaTime;
+                    }
+                }
+            }
+        }
+
+    } else {
+        buttonHoloAutoPlay.materialHolo.uniforms.boolOn.value = false;
+        buttonHoloAutoPlay.boolOnOffSwitch = false;
+        boolStartStopAutoPlay = false;
+
+        if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
+            if (!slot.boolFreeSpin) {
+                var totalRound = slot.getTotalSum();
+                if (totalRound2D.boolEndOfCount) {
+                    dt += deltaTime;
+                }
+                totalRound2D.nameSlot.visible = false;
+                totalRound2D.setNumber(totalRound);
+            } else {
+                boolUpdateScore = true;
+                totalRound2D.nameSlot.visible = false;
+                totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                boolStopScore = false;
+            }
+        }
+    }
+
+    if (dt > 1.0) {
+        dt = 0;
+        totalScore2D.setNumber(slot.getTotalScore());
+        totalRound2D.setNumber(0);
+        boolStopScore = false;
+        slot.autoPlayStop = false;
+        boolStartColor = true;
+    }
+
+    if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
+        totalScore2D.setNumber(slot.getTotalScore());
+        totalRound2D.setNumber(0);
+        boolUpdateScore = false;
+    }
+    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinPlus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinMinus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinBeforePlus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin - slot.genArraySymb.numFreeSpinToRound);
+    } else  if (!slot.boolFreeSpin) {
+        totalFreeSpin.stop();
+    }
+
+    if (slot.boolChangeStopToStart && boolStartStop) {
+        button.startColor();
+        sunlight.setStartButtonlight();
+        boolStartStop = false;
+    }
+////////////////////////////////////////////////////////////
+    // sunlight.updateWithTime( deltaTimeElapsed );
+////////////////////////////////////////////////////////////
+    slot.updateWithTime(deltaTimeElapsed, deltaTime);
+    totalRound2D.update(deltaTime * 1.2);
+    totalScore2D.update(deltaTime * 1.2);
+    totalBet.update(deltaTime * 1.2);
+    totalFreeSpin.update(deltaTimeElapsed, deltaTime * 1.2);
+////////////////////////////////////////////////////////////
+    var speedFactor = 2.0;
+    if (slot.genArraySymb.numFreeSpin > 0) {
+        if (slot.genArraySymb.numFreeSpin > 0 && slot.boolFreeSpin) {
+            slot.boolMoveBackFreeSpin = false;
+            slot.boolMoveFreeSpin = true;
+            if (slot.position.x <= -15.0) {
+                slot.position.x = -15.0;
+            } else {
+                slot.position.x -= deltaTime * 10.0*speedFactor;
+            }
+            if (slot.position.y <= 0.0) {
+                slot.position.y = 0.0;
+            } else {
+                slot.position.y -= deltaTime * 7.25*speedFactor;
+            }
+            if (slot.position.z >= 30.0) {
+                slot.position.z = 30.0;
+            } else {
+                slot.position.z += deltaTime * 20.0*speedFactor;
+            }
+            ///////////////////
+            totalFreeSpin.startAnimation();
+            if (!isMobile) {
+                if (effectController.focus <= 120) {
+                    effectController.focus = 120;
+                } else {
+                    effectController.focus -= deltaTime * 20;
+                }
+                matChanger(effectController);
+            }
+            //////////////////
+           /* if (totalScore2D.rotation.x <= -Math.PI) {
+                totalScore2D.rotation.x = -Math.PI;
+            } else {
+                totalScore2D.rotation.x -= deltaTime * 1.0 * speedFactor;
+            }*/
+            if (totalScore2D.position.z >= 90) {
+                totalScore2D.position.z = 90;
+            } else {
+                totalScore2D.position.z += deltaTime * 30.0*speedFactor;
+            }
+            sunlight.setPositionTotalScorelight(totalScore2D.position);
+            ///////////////////
+            if (totalBet.rotation.y >= Math.PI) {
+                totalBet.rotation.y = Math.PI;
+            } else {
+                totalBet.rotation.y += deltaTime * 1.0 * speedFactor;
+            }
+            ///////////////////
+            buttonHoloBet.children[0].children[0].children[0].visible = false;
+        }
+    } else if (slot.genArraySymb.numFreeSpin <= 0 && !slot.boolFreeSpin) {
+        if (slot.position.x >= 0.0) {
+            slot.position.x = 0.0;
+        } else {
+            slot.position.x += deltaTime * 10.0*speedFactor;
+        }
+        if (slot.position.y >= 11.0) {
+            slot.position.y = 11.0;
+        } else {
+            slot.position.y += deltaTime * 7.25*speedFactor;
+        }
+        if (slot.position.z <= 0.0) {
+            slot.position.z = 0.0;
+            slot.boolMoveBackFreeSpin = true;
+            slot.boolMoveFreeSpin = false;
+        } else {
+            slot.position.z -= deltaTime * 20.0*speedFactor;
+        }
+        //////////////////////////
+        totalFreeSpin.startAnimationAfterPause();
+        if (!isMobile) {
+            if (effectController.focus >= 140) {
+                effectController.focus = 140;
+            } else {
+                effectController.focus += deltaTime * 20;
+            }
+            matChanger(effectController);
+        }
+        ////////////////////////////
+       /* if (totalScore2D.rotation.x >= -Math.PI/2) {
+            totalScore2D.rotation.x = -Math.PI/2;
+        } else {
+            totalScore2D.rotation.x += deltaTime * 1.0 * speedFactor;
+        }*/
+        /* if (totalScore2D.position.y >= -42) {
+             totalScore2D.position.y = -42;
+         } else {
+             totalScore2D.position.y += deltaTime * 30.0*speedFactor;
+         }*/
+        if (totalScore2D.position.z <= 40) {
+            totalScore2D.position.z = 40;
+        } else {
+            totalScore2D.position.z -= deltaTime * 50.0*speedFactor;
+        }
+        sunlight.setPositionTotalScorelight(totalScore2D.position);
+        //////////////////////////
+        if (totalBet.rotation.y <= 0) {
+            totalBet.rotation.y = 0;
+        } else {
+            totalBet.rotation.y -= deltaTime * 1.0 * speedFactor;
+        }
+        ///////////////////
+        buttonHoloBet.children[0].children[0].children[0].visible = true;
+    }
+////////////////////////////////////////////////////////////
+    buttonHoloFullScreen.updateWithTime(deltaTimeElapsed, deltaTime);
+    buttonHoloAutoPlay.updateWithTime(deltaTimeElapsed, deltaTime);
+    buttonHoloBet.updateWithTime(deltaTimeElapsed, deltaTime);
+    button.updateWithTime(deltaTimeElapsed, deltaTime);
+}
+
+function mobile() {
+    slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, isMobile);
+    slot.position.set(-25, 0, 30);
+    //slot.position.y = 11.0;
+    // slot.scale.set(2.1, 2.1, 2.1);
+    scene.add(slot);
+////////////////////////////////////////////
+    textureFullScreen = textureLoader.load("textures/" + stringInsert + "button/buttonFullScreen.png");
+    textureFullScreenCancel = textureLoader.load("textures/" + stringInsert + "button/buttonFullScreenCancel.png");
+    buttonHoloFullScreen = new ButtonHolo(textureFullScreen, textureLoader, isMobile);
+    buttonHoloFullScreen.name = "buttonHoloFullScreen";
+    buttonHoloFullScreen.position.set(85, 25, 30);
+    buttonHoloFullScreen.scale.set(0.12, 0.12, 0.12);
+    groupButton.add(buttonHoloFullScreen);
+///////////////////////////////////////////////
+    var textureAutoPlay = textureLoader.load("textures/" + stringInsert + "button/buttonAutoPlay.png");
+    buttonHoloAutoPlay = new ButtonHolo(textureAutoPlay, textureLoader, isMobile);
+    buttonHoloAutoPlay.name = "buttonHoloAutoPlay";
+    buttonHoloAutoPlay.position.set(60, -46+15, 27+30);
+    buttonHoloAutoPlay.scale.set(0.2, 0.2, 0.2);
+    groupButton.add(buttonHoloAutoPlay);
+////////////////////////////////////////////
+    var textureBet = textureLoader.load("textures/" + stringInsert + "button/buttonBet.png");
+    buttonHoloBet = new ButtonHolo(textureBet, textureLoader, isMobile);
+    buttonHoloBet.name = "buttonHoloBet";
+    buttonHoloBet.position.set(35, -46+13, 19+30);
+    buttonHoloBet.scale.set(0.2, 0.2, 0.2);
+    groupButton.add(buttonHoloBet);
+////////////////////////////////////////////
+    button = new Button3D(textureLoader, isMobile);
+    button.name = "buttonStartStop";
+    button.position.set(60, -30+12, 14.0+30);
+    button.scale.set(0.15, 0.15, 0.15);
+    button.rotation.x = Math.PI/10;
+    groupButton.add(button);
+    groupButton.name = "groupButton";
+    scene.add(groupButton);
+///////////////////////////////////////////////
+    //var stringIn = totalScore.toString();
+    var stringIn = "000000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    var stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01, isMobile);
+    totalRound2D.position.x = 45;
+    totalRound2D.position.y = 42 /*+ 10*/;
+    totalRound2D.position.z = 35;
+    totalRound2D.rotation.x = 0.3;
+    totalRound2D.setBeginNumber(0);
+    totalRound2D.setNumber(0);
+    totalRound2D.stop();
+    totalRound2D.scale.set(0.65, 0.65, 0.65);
+    scene.add(totalRound2D);
+////////////////////////////////////////////
+    stringIn = "000000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01, isMobile);
+    totalScore2D.position.x = -32;
+    totalScore2D.position.y = 42 /*+ 10*/;
+    totalScore2D.position.z = 35;
+    totalScore2D.rotation.x = 0.3;
+    var totalScore = slot.getTotalScore();
+    totalScore2D.setBeginNumber(totalScore);
+    totalScore2D.setNumber(totalScore);
+    totalScore2D.scale.set(0.65, 0.65, 0.65);
+    scene.add(totalScore2D);
+////////////////////////////////////////////
+    stringIn = "00000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalBet = new MessageBet(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 10, 10, -0.75, 0.01, isMobile);
+    totalBet.position.x = 37;
+    totalBet.position.y = -23.5+14 /*+ 10*/;
+    totalBet.position.z = 5+30;
+    //totalBet.rotation.z = Math.PI / 2.0;
+    //totalBet.children[0].rotation.z = Math.PI / 2.0;
+    var bet = slot.getBet();
+    totalBet.setBeginNumber(0);
+    totalBet.setNumber(bet);
+    totalBet.scale.set(0.7, 0.7, 0.7);
+    scene.add(totalBet);
+////////////////////////////////////////////
+    stringIn = "00000";
+    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
+    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+    stringPattern = "0123456789";
+    //var textLoader = new THREE.TextureLoader(loadingManager);
+    //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
+    totalFreeSpin = new MessageFreeSpin(-4.0, 0, 87, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
+    totalFreeSpin.position.y = 10 /*+ 10*/;
+    totalFreeSpin.position.x = 52;
+    totalFreeSpin.position.z = 0;
+    totalFreeSpin.scale.set(0.7, 0.7, 0.7);
+    totalFreeSpin.setBeginNumber(0);
+    totalFreeSpin.setNumber(0);
+    totalFreeSpin.stop();
+    scene.add(totalFreeSpin);
+//////////////////////////////////////////////////
+    terminal = new Terminal(textureLoader, isMobile);
+    terminal.name = "terminal";
+    terminal.position.set(0, -40+12.0, 5.0+30);
+    terminal.scale.set(0.2, 0.2, 0.2);
+    //  terminal.rotation.set(0.5, 0.0, 0.3);
+    //terminal.rotation.x = Math.PI/9;
+    // terminal.rotation.y = Math.PI/6;
+    //  terminal.rotation.z = Math.PI/6;
+    scene.add(terminal);
+///////////////////////////////////////////////
+}
+
+function updateMobile(deltaTime, deltaTimeElapsed) {
+    if (slot.autoPlay) {
+        if (slot.autoPlayStart) {
+            slot.autoPlayStart = false;
+            button.stopColor();
+            sunlight.setStopButtonlight();
+            boolStartColor = true;
+            if (!slot.boolFreeSpin) {
+                totalScore2D.setNumber(slot.getTotalScore());
+                slot.autoPlayStart = false;
+                if (!totalRound2D.nameSlot.visible) {
+                    totalRound2D.visibleSlotName();
+                }
+                totalRound2D.setBeginNumber(0);
+                totalRound2D.stop();
+            }
+        }
+        if (slot.autoPlayStop) {
+            if (boolStartColor) {
+                boolStartColor = false;
+                button.startColor();
+                sunlight.setStartButtonlight();
+            }
+            if (!slot.boolFreeSpin) {
+                if (totalRound2D.boolEndOfCount) {
+                    dt += deltaTime;
+                }
+                if (slot.getTotalSum() > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.getTotalSum());
+                }
+            } else {
+                if (slot.totalRoundFreeSpin > 0) {
+                    totalRound2D.nameSlot.visible = false;
+                    totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                    boolUpdateScore = true;
+                } else {
+                    if (totalRound2D.boolEndOfCount) {
+                        dt += deltaTime;
+                    }
+                }
+            }
+        }
+
+    } else {
+        buttonHoloAutoPlay.materialHolo.uniforms.boolOn.value = false;
+        buttonHoloAutoPlay.boolOnOffSwitch = false;
+        boolStartStopAutoPlay = false;
+
+        if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
+            if (!slot.boolFreeSpin) {
+                var totalRound = slot.getTotalSum();
+                if (totalRound2D.boolEndOfCount) {
+                    dt += deltaTime;
+                }
+                totalRound2D.nameSlot.visible = false;
+                totalRound2D.setNumber(totalRound);
+            } else {
+                boolUpdateScore = true;
+                totalRound2D.nameSlot.visible = false;
+                totalRound2D.setNumber(slot.totalRoundFreeSpin);
+                boolStopScore = false;
+            }
+        }
+    }
+
+    if (dt > 1.0) {
+        dt = 0;
+        totalScore2D.setNumber(slot.getTotalScore());
+        totalRound2D.setNumber(0);
+        boolStopScore = false;
+        slot.autoPlayStop = false;
+        boolStartColor = true;
+    }
+
+    if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
+        totalScore2D.setNumber(slot.getTotalScore());
+        totalRound2D.setNumber(0);
+        boolUpdateScore = false;
+    }
+    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinPlus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinMinus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
+    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinBeforePlus) {
+        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin - slot.genArraySymb.numFreeSpinToRound);
+    } else  if (!slot.boolFreeSpin) {
+        totalFreeSpin.stop();
+    }
+
+    if (slot.boolChangeStopToStart && boolStartStop) {
+        button.startColor();
+        sunlight.setStartButtonlight();
+        boolStartStop = false;
+    }
+////////////////////////////////////////////////////////////
+    // sunlight.updateWithTime( deltaTimeElapsed );
+////////////////////////////////////////////////////////////
+    slot.updateWithTime(deltaTimeElapsed, deltaTime);
+    totalRound2D.update(deltaTime * 1.2);
+    totalScore2D.update(deltaTime * 1.2);
+    totalBet.update(deltaTime * 1.2);
+    totalFreeSpin.update(deltaTimeElapsed, deltaTime * 1.2);
+////////////////////////////////////////////////////////////
+    var speedFactor = 2.0;
+    if (slot.genArraySymb.numFreeSpin > 0) {
+        if (slot.genArraySymb.numFreeSpin > 0 && slot.boolFreeSpin) {
+            slot.boolMoveBackFreeSpin = false;
+            slot.boolMoveFreeSpin = true;
+            if (slot.position.x >= -22.0) {
+                slot.position.x = -22.0;
+            } else {
+                slot.position.x += deltaTime * 5.0*speedFactor;
+            }
+            if (slot.position.y >= 5.0) {
+                slot.position.y = 5.0;
+            } else {
+                slot.position.y += deltaTime * 7.25*speedFactor;
+            }
+            if (slot.position.z >= 45.0) {
+                slot.position.z = 45.0;
+            } else {
+                slot.position.z += deltaTime * 20.0*speedFactor;
+            }
+            ///////////////////
+            totalFreeSpin.startAnimation();
+            if (!isMobile) {
+                if (effectController.focus <= 120) {
+                    effectController.focus = 120;
+                } else {
+                    effectController.focus -= deltaTime * 20;
+                }
+                matChanger(effectController);
+            }
+            //////////////////
+          /*  if (totalScore2D.rotation.x <= -Math.PI) {
+                totalScore2D.rotation.x = -Math.PI;
+            } else {
+                totalScore2D.rotation.x -= deltaTime * 1.0 * speedFactor;
+            }*/
+            if (totalScore2D.position.y >= 60) {
+                totalScore2D.position.y = 60;
+            } else {
+                totalScore2D.position.y += deltaTime * 30.0*speedFactor;
+            }
+          //  sunlight.setPositionTotalScorelight(totalScore2D.position);
+            ///////////////////
+            if (totalRound2D.position.x >= 48) {
+                totalRound2D.position.x = 48;
+            } else {
+                totalRound2D.position.x += deltaTime * 6.0*speedFactor;
+            }
+
+            if (totalRound2D.position.y <= 30) {
+                totalRound2D.position.y = 30;
+            } else {
+                totalRound2D.position.y -= deltaTime * 15.25*speedFactor;
+            }
+
+            if (totalRound2D.position.z >= 60) {
+                totalRound2D.position.z = 60;
+            } else {
+                totalRound2D.position.z += deltaTime * 33.0*speedFactor;
+            }
+
+            if (totalRound2D.scale.x <= 0.37) {
+                totalRound2D.scale.x = 0.37;
+            } else {
+                totalRound2D.scale.x -= deltaTime * 0.4*speedFactor;
+            }
+            if (totalRound2D.scale.y <= 0.37) {
+                totalRound2D.scale.y = 0.37;
+            } else {
+                totalRound2D.scale.y -= deltaTime * 0.4*speedFactor;
+            }
+            if (totalRound2D.scale.z <= 0.37) {
+                totalRound2D.scale.z = 0.37;
+            } else {
+                totalRound2D.scale.z -= deltaTime * 0.4*speedFactor;
+            }
+            ///////////////////
+            if (totalBet.rotation.y >= Math.PI) {
+                totalBet.rotation.y = Math.PI;
+            } else {
+                totalBet.rotation.y += deltaTime * 2.0 * speedFactor;
+            }
+            if (totalBet.position.z <= 0) {
+                totalBet.position.z = 0;
+            } else {
+                totalBet.position.z -= deltaTime * 30.0*speedFactor;
+            }
+            ///////////////////
+            if (buttonHoloBet.position.y <= -60) {
+                buttonHoloBet.position.y = -60;
+            } else {
+                buttonHoloBet.position.y -= deltaTime * 30.0*speedFactor;
+            }
+          //  buttonHoloBet.children[0].children[0].children[0].visible = false;
+        }
+    } else if (slot.genArraySymb.numFreeSpin <= 0 && !slot.boolFreeSpin) {
+      //  slot.boolMoveBackFreeSpin = true;
+     //   slot.boolMoveFreeSpin = false;
+        if (slot.position.x <= -25.0) {
+            slot.position.x = -25.0;
+        } else {
+            slot.position.x -= deltaTime * 5.0*speedFactor;
+        }
+        if (slot.position.y <= 0.0) {
+            slot.position.y = 0.0;
+        } else {
+            slot.position.y -= deltaTime * 7.25*speedFactor;
+        }
+
+        if (slot.position.z <= 30.0) {
+            slot.position.z = 30.0;
+            slot.boolMoveBackFreeSpin = true;
+            slot.boolMoveFreeSpin = false;
+        } else {
+            slot.position.z -= deltaTime * 20.0*speedFactor;
+        }
+        //////////////////////////
+        totalFreeSpin.startAnimationAfterPause();
+        if (!isMobile) {
+            if (effectController.focus >= 140) {
+                effectController.focus = 140;
+            } else {
+                effectController.focus += deltaTime * 20;
+            }
+            matChanger(effectController);
+        }
+        ////////////////////////////
+       /* if (totalScore2D.rotation.x >= -Math.PI/2) {
+            totalScore2D.rotation.x = -Math.PI/2;
+        } else {
+            totalScore2D.rotation.x += deltaTime * 1.0 * speedFactor;
+        }*/
+         if (totalScore2D.position.y <= 42) {
+             totalScore2D.position.y = 42;
+         } else {
+             totalScore2D.position.y -= deltaTime * 30.0*speedFactor;
+         }
+       /* if (totalScore2D.position.z <= 35) {
+            totalScore2D.position.z = 35;
+        } else {
+            totalScore2D.position.z -= deltaTime * 30.0*speedFactor;
+        }*/
+       // sunlight.setPositionTotalScorelight(totalScore2D.position);
+        ///////////////////
+        if (totalRound2D.position.x <= 45) {
+            totalRound2D.position.x = 45;
+        } else {
+            totalRound2D.position.x -= deltaTime * 10.0*speedFactor;
+        }
+
+        if (totalRound2D.position.y >= 42) {
+            totalRound2D.position.y = 42;
+        } else {
+            totalRound2D.position.y += deltaTime * 15.25*speedFactor;
+        }
+
+        if (totalRound2D.position.z <= 35) {
+            totalRound2D.position.z = 35;
+        } else {
+            totalRound2D.position.z -= deltaTime * 33.0*speedFactor;
+        }
+
+        if (totalRound2D.scale.x >= 0.65) {
+            totalRound2D.scale.x = 0.65;
+        } else {
+            totalRound2D.scale.x += deltaTime * 0.4*speedFactor;
+        }
+        if (totalRound2D.scale.y >= 0.65) {
+            totalRound2D.scale.y = 0.65;
+        } else {
+            totalRound2D.scale.y += deltaTime * 0.4*speedFactor;
+        }
+        if (totalRound2D.scale.z >= 0.65) {
+            totalRound2D.scale.z = 0.65;
+        } else {
+            totalRound2D.scale.z += deltaTime * 0.4*speedFactor;
+        }
+        //////////////////////////
+        if (totalBet.rotation.y <= 0) {
+            totalBet.rotation.y = 0;
+        } else {
+            totalBet.rotation.y -= deltaTime * 2.0 * speedFactor;
+        }
+        if (totalBet.position.z >= 35) {
+            totalBet.position.z = 35;
+        } else {
+            totalBet.position.z += deltaTime * 30.0*speedFactor;
+        }
+        ///////////////////
+        if (buttonHoloBet.position.y >= -33) {
+            buttonHoloBet.position.y = -33;
+        } else {
+            buttonHoloBet.position.y += deltaTime * 30.0*speedFactor;
+        }
+        //buttonHoloBet.children[0].children[0].children[0].visible = true;
+    }
+////////////////////////////////////////////////////////////
+    buttonHoloFullScreen.updateWithTime(deltaTimeElapsed, deltaTime);
+    buttonHoloAutoPlay.updateWithTime(deltaTimeElapsed, deltaTime);
+    buttonHoloBet.updateWithTime(deltaTimeElapsed, deltaTime);
+    button.updateWithTime(deltaTimeElapsed, deltaTime);
+}
+
 function init() {
     isMobile = new DetectedMobile().getIsMobile();
    // isMobile = true;
+
+    if (isMobile) {
+        stringInsert = "mobile/";
+    }
 
     loadingScreen = {
         scene: new THREE.Scene(),
@@ -142,120 +910,11 @@ function init() {
     sunlight = new SunLight(loadingManager, isMobile);
     scene.add(sunlight);
 ////////////////////////////////////////////
-    slot = new ControllerTV(0, 0, 0, 3, 3, 8, 12, textureLoader, isMobile);
-    slot.position.y = 11.0;
-    // slot.scale.set(2.1, 2.1, 2.1);
-    scene.add(slot);
-////////////////////////////////////////////
-    textureFullScreen = textureLoader.load("textures/button/buttonFullScreen.png");
-    textureFullScreenCancel = textureLoader.load("textures/button/buttonFullScreenCancel.png");
-    buttonHoloFullScreen = new ButtonHolo(textureFullScreen, textureLoader, false);
-    buttonHoloFullScreen.name = "buttonHoloFullScreen";
-    buttonHoloFullScreen.position.set(48, 45, 28);
-    buttonHoloFullScreen.scale.set(0.1, 0.1, 0.1);
-    groupButton.add(buttonHoloFullScreen);
-///////////////////////////////////////////////
-    var textureAutoPlay = textureLoader.load("textures/button/buttonAutoPlay.png");
-    buttonHoloAutoPlay = new ButtonHolo(textureAutoPlay, textureLoader, false);
-    buttonHoloAutoPlay.name = "buttonHoloAutoPlay";
-    buttonHoloAutoPlay.position.set(60, -46, 27);
-    buttonHoloAutoPlay.scale.set(0.15, 0.15, 0.15);
-    groupButton.add(buttonHoloAutoPlay);
-////////////////////////////////////////////
-    var textureBet = textureLoader.load("textures/button/buttonBet.png");
-    buttonHoloBet = new ButtonHolo(textureBet, textureLoader, false);
-    buttonHoloBet.name = "buttonHoloBet";
-    buttonHoloBet.position.set(-60, -46, 19);
-    buttonHoloBet.scale.set(0.2, 0.2, 0.2);
-    groupButton.add(buttonHoloBet);
-////////////////////////////////////////////
-    button = new Button3D(textureLoader, false);
-    button.name = "buttonStartStop";
-    button.position.set(60, -30, 14.0);
-    button.scale.set(0.2, 0.2, 0.2);
-    button.rotation.x = Math.PI/10;
-    groupButton.add(button);
-    groupButton.name = "groupButton";
-    scene.add(groupButton);
-///////////////////////////////////////////////
-    //var stringIn = totalScore.toString();
-    var stringIn = "000000";
-    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
-    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    var stringPattern = "0123456789";
-    //var textLoader = new THREE.TextureLoader(loadingManager);
-    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
-    totalRound2D.position.y = 45 /*+ 10*/;
-    totalRound2D.position.z = 25;
-    totalRound2D.rotation.x = 0.4;
-    totalRound2D.setBeginNumber(0);
-    totalRound2D.setNumber(0);
-    totalRound2D.stop();
-    totalRound2D.scale.set(0.7, 0.7, 0.7);
-    scene.add(totalRound2D);
-////////////////////////////////////////////
-    stringIn = "000000";
-    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
-    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    stringPattern = "0123456789";
-    //var textLoader = new THREE.TextureLoader(loadingManager);
-    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalScore2D = new MessageTotalScore(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
-    totalScore2D.position.y = -42 /*+ 10*/;
-    totalScore2D.position.z = 25;
-    totalScore2D.rotation.x = -Math.PI/2;
-    var totalScore = slot.getTotalScore();
-    totalScore2D.setBeginNumber(totalScore);
-    totalScore2D.setNumber(totalScore);
-    totalScore2D.scale.set(0.7, 0.7, 0.7);
-    scene.add(totalScore2D);
-////////////////////////////////////////////
-    stringIn = "00000";
-    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
-    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    stringPattern = "0123456789";
-    //var textLoader = new THREE.TextureLoader(loadingManager);
-    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalBet = new MessageBet(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01);
-    totalBet.position.y = -23.5 /*+ 10*/;
-    totalBet.position.x = -65;
-    totalBet.position.z = 5;
-    var bet = slot.getBet();
-    totalBet.setBeginNumber(0);
-    totalBet.setNumber(bet);
-    totalBet.scale.set(0.7, 0.7, 0.7);
-    scene.add(totalBet);
-////////////////////////////////////////////
-    stringIn = "00000";
-    //var stringPattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    //var stringPattern = "abcdefghijklmnoprstuvwxyz1234567890";
-    //var stringPattern = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    stringPattern = "0123456789";
-    //var textLoader = new THREE.TextureLoader(loadingManager);
-    //var baseTexture =  textLoader.load('textures/winplane/numbers1.png');
-    totalFreeSpin = new MessageFreeSpin(-4.0, 0, 87, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
-    totalFreeSpin.position.y = 12 /*+ 10*/;
-    totalFreeSpin.position.x = 70;
-    totalFreeSpin.position.z = -45;
-    totalFreeSpin.setBeginNumber(0);
-    totalFreeSpin.setNumber(0);
-    totalFreeSpin.stop();
-    scene.add(totalFreeSpin);
-//////////////////////////////////////////////////
-    terminal = new Terminal(textureLoader, false);
-    terminal.name = "terminal";
-    terminal.position.set(0, -40.0, 5.0);
-    terminal.scale.set(0.2, 0.2, 0.2);
-    //  terminal.rotation.set(0.5, 0.0, 0.3);
-    //terminal.rotation.x = Math.PI/9;
-    // terminal.rotation.y = Math.PI/6;
-    //  terminal.rotation.z = Math.PI/6;
-    scene.add(terminal);
-///////////////////////////////////////////////
+    if (isMobile) {
+        mobile();
+    } else {
+        desktop();
+    }
 
     renderer = new THREE.WebGLRenderer({ precision: "highp" });
     if (isMobile) {
@@ -359,219 +1018,12 @@ function animate() {
     var deltaTime = clock.getDelta();
     var deltaTimeElapsed = clock.getElapsedTime();
 
-    if (slot.autoPlay) {
-        if (slot.autoPlayStart) {
-            slot.autoPlayStart = false;
-            button.stopColor();
-            sunlight.setStopButtonlight();
-            boolStartColor = true;
-            if (!slot.boolFreeSpin) {
-                totalScore2D.setNumber(slot.getTotalScore());
-                slot.autoPlayStart = false;
-                if (!totalRound2D.nameSlot.visible) {
-                    totalRound2D.visibleSlotName();
-                }
-                totalRound2D.setBeginNumber(0);
-                totalRound2D.stop();
-            }
-        }
-        if (slot.autoPlayStop) {
-            if (boolStartColor) {
-                boolStartColor = false;
-                button.startColor();
-                sunlight.setStartButtonlight();
-            }
-            if (!slot.boolFreeSpin) {
-                if (totalRound2D.boolEndOfCount) {
-                    dt += deltaTime;
-                }
-                if (slot.getTotalSum() > 0) {
-                    totalRound2D.nameSlot.visible = false;
-                    totalRound2D.setNumber(slot.getTotalSum());
-                }
-            } else {
-                if (slot.totalRoundFreeSpin > 0) {
-                    totalRound2D.nameSlot.visible = false;
-                    totalRound2D.setNumber(slot.totalRoundFreeSpin);
-                    boolUpdateScore = true;
-                } else {
-                    if (totalRound2D.boolEndOfCount) {
-                        dt += deltaTime;
-                    }
-                }
-            }
-        }
-
+    if (isMobile) {
+        updateMobile(deltaTime, deltaTimeElapsed);
     } else {
-        buttonHoloAutoPlay.materialHolo.uniforms.boolOn.value = false;
-        buttonHoloAutoPlay.boolOnOffSwitch = false;
-        boolStartStopAutoPlay = false;
-
-            if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
-                if (!slot.boolFreeSpin) {
-                    var totalRound = slot.getTotalSum();
-                    if (totalRound2D.boolEndOfCount) {
-                        dt += deltaTime;
-                    }
-                    totalRound2D.nameSlot.visible = false;
-                    totalRound2D.setNumber(totalRound);
-                } else {
-                    boolUpdateScore = true;
-                    totalRound2D.nameSlot.visible = false;
-                    totalRound2D.setNumber(slot.totalRoundFreeSpin);
-                    boolStopScore = false;
-                }
-            }
+        updateDesktop(deltaTime, deltaTimeElapsed);
     }
 
-    if (dt > 1.0) {
-        dt = 0;
-        totalScore2D.setNumber(slot.getTotalScore());
-        totalRound2D.setNumber(0);
-        boolStopScore = false;
-        slot.autoPlayStop = false;
-        boolStartColor = true;
-    }
-
-    if (!slot.genArraySymb.boolFreeSpin && boolUpdateScore) {
-        totalScore2D.setNumber(slot.getTotalScore());
-        totalRound2D.setNumber(0);
-        boolUpdateScore = false;
-    }
-    if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinPlus) {
-        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
-    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinMinus) {
-        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
-    } else if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinBeforePlus) {
-        totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin - slot.genArraySymb.numFreeSpinToRound);
-    } else  if (!slot.boolFreeSpin) {
-        totalFreeSpin.stop();
-    }
-
-    if (slot.boolChangeStopToStart && boolStartStop) {
-       button.startColor();
-       sunlight.setStartButtonlight();
-       boolStartStop = false;
-    }
-////////////////////////////////////////////////////////////
-    // sunlight.updateWithTime( deltaTimeElapsed );
-////////////////////////////////////////////////////////////
-    slot.updateWithTime(deltaTimeElapsed, deltaTime);
-    totalRound2D.update(deltaTime * 1.2);
-    totalScore2D.update(deltaTime * 1.2);
-    totalBet.update(deltaTime * 1.2);
-    totalFreeSpin.update(deltaTimeElapsed, deltaTime * 1.2);
-////////////////////////////////////////////////////////////
-    var speedFactor = 2.0;
-    if (slot.genArraySymb.numFreeSpin > 0) {
-        if (slot.genArraySymb.numFreeSpin > 0 && slot.boolFreeSpin) {
-            slot.boolMoveBackFreeSpin = false;
-            slot.boolMoveFreeSpin = true;
-            if (slot.position.x <= -15.0) {
-                slot.position.x = -15.0;
-            } else {
-                slot.position.x -= deltaTime * 10.0*speedFactor;
-            }
-            if (slot.position.y <= 0.0) {
-                slot.position.y = 0.0;
-            } else {
-                slot.position.y -= deltaTime * 7.25*speedFactor;
-            }
-            if (slot.position.z >= 30.0) {
-                slot.position.z = 30.0;
-            } else {
-                slot.position.z += deltaTime * 20.0*speedFactor;
-            }
-            ///////////////////
-            totalFreeSpin.startAnimation();
-            if (!isMobile) {
-                if (effectController.focus <= 120) {
-                    effectController.focus = 120;
-                } else {
-                    effectController.focus -= deltaTime * 20;
-                }
-                matChanger(effectController);
-            }
-            //////////////////
-            if (totalScore2D.rotation.x <= -Math.PI) {
-                totalScore2D.rotation.x = -Math.PI;
-            } else {
-                totalScore2D.rotation.x -= deltaTime * 1.0 * speedFactor;
-            }
-            if (totalScore2D.position.z >= 80) {
-                totalScore2D.position.z = 80;
-            } else {
-                totalScore2D.position.z += deltaTime * 30.0*speedFactor;
-            }
-            sunlight.setPositionTotalScorelight(totalScore2D.position);
-            ///////////////////
-            if (totalBet.rotation.y >= Math.PI) {
-                totalBet.rotation.y = Math.PI;
-            } else {
-                totalBet.rotation.y += deltaTime * 1.0 * speedFactor;
-            }
-            ///////////////////
-            buttonHoloBet.children[0].children[0].children[0].visible = false;
-        }
-    } else if (slot.genArraySymb.numFreeSpin <= 0 && !slot.boolFreeSpin) {
-        if (slot.position.x >= 0.0) {
-            slot.position.x = 0.0;
-        } else {
-            slot.position.x += deltaTime * 10.0*speedFactor;
-        }
-        if (slot.position.y >= 11.0) {
-            slot.position.y = 11.0;
-        } else {
-            slot.position.y += deltaTime * 7.25*speedFactor;
-        }
-        if (slot.position.z <= 0.0) {
-            slot.position.z = 0.0;
-            slot.boolMoveBackFreeSpin = true;
-            slot.boolMoveFreeSpin = false;
-        } else {
-            slot.position.z -= deltaTime * 20.0*speedFactor;
-        }
-        //////////////////////////
-        totalFreeSpin.startAnimationAfterPause();
-        if (!isMobile) {
-            if (effectController.focus >= 140) {
-                effectController.focus = 140;
-            } else {
-                effectController.focus += deltaTime * 20;
-            }
-            matChanger(effectController);
-        }
-        ////////////////////////////
-        if (totalScore2D.rotation.x >= -Math.PI/2) {
-            totalScore2D.rotation.x = -Math.PI/2;
-        } else {
-            totalScore2D.rotation.x += deltaTime * 1.0 * speedFactor;
-        }
-       /* if (totalScore2D.position.y >= -42) {
-            totalScore2D.position.y = -42;
-        } else {
-            totalScore2D.position.y += deltaTime * 30.0*speedFactor;
-        }*/
-        if (totalScore2D.position.z <= 25) {
-            totalScore2D.position.z = 25;
-        } else {
-            totalScore2D.position.z -= deltaTime * 30.0*speedFactor;
-        }
-        sunlight.setPositionTotalScorelight(totalScore2D.position);
-        //////////////////////////
-        if (totalBet.rotation.y <= 0) {
-            totalBet.rotation.y = 0;
-        } else {
-            totalBet.rotation.y -= deltaTime * 1.0 * speedFactor;
-        }
-        ///////////////////
-        buttonHoloBet.children[0].children[0].children[0].visible = true;
-    }
-////////////////////////////////////////////////////////////
-    buttonHoloFullScreen.updateWithTime(deltaTimeElapsed, deltaTime);
-    buttonHoloAutoPlay.updateWithTime(deltaTimeElapsed, deltaTime);
-    buttonHoloBet.updateWithTime(deltaTimeElapsed, deltaTime);
-    button.updateWithTime(deltaTimeElapsed, deltaTime);
 ////////////////////////////////////////////////////////////
     if (boolControls) {
         controls.update();

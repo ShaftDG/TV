@@ -3,6 +3,11 @@ function ButtonHolo(textureButton, textureLoader, isMobile) {
     this.name = "ButtonHolo";
     this.textureLoader = textureLoader;
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.mixers = [];
 
     this.dt = 0.0;
@@ -11,14 +16,14 @@ function ButtonHolo(textureButton, textureLoader, isMobile) {
 
     var materialCorps = new THREE.MeshStandardMaterial({
         // color: new THREE.Color("#b8b5b8"),
-        map: textureLoader.load("textures/button/holo_corps_Base_Color.png"),
-        metalnessMap: textureLoader.load("textures/button/holo_corps_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "button/holo_corps_Base_Color.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "button/holo_corps_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/button/holo_corps_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "button/holo_corps_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/button/holo_corps_Normal.png"),
-        aoMap: textureLoader.load("textures/button/holo_corps_Mixed_AO.png"),
-        bumpMap: textureLoader.load("textures/button/holo_corps_Height.png"),
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "button/holo_corps_Normal.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "button/holo_corps_Mixed_AO.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "button/holo_corps_Height.png"),
     });
     ///////////////////////////////////////////////////////
     var vertexShader = shaders.vertexShaders.vertexShTotalHologram;
@@ -32,9 +37,9 @@ function ButtonHolo(textureButton, textureLoader, isMobile) {
         },
         uniforms: {
             color: { value : new THREE.Vector3(10, 3, 3) },
-            s_texture:   { value: textureLoader.load("textures/background/display.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             f_texture:   { value: textureButton },
-            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            noise_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
             time: { value: 0.0 },
             rateFactor:   { value: 1.0 },
             boolGlitch:  { value: false },

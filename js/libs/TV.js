@@ -5,6 +5,11 @@ function TV(textureLoader, align, isMobile)
 
     this.mixers = [];
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+    
     this.boolRotate = false;
     this.boolRate = false;
 
@@ -16,14 +21,14 @@ function TV(textureLoader, align, isMobile)
     this.i = 0;
     this.dt = 0.0;
     this.arrayTexturesSymb = [
-        textureLoader.load("textures/numbers/symb_1.png"),
-        textureLoader.load("textures/numbers/symb_2.png"),
-        textureLoader.load("textures/numbers/symb_3.png"),
-        textureLoader.load("textures/numbers/symb_4.png"),
-        textureLoader.load("textures/numbers/symb_5.png"),
-        textureLoader.load("textures/numbers/symb_6.png"),
-        textureLoader.load("textures/numbers/symb_7.png"),
-        textureLoader.load("textures/numbers/symb_8.png")
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_1.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_2.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_3.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_4.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_5.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_6.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_7.png"),
+        textureLoader.load("textures/" + this.stringInsert + "numbers/symb_8.png")
     ];
 
     var arrayLoadFBXSymb = [
@@ -65,9 +70,9 @@ function TV(textureLoader, align, isMobile)
         },
         uniforms: {
             color: { value : new THREE.Color("#00d3ff") },
-            f_texture:   { value: textureLoader.load("textures/noise/noise.png") },
-            s_texture:   { value: textureLoader.load("textures/noise/wideScreen.png") },
-            t_texture:   { value: textureLoader.load("textures/background/display.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/wideScreen.png") },
+            t_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
             time: { value: 0.0 },
             speedFactor:   { value: 10.0 },
             boolGlitch:  { value: false },
@@ -127,9 +132,9 @@ function TV(textureLoader, align, isMobile)
             colorBorderDisplay:     { value: new THREE.Color( "#111111" ) },
           //  colorClampColor:     { value: new THREE.Color( "#f0f8fd" ) },
             arrayTexture: { value: this.arrayTexturesSymb },
-            f_texture:   { value: textureLoader.load("textures/background/display.png") },
-            s_texture:   { value: textureLoader.load("textures/numbers/compose.png") },
-            noise_texture:   { value: textureLoader.load("textures/noise/noise.png") },
+            f_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "background/display.png") },
+            s_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "numbers/compose.png") },
+            noise_texture:   { value: textureLoader.load("textures/" + this.stringInsert + "noise/noise.png") },
             time: { value: 0.0 },
             timeRotate: { value: 1.0 },
             rateFactor:   { value: 0.0 },
@@ -156,35 +161,38 @@ function TV(textureLoader, align, isMobile)
     var materialDisplay = this.materialDisplay;
     var materialPanel = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
-        map: textureLoader.load("textures/tv/monitor_Base_Color.png"),
-        bumpMap: textureLoader.load("textures/tv/monitor_Height.png"),
-        metalnessMap: textureLoader.load("textures/tv/monitor_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "tv/monitor_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "tv/monitor_Height.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "tv/monitor_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/tv/monitor_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "tv/monitor_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/tv/monitor_Normal.png"),
-        aoMap: textureLoader.load("textures/tv/monitor_Mixed_AO.png"),
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "tv/monitor_Normal.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "tv/monitor_Mixed_AO.png"),
         //aoMapIntensity: 0.5,
       //  envMap: cubeCamera.renderTarget.texture
     });
     var materialHand1 = new THREE.MeshStandardMaterial({
      //   color: new THREE.Color("#787878"),
-        map: textureLoader.load("textures/tv/bracket_Base_Color.png"),
-        bumpMap: textureLoader.load("textures/tv/bracket_Height.png"),
-        metalnessMap: textureLoader.load("textures/tv/bracket_Metallic.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "tv/bracket_Base_Color.png"),
+        bumpMap: textureLoader.load("textures/" + this.stringInsert + "tv/bracket_Height.png"),
+        metalnessMap: textureLoader.load("textures/" + this.stringInsert + "tv/bracket_Metallic.png"),
         metalness: 1.0,
-        roughnessMap: textureLoader.load("textures/tv/bracket_Roughness.png"),
+        roughnessMap: textureLoader.load("textures/" + this.stringInsert + "tv/bracket_Roughness.png"),
         roughness: 1.0,
-        normalMap: textureLoader.load("textures/tv/bracket_Normal.png"),
-        aoMap: textureLoader.load("textures/tv/bracket_Mixed_AO.png"),
+        normalMap: textureLoader.load("textures/" + this.stringInsert + "tv/bracket_Normal.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "tv/bracket_Mixed_AO.png"),
         //aoMapIntensity: 0.5,
      //   envMap: cubeCamera.renderTarget.texture
     });
 
     var tvParent = new THREE.Object3D;
-
-    var FBXobject = "tvCRT.fbx";
-
+    var FBXobject = "";
+    if (isMobile) {
+        FBXobject = "tvCRTMobile.fbx";
+    } else {
+        FBXobject = "tvCRT.fbx";
+    }
     var loaderOBJ = new THREE.FBXLoader( loadingManager );
     loaderOBJ.load("obj/" + FBXobject, function (object) {
 
@@ -228,7 +236,7 @@ function TV(textureLoader, align, isMobile)
     geometry.rotateX(-Math.PI*2.0);
     var material = new THREE.MeshPhongMaterial({
         // color: new THREE.Color("#ff0300"),
-        map: textureLoader.load("textures/numbers/symb_1.png"),
+        map: textureLoader.load("textures/" + this.stringInsert + "numbers/symb_1.png"),
         transparent: true
     });
    // material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
