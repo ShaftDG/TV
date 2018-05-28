@@ -122,7 +122,7 @@ function MessageBet(posX, posY, posZ, textureLoader, stringPattern, col, row, st
         roughnessMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Roughness.png"),
         roughness: 1.0,
         normalMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Normal.png"),
-        // aoMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Mixed_AO.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Mixed_AO.png"),
     });
     var materialCorpsLinz = new THREE.MeshStandardMaterial({
         //  color: new THREE.Color("#a5a5a5"),

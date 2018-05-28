@@ -72,7 +72,7 @@ function Button3D(textureLoader, isMobile) {
             boolGlitch:  { value: false },
             start:   { value: 0.01 },
             end:   { value: 0.05 },
-            alpha:   { value: 0.01 },
+            alpha:   { value: 0.5 },
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -87,9 +87,9 @@ function Button3D(textureLoader, isMobile) {
     this.materialHoloPlane.uniforms.s_texture.value.wrapS = this.materialHoloPlane.uniforms.s_texture.value.wrapT = THREE.MirroredRepeatWrapping;
     this.materialHoloPlane.uniforms.t_texture.value.wrapS = this.materialHoloPlane.uniforms.t_texture.value.wrapT = THREE.RepeatWrapping;
     var materialHoloPlane = this.materialHoloPlane;
-    if (isMobile) {
+    /*if (isMobile) {
         this.materialHoloPlane.uniforms.alpha.value = 0.5;
-    }
+    }*/
     ////////////////////////////////////////
     var buttonParent = new THREE.Object3D;
     var loaderOBJ = new THREE.FBXLoader( loadingManager );

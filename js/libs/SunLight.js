@@ -61,16 +61,73 @@ function SunLight(loadingManager, isMobile) {
         this.add(this.buttonStartPointlight);
 
         var roomPointlight = new THREE.PointLight("#fdffd5", 1.0, 100, 2);
-        roomPointlight.position.set(-65, 64, -70);
+        roomPointlight.position.set(-65, 64, -40);
         roomPointlight.castShadow = true;
         roomPointlight.shadow.camera.near = 1;
         roomPointlight.shadow.camera.far = 500;
         roomPointlight.shadow.bias = - 0.005;
         this.add(roomPointlight);
+
+        var materialBase = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/" + this.stringInsert + "freespin/base_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/" + this.stringInsert + "freespin/base_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/" + this.stringInsert + "freespin/base_Roughness.png"),
+            normalMap: textureLoader.load("textures/" + this.stringInsert + "freespin/base_Normal.png"),
+            bumpMap: textureLoader.load("textures/" + this.stringInsert + "freespin/base_Height.png"),
+            aoMap: textureLoader.load("textures/" + this.stringInsert + "freespin/base_Mixed_AO.png")
+            //  side: THREE.DoubleSide
+        });
+        var materialArc = new THREE.MeshStandardMaterial({
+            //  color: new THREE.Color("#dddddd"),
+            //  refractionRatio: 0.05,
+            // envMap: cubeCamera.renderTarget.texture,
+            metalness: 1.0,
+            roughness: 1.0,
+            map: textureLoader.load("textures/" + this.stringInsert + "freespin/arc_Base_Color.png"),
+            metalnessMap: textureLoader.load("textures/" + this.stringInsert + "freespin/arc_Metallic.png"),
+            roughnessMap: textureLoader.load("textures/" + this.stringInsert + "freespin/arc_Roughness.png"),
+            normalMap: textureLoader.load("textures/" + this.stringInsert + "freespin/arc_Normal.png"),
+            bumpMap: textureLoader.load("textures/" + this.stringInsert + "freespin/arc_Height.png"),
+            aoMap: textureLoader.load("textures/" + this.stringInsert + "freespin/arc_Mixed_AO.png")
+            //  side: THREE.DoubleSide
+        });
+        var materialLamp = new THREE.MeshBasicMaterial({
+            color: new THREE.Color("#f1e8d9"),
+            //  emissive: new THREE.Color("#fff3e7"),
+            //  emissiveIntensity: 0.25,
+        });
+
+    var OBJobject = "lamp.fbx";
+    var holoParent = new THREE.Object3D;
+    var loaderOBJ = new THREE.FBXLoader( loadingManager );
+    loaderOBJ.load("obj/" + OBJobject, function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                if (child.name == "base") {
+                    child.material = materialBase;
+                } else if (child.name == "arc") {
+                    child.material = materialArc;
+                } else if (child.name == "lamp") {
+                    child.material = materialLamp;
+                } else {
+                    child.material.color = new THREE.Color("#303030");
+                }
+                holoParent.add(object);
+            }
+        });
+    });
+    holoParent.position.copy(roomPointlight.position);
+    this.holoParent = holoParent;
+    this.add(holoParent);
         // var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
-        var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
+      /*  var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
         var material = new THREE.MeshBasicMaterial({
-          //  color: new THREE.Color("#fff3e7"),
+          color: new THREE.Color("#c4bab0"),
           //  emissive: new THREE.Color("#fff3e7"),
           //  emissiveIntensity: 0.25,
         });
@@ -82,7 +139,7 @@ function SunLight(loadingManager, isMobile) {
         var geometry = new THREE.PlaneBufferGeometry(23, 36);
         geometry.rotateX(Math.PI/2.0);
         var material = new THREE.MeshBasicMaterial({
-         //   color: new THREE.Color("#fff3e7"),
+            color: new THREE.Color("#c4bab0"),
             map: textureLoader.load("textures/" + this.stringInsert + "sprites/glow.png"),
           //  emissive: new THREE.Color("#fff3e7"),
          //   emissiveIntensity: 1.0,
@@ -97,7 +154,7 @@ function SunLight(loadingManager, isMobile) {
 
         var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
         var material = new THREE.MeshBasicMaterial({
-          //  color: new THREE.Color("#fff3e7"),
+            color: new THREE.Color("#c4bab0"),
          //   emissive: new THREE.Color("#fff3e7"),
           //  emissiveIntensity: 1.0,
         });
@@ -110,7 +167,7 @@ function SunLight(loadingManager, isMobile) {
         var geometry = new THREE.PlaneBufferGeometry(23, 36);
         geometry.rotateX(Math.PI/2.0);
         var material = new THREE.MeshBasicMaterial({
-            //   color: new THREE.Color("#fff3e7"),
+            color: new THREE.Color("#c4bab0"),
             map: textureLoader.load("textures/" + this.stringInsert + "sprites/glow.png"),
           //  emissive: new THREE.Color("#fff3e7"),
           //  emissiveIntensity: 1.0,
@@ -122,7 +179,7 @@ function SunLight(loadingManager, isMobile) {
       //  lamp.position.x += 0.2;
         lamp.position.y += 1.5;
         lamp.position.z += 50;
-        this.add(lamp);
+        this.add(lamp);*/
 
         var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.5, 100, 2);
         totalRoundPointlight.position.set(0, 45, 70);

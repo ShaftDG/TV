@@ -13,6 +13,8 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
     
     this.boolEndOfCount = false;
 
+    this.isZero = false;
+
     this.withoutSwitchNumber = false;
     this.speedSwitchNumber = speedSwitchNumber;
     if (speedSwitchNumber == 0.0) {
@@ -160,7 +162,7 @@ function MessageTotalRound(posX, posY, posZ, textureLoader, stringPattern, col, 
         roughnessMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Roughness.png"),
         roughness: 1.0,
         normalMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Normal.png"),
-       // aoMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Mixed_AO.png"),
+        aoMap: textureLoader.load("textures/" + this.stringInsert + "holoProj/corps_Mixed_AO.png"),
     });
     var materialCorpsLinz = new THREE.MeshStandardMaterial({
       //  color: new THREE.Color("#a5a5a5"),
@@ -439,6 +441,7 @@ MessageTotalRound.prototype.visibleSlotName = function() {
     this.nameSlot.visible = true;
     this.nameSlot.material.uniforms.boolGlitch.value = true;
     this.dt1 = 0.0;
+    this.stop();
 };
 
 MessageTotalRound.prototype.setBeginNumber = function(number) {
@@ -451,6 +454,7 @@ MessageTotalRound.prototype.setNumber = function(number) {
 };
 
 MessageTotalRound.prototype.setString = function(number) {
+    this.isZero = false;
     if (number > -1) {
         var stringIn = number.toString();
         if (stringIn.length > this.groupNumbers.children.length) {
@@ -560,6 +564,9 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                     } else if (this.k == this.number) {
                         this.StartStopSwitch = false;
                         this.boolEndOfCount = true;
+                        if (this.k == 0.0) {
+                            this.isZero = true;
+                        }
                     }
                 }
             } else {
