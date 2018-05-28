@@ -125,6 +125,7 @@ function TV(textureLoader, align, isMobile)
          //   USE_OFF       : false,
          //   USE_GLITCH    : false,
             USE_SCANLINE  : true,
+            USE_MOBILE    : false,
             NUMSYMB       : 8,
             INDEX_TEXTURE : 3,
         },
@@ -153,6 +154,7 @@ function TV(textureLoader, align, isMobile)
     } );
     if (isMobile) {
         this.materialDisplay.defines.USE_SCANLINE = false;
+        this.materialDisplay.defines.USE_MOBILE = true;
     }
 
     for (var i = 0; i < this.arrayTexturesSymb.length; i++) {

@@ -23,11 +23,11 @@ var groupButton = new THREE.Object3D;
 var clock = new THREE.Clock();
 var mouseX = 0, mouseY = 0;
 var stats;
-/*var rendererStats	= new THREEx.RendererStats();
+var rendererStats	= new THREEx.RendererStats();
 rendererStats.domElement.style.position	= 'absolute';
 rendererStats.domElement.style.right	= '0px';
 rendererStats.domElement.style.bottom	= '0px';
-document.body.appendChild( rendererStats.domElement );*/
+document.body.appendChild( rendererStats.domElement );
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -436,7 +436,7 @@ function mobile() {
     button = new Button3D(textureLoader, isMobile);
     button.name = "buttonStartStop";
     button.position.set(60, -30+12, 14.0+30);
-    button.scale.set(0.15, 0.15, 0.15);
+    button.scale.set(0.2, 0.2, 0.2);
     button.rotation.x = Math.PI/10;
     groupButton.add(button);
     groupButton.name = "groupButton";
@@ -452,8 +452,8 @@ function mobile() {
     //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
     totalRound2D = new MessageTotalRound(0, 0, 0, textureLoader, stringPattern, 5, 2, stringIn, "centre", 12, 12, -0.75, 0.01, isMobile);
     totalRound2D.position.x = 45;
-    totalRound2D.position.y = 42 /*+ 10*/;
-    totalRound2D.position.z = 35;
+    totalRound2D.position.y = 40 /*+ 10*/;
+    totalRound2D.position.z = 32;
     totalRound2D.rotation.x = 0.3;
     totalRound2D.setBeginNumber(0);
     totalRound2D.setNumber(0);
@@ -506,7 +506,7 @@ function mobile() {
     //var textLoader = new THREE.TextureLoader(loadingManager);
     //var baseTexture =  textLoader.load('textures/" + stringInsert + "winplane/numbers1.png');
     totalFreeSpin = new MessageFreeSpin(-4.0, 0, 87, textureLoader, stringPattern, 5, 2, stringIn, "centre", 7, 7, -0.75, 0.01, isMobile);
-    totalFreeSpin.position.y = 10 /*+ 10*/;
+    totalFreeSpin.position.y = 14 /*+ 10*/;
     totalFreeSpin.position.x = 52;
     totalFreeSpin.position.z = 0;
     totalFreeSpin.scale.set(0.7, 0.7, 0.7);
@@ -680,14 +680,14 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
                 totalRound2D.position.x += deltaTime * 6.0*speedFactor;
             }
 
-            if (totalRound2D.position.y <= 30) {
-                totalRound2D.position.y = 30;
+            if (totalRound2D.position.y <= 32) {
+                totalRound2D.position.y = 32;
             } else {
                 totalRound2D.position.y -= deltaTime * 15.25*speedFactor;
             }
 
-            if (totalRound2D.position.z >= 60) {
-                totalRound2D.position.z = 60;
+            if (totalRound2D.position.z >= 58) {
+                totalRound2D.position.z = 58;
             } else {
                 totalRound2D.position.z += deltaTime * 33.0*speedFactor;
             }
@@ -938,7 +938,7 @@ function init() {
         renderer.autoClear = false;
         effectController = {
             focus: 140.0,
-            aperture: 3,
+            aperture: 1.0,
             maxblur: 0.05
         };
         matChanger = function (effectController) {
@@ -1029,20 +1029,20 @@ function animate() {
         controls.update();
     }
     stats.update();
-  //  rendererStats.update(renderer);
+    rendererStats.update(renderer);
     render();
 }
 
 function render() {
-  //  if (!isMobile) {
+    //if (!isMobile) {
         // render cube map
       //  slot.visible = false;
       //  cubeCamera.update( renderer, scene );
       //  slot.visible = true;
-    //    postprocessing.composer.render(0.1);
-  //  } else {
+     //   postprocessing.composer.render(0.1);
+   // } else {
         renderer.render( scene, camera );
-   // }
+  //  }
 }
 
 function onKeyDown ( event ) {

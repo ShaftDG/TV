@@ -12,7 +12,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.f = 0;
     this.g = 0;
     if (isMobile) {
-        this.endPosition = new THREE.Vector3(65, 5, 12);
+        this.endPosition = new THREE.Vector3(65, 10, 12);
     } else {
         this.endPosition = new THREE.Vector3(77, 12, 12);
     }
@@ -288,7 +288,7 @@ if (isMobile) {
         }
     }
     for (var i = 0; i < this.particlesArray.length; i++) {
-            var flameParticlesFreeSpin = new FlameBonfire(optionsFire, loadingManager, false);
+            var flameParticlesFreeSpin = new FlameBonfire(optionsFire, loadingManager, isMobile);
             flameParticlesFreeSpin.name = "fire";
             flameParticlesFreeSpin.position.x = 0;
             flameParticlesFreeSpin.position.y = -20 + i * 10;

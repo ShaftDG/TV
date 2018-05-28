@@ -73,6 +73,9 @@ function FlameBonfire(optionsFire, loadingManager, isMobile) {
         movementSpeed: 4.2,
         pulseFactor: 0.8
     };
+    if (isMobile) {
+        explodeOption.totalParticles = 200;
+    }
     this.explodeParticles = new ExplodeParticles(explodeOption);
     // this.explodeParticles.start();
     this.explodeParticles.name = "explodeParticles";

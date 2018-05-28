@@ -2,6 +2,11 @@ function SunLight(loadingManager, isMobile) {
     THREE.Object3D.apply(this);
     this.name = "SunLight";
 
+    this.stringInsert = "";
+    if (isMobile) {
+        this.stringInsert = "mobile/";
+    }
+
     //Ambient light
     this.ambient = new THREE.AmbientLight( "#76796f" );
     this.add( this.ambient );
@@ -64,26 +69,59 @@ function SunLight(loadingManager, isMobile) {
         this.add(roomPointlight);
         // var geometry = new THREE.SphereBufferGeometry(3, 8, 8);
         var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
-        var material = new THREE.MeshLambertMaterial({
+        var material = new THREE.MeshBasicMaterial({
           //  color: new THREE.Color("#fff3e7"),
-            emissive: new THREE.Color("#fff3e7"),
-            emissiveIntensity: 0.25,
+          //  emissive: new THREE.Color("#fff3e7"),
+          //  emissiveIntensity: 0.25,
         });
         var lamp = new THREE.Mesh(geometry, material);
         lamp.position.copy(roomPointlight.position);
-        lamp.position.y += 2.5;
+        lamp.position.y += 1.5;
+        this.add(lamp);
+
+        var geometry = new THREE.PlaneBufferGeometry(23, 36);
+        geometry.rotateX(Math.PI/2.0);
+        var material = new THREE.MeshBasicMaterial({
+         //   color: new THREE.Color("#fff3e7"),
+            map: textureLoader.load("textures/" + this.stringInsert + "sprites/glow.png"),
+          //  emissive: new THREE.Color("#fff3e7"),
+         //   emissiveIntensity: 1.0,
+            transparent: true,
+            opacity: 0.8
+        });
+        var lamp = new THREE.Mesh(geometry, material);
+        lamp.position.copy(roomPointlight.position);
+      //  lamp.position.x += 0.2;
+        lamp.position.y += 1.5;
         this.add(lamp);
 
         var geometry = new THREE.BoxBufferGeometry(16, 1, 24);
-        var material = new THREE.MeshLambertMaterial({
+        var material = new THREE.MeshBasicMaterial({
           //  color: new THREE.Color("#fff3e7"),
-            emissive: new THREE.Color("#fff3e7"),
-            emissiveIntensity: 0.25,
+         //   emissive: new THREE.Color("#fff3e7"),
+          //  emissiveIntensity: 1.0,
         });
         var lamp = new THREE.Mesh(geometry, material);
         lamp.position.copy(roomPointlight.position);
         lamp.position.z += 50;
-        lamp.position.y += 2.5;
+        lamp.position.y += 1.75;
+        this.add(lamp);
+
+        var geometry = new THREE.PlaneBufferGeometry(23, 36);
+        geometry.rotateX(Math.PI/2.0);
+        var material = new THREE.MeshBasicMaterial({
+            //   color: new THREE.Color("#fff3e7"),
+            map: textureLoader.load("textures/" + this.stringInsert + "sprites/glow.png"),
+          //  emissive: new THREE.Color("#fff3e7"),
+          //  emissiveIntensity: 1.0,
+            transparent: true,
+            opacity: 0.8
+        });
+        var lamp = new THREE.Mesh(geometry, material);
+        lamp.position.copy(roomPointlight.position);
+      //  lamp.position.x += 0.2;
+        lamp.position.y += 1.5;
+        lamp.position.z += 50;
         this.add(lamp);
 
         var totalRoundPointlight = new THREE.PointLight("#5dfff7", 1.5, 100, 2);

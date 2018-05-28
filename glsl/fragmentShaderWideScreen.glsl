@@ -147,6 +147,10 @@ float sharpness = 100.0;
     float alpha = clamp( leftRight + upDown, 0.0, 1.0 );
 
 //gl_FragColor
+
+vec4 colorBack = vec4(1.0);
+
+#ifdef USE_MOBILE
     vec2 quv = vUv - 0.5;
     vec3 color_back = vec3(0.9, 1.0, 0.95);
     float start = 0.0;
@@ -157,8 +161,9 @@ float sharpness = 100.0;
         smoothstep(start, end, 1.0 - dot(length(quv), 1.0)),
         power
     );
-    vec4 colorBack = vec4( clamp(rim, 0.0, 1.0) * al * color_back, 1.0 );
-//vec4 colorBack = vec4(1.0);
+    colorBack = vec4( clamp(rim, 0.0, 1.0) * al * color_back, 1.0 )*1.1;
+#endif
+
 vec4 colorMain = getSampleFromArray(arrayTexture, int(textureIndex), vec2(vUv.x, vUv.y + t));
 vec4 colorSecond = getSampleFromArray(arrayTexture, int(textureIndex) >= 7 ? 0 : int(textureIndex) + 1, vec2(vUv.x, vUv.y + t));
 
@@ -198,6 +203,11 @@ vec4 colorTotal =  mix( colorMain,
                         colorSecond,
                         checkerboard
                       );
+
+#ifdef USE_MOBILE
+    colorTotal *= 1.05;
+#endif
+
 vec4 mixBack = mix( colorBack,
                     colorTotal,
                     colorTotal.a
