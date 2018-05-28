@@ -399,7 +399,7 @@ MessageTotalScore.prototype.constructor = MessageTotalScore;
 
 MessageTotalScore.prototype.setNumber = function(number) {
     this.number = number;
-    var deltaNumber = Math.abs(this.number - (this.k + 1));
+    var deltaNumber = Math.abs(this.number - (this.k));
     this.lengthChangeNumbers = deltaNumber.toString().length;
     this.StartStopSwitch = true;
 };
@@ -531,11 +531,11 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                 this.dt += deltaTime;
                 if (this.dt > this.speedSwitchNumber) {
                     if (this.k < this.number) {
-                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 4) {
+                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 5) {
                             this.k += 1111;
-                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 3) {
+                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 4) {
                             this.k += 111;
-                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 2) {
+                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 3) {
                             this.k += 11;
                         } else {
                             this.k++;
@@ -545,11 +545,11 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                             this.k = this.number;
                         }
                     } else if (this.k > this.number) {
-                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 4) {
+                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 5) {
                             this.k -= 1111;
-                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 3) {
+                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 4) {
                             this.k -= 111;
-                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 2) {
+                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 3) {
                             this.k -= 11;
                         } else {
                             this.k--;

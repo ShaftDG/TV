@@ -24,11 +24,11 @@ var groupButton = new THREE.Object3D;
 var clock = new THREE.Clock();
 var mouseX = 0, mouseY = 0;
 var stats;
-var rendererStats	= new THREEx.RendererStats();
+/*var rendererStats	= new THREEx.RendererStats();
 rendererStats.domElement.style.position	= 'absolute';
 rendererStats.domElement.style.right	= '0px';
 rendererStats.domElement.style.bottom	= '0px';
-document.body.appendChild( rendererStats.domElement );
+document.body.appendChild( rendererStats.domElement );*/
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -1047,7 +1047,7 @@ function animate() {
         controls.update();
     }
     stats.update();
-    rendererStats.update(renderer);
+   // rendererStats.update(renderer);
     render();
 }
 
