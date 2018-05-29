@@ -8,7 +8,7 @@ var matChanger, effectController;
 var camera, cubeCamera, scene, renderer, controls;
 var cameraParent = new THREE.Object3D;
 
-var sunlight, tv, slot;
+var sunlight, tv, slot, sound;
 
 var dtCollect = 0;
 var dtNameSlot = 0;
@@ -217,12 +217,14 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
                     dtCollect += deltaTime;
                 }
                 if (slot.getTotalSum() > 0) {
+                    sound.playWin();
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.getTotalSum());
                 }
             } else {
                 if (slot.totalRoundFreeSpin > 0) {
                     totalRound2D.nameSlot.visible = false;
+                    sound.playWin();
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
                     boolUpdateScore = true;
                 } else {
@@ -240,6 +242,7 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
 
         if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
             if (!slot.boolFreeSpin) {
+                sound.playWin();
                 var totalRound = slot.getTotalSum();
                 if (totalRound2D.boolEndOfCount) {
                     dtCollect += deltaTime;
@@ -323,14 +326,14 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
             }
             ///////////////////
             totalFreeSpin.startAnimation();
-            if (!isMobile) {
+         /*   if (!isMobile) {
                 if (effectController.focus <= 120) {
                     effectController.focus = 120;
                 } else {
                     effectController.focus -= deltaTime * 20;
                 }
                 matChanger(effectController);
-            }
+            }*/
             //////////////////
            /* if (totalScore2D.rotation.x <= -Math.PI) {
                 totalScore2D.rotation.x = -Math.PI;
@@ -372,14 +375,14 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
         }
         //////////////////////////
         totalFreeSpin.startAnimationAfterPause();
-        if (!isMobile) {
+       /* if (!isMobile) {
             if (effectController.focus >= 140) {
                 effectController.focus = 140;
             } else {
                 effectController.focus += deltaTime * 20;
             }
             matChanger(effectController);
-        }
+        }*/
         ////////////////////////////
        /* if (totalScore2D.rotation.x >= -Math.PI/2) {
             totalScore2D.rotation.x = -Math.PI/2;
@@ -671,14 +674,14 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
             }
             ///////////////////
             totalFreeSpin.startAnimation();
-            if (!isMobile) {
+           /* if (!isMobile) {
                 if (effectController.focus <= 120) {
                     effectController.focus = 120;
                 } else {
                     effectController.focus -= deltaTime * 20;
                 }
                 matChanger(effectController);
-            }
+            }*/
             //////////////////
           /*  if (totalScore2D.rotation.x <= -Math.PI) {
                 totalScore2D.rotation.x = -Math.PI;
@@ -767,14 +770,14 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
         }
         //////////////////////////
         totalFreeSpin.startAnimationAfterPause();
-        if (!isMobile) {
+       /* if (!isMobile) {
             if (effectController.focus >= 140) {
                 effectController.focus = 140;
             } else {
                 effectController.focus += deltaTime * 20;
             }
             matChanger(effectController);
-        }
+        }*/
         ////////////////////////////
        /* if (totalScore2D.rotation.x >= -Math.PI/2) {
             totalScore2D.rotation.x = -Math.PI/2;
@@ -934,11 +937,13 @@ function init() {
         desktop();
     }
 
-    renderer = new THREE.WebGLRenderer({ precision: "highp" });
+    sound = new SoundController(loadingManager);
+    scene.add(sound);
+
     if (isMobile) {
-        renderer.antialias = false;
+        renderer = new THREE.WebGLRenderer({ antialias: false, precision: "highp" });
     } else {
-        renderer.antialias = true;
+        renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
         renderer.physicallyBasedShading = true;
         renderer.shadowMap.enabled = true;
         renderer.shadowMapAutoUpdate = true;
@@ -950,7 +955,7 @@ function init() {
     // renderer.setClearColor("#dcf6ff");
     renderer.setSize( window.innerWidth, window.innerHeight );
 
-    if (!isMobile) {
+   /* if (!isMobile) {
         scene.matrixAutoUpdate = false;
         initPostprocessing();
         renderer.autoClear = false;
@@ -965,7 +970,7 @@ function init() {
             postprocessing.bokeh.uniforms["maxblur"].value = effectController.maxblur;
         };
         matChanger(effectController);
-    }
+    }*/
     container.appendChild( renderer.domElement );
 
     if (boolControls) {
@@ -1073,6 +1078,7 @@ function onKeyDown ( event ) {
         case 84: // t - paused
             break;
         case 32: // stop rotate
+          //  sound.playButtonStart();
             if (!slot.genArraySymb.boolFreeSpin) {
                 slot.stopStartRotateSymb();
                 var totalScore = slot.getTotalScore();
@@ -1088,6 +1094,7 @@ function onKeyDown ( event ) {
                     boolStopScore = true;
                     boolStartStop = true;
                 } else if (slot.boolChangeStopToStart) {
+                    sound.stopButtonStart();
                     button.startColor();
                     sunlight.setStartButtonlight();
                     boolStartStop = false;
@@ -1156,6 +1163,7 @@ function onDocumentMouseDown( event ) {
     if ( intersects.length > 0 ) {
        // console.log(intersects[0].object.parent.name);
         if (intersects[0].object.parent.name == "button") {
+           // sound.playButtonStart();
             if (!slot.genArraySymb.boolFreeSpin) {
                 slot.stopStartRotateSymb();
                 var totalScore = slot.getTotalScore();
@@ -1171,6 +1179,7 @@ function onDocumentMouseDown( event ) {
                     boolStopScore = true;
                     boolStartStop = true;
                 } else if (slot.boolChangeStopToStart) {
+                    sound.stopButtonStart();
                     button.startColor();
                     sunlight.setStartButtonlight();
                     boolStartStop = false;
@@ -1190,6 +1199,7 @@ function onDocumentMouseDown( event ) {
             }
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloFullScreen") {
+            sound.playButtonBet();
             if( THREEx.FullScreen.activated() ){
                 THREEx.FullScreen.cancel();
                 buttonHoloFullScreen.setTexture( textureFullScreen );
@@ -1200,6 +1210,7 @@ function onDocumentMouseDown( event ) {
             buttonHoloFullScreen.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloAutoPlay") {
+            sound.playButtonAutoplay();
             if (!slot.genArraySymb.boolFreeSpin) {
                 if (!boolStartStopAutoPlay) {
                     console.log("AutoPlay = Start");
@@ -1235,6 +1246,7 @@ function onDocumentMouseDown( event ) {
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
 
+            sound.playButtonBet();
             var uv = intersects[ 0 ].uv;
 
             buttonHoloBet.startGlitch();

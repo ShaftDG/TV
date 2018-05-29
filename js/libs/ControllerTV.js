@@ -682,6 +682,9 @@ ControllerTV.prototype.setBeginSettings = function() {
 };
 
 ControllerTV.prototype.start = function() {
+    if (sound) {
+        sound.playButtonStart();
+    }
   //  this.boolRotate = true;
     this.boolChangeStopToStart = false;
     this.arrayStop = [];
@@ -701,6 +704,9 @@ ControllerTV.prototype.start = function() {
 };
 
 ControllerTV.prototype.stop = function() {
+    if (sound) {
+        sound.stopButtonStart();
+    }
     if (this.arrayStop.length != 0 && this.canStop) {
         this.canStop = false;
      //   this.boolRotate = false;
@@ -916,6 +922,9 @@ ControllerTV.prototype.mainGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -960,6 +969,9 @@ ControllerTV.prototype.mainGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1080,6 +1092,9 @@ ControllerTV.prototype.mainGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1119,6 +1134,9 @@ ControllerTV.prototype.mainGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1232,6 +1250,9 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1271,6 +1292,9 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1405,6 +1429,9 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1442,6 +1469,9 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
                 this.f = 0;
             }
             if (this.tvArray[this.tvArray[0].length - 1][this.tvArray.length - 1].isStopped) {
+                if (sound) {
+                    sound.stopButtonStart();
+                }
                 this.dt2 += deltaTime;
                 if (this.dt2 > this.speedSwitchBetweenRounds) {
                     this.dt2 = 0;
@@ -1554,6 +1584,11 @@ ControllerTV.prototype.freeSpinGame = function (deltaTime) {
 
 ControllerTV.prototype.animationFreeSpinSymb = function (deltaTime) {
     if (this.boolMoveFront) {
+        if (this.genArraySymb.boolPlusFreeSpin) {
+            if (sound) {
+                sound.playFreespin();
+            }
+        }
         for (var i = 0; i < this.tvArray.length; i++) {
             for (var j = 0; j < this.tvArray[0].length; j++) {
                 if (this.moveArrayFreeSpinSymb[i][j] == 1) {
@@ -1590,6 +1625,9 @@ ControllerTV.prototype.animationFreeSpinSymb = function (deltaTime) {
                        //     this.particlesArray[i].position.z = this.tvArray[j][i].position.z + 30;
 
                             this.particlesArray[i].start();
+                            if (sound) {
+                                sound.playPlazma();
+                            }
                             this.boolUpdateParticles = true;
                             this.tvArray[j][i].symbsParent.visible = false;
                         }
@@ -1675,7 +1713,10 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
                                               this.endPosition.y * this.endPosition.y +
                                               this.endPosition.z * this.endPosition.z)) {
                     this.particlesArray[i].stop();
-                    console.log("!!!!!!", this.particlesArray[i].position );
+                    if (sound) {
+                        sound.playExplode();
+                    }
+                   // console.log("!!!!!!", this.particlesArray[i].position );
                     this.switchNumFreeSpinPlus = true;
                     this.resolutionStart = true;
                     // this.particlesArray[i].scaled = false;
