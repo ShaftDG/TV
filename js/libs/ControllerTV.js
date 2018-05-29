@@ -683,6 +683,7 @@ ControllerTV.prototype.setBeginSettings = function() {
 
 ControllerTV.prototype.start = function() {
     if (sound) {
+       // sound.stopAll();
         sound.playButtonStart();
     }
   //  this.boolRotate = true;

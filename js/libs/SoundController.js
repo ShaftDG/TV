@@ -78,7 +78,7 @@ function SoundController(loadingManager) {
         soundFreespin.setBuffer( buffer );
         soundFreespin.setLoop(false);
         soundFreespin.setRefDistance( 200 );
-        soundFreespin.setVolume(1.0);
+        soundFreespin.setVolume(0.5);
     });
     this.soundFreespin = soundFreespin;
     totalRound2D.add(soundFreespin);
@@ -103,10 +103,33 @@ function SoundController(loadingManager) {
     this.soundExplode = soundExplode;
     totalRound2D.add(soundExplode);
 
+    var soundMove = new THREE.PositionalAudio( listener );
+    audioLoader.load( 'sounds/move.mp3', function( buffer ) {
+        soundMove.setBuffer( buffer );
+        soundMove.setLoop(false);
+        soundMove.setRefDistance( 200 );
+        soundMove.setVolume(0.5);
+    });
+    this.soundMove = soundMove;
+    totalFreeSpin.add(soundMove);
+
 }
 
 SoundController.prototype = Object.create(THREE.Object3D.prototype);
 SoundController.prototype.constructor = SoundController;
+
+SoundController.prototype.stopAll = function() {
+
+        this.soundButtonBet.stop();
+        this.soundButtonAutoplay.stop();
+        this.soundButtonStart.stop();
+        this.soundButtonStop.stop();
+        this.soundWin.stop();
+        this.soundFreespin.stop();
+        this.soundPlazma.stop();
+        this.soundExplode.stop();
+
+};
 
 SoundController.prototype.playButtonBet = function() {
     if (!this.soundButtonBet.isPlaying) {
@@ -154,5 +177,11 @@ SoundController.prototype.playPlazma = function() {
 SoundController.prototype.playExplode = function() {
     if (!this.soundExplode.isPlaying) {
         this.soundExplode.play();
+    }
+};
+
+SoundController.prototype.playMove = function() {
+    if (!this.soundMove.isPlaying) {
+        this.soundMove.play();
     }
 };

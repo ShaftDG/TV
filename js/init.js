@@ -224,7 +224,9 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
             } else {
                 if (slot.totalRoundFreeSpin > 0) {
                     totalRound2D.nameSlot.visible = false;
-                    sound.playWin();
+                    if (slot.getTotalSum() > 0) {
+                        sound.playWin();
+                    }
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
                     boolUpdateScore = true;
                 } else {
@@ -241,8 +243,8 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
         boolStartStopAutoPlay = false;
 
         if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
+            sound.playWin();
             if (!slot.boolFreeSpin) {
-                sound.playWin();
                 var totalRound = slot.getTotalSum();
                 if (totalRound2D.boolEndOfCount) {
                     dtCollect += deltaTime;
@@ -567,11 +569,15 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
                     dtCollect += deltaTime;
                 }
                 if (slot.getTotalSum() > 0) {
+                    sound.playWin();
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.getTotalSum());
                 }
             } else {
                 if (slot.totalRoundFreeSpin > 0) {
+                    if (slot.getTotalSum() > 0) {
+                        sound.playWin();
+                    }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
                     boolUpdateScore = true;
@@ -589,6 +595,7 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
         boolStartStopAutoPlay = false;
 
         if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
+            sound.playWin();
             if (!slot.boolFreeSpin) {
                 var totalRound = slot.getTotalSum();
                 if (totalRound2D.boolEndOfCount) {

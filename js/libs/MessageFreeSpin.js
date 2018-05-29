@@ -13,6 +13,7 @@ function MessageFreeSpin(posX, posY, posZ, textureLoader, stringPattern, col, ro
     this.resolutionPaused = false;
     this.resolutionRevers = false;
     this.resolutionStop = false;
+    this.soundIsPlaying = false;
 
     this.col = col;
     this.row = row;
@@ -866,20 +867,34 @@ MessageFreeSpin.prototype.addAnimation = function() {
 };
 
 MessageFreeSpin.prototype.startAnimation = function () {
+
     if (this.action.time > 1.0 && this.action.time < 2.0) {
         this.reversAnimation();
     } else {
         this.action.play();
         this.resolutionPaused = true;
     }
+    if (!this.soundIsPlaying && !this.action.paused ) {
+        if (sound) {
+            sound.playMove();
+        }
+        this.soundIsPlaying = true;
+    }
 };
 
 MessageFreeSpin.prototype.stopAnimation = function () {
     this.action.stop();
     this.resolutionPaused = false;
+    this.soundIsPlaying = false;
 };
 
 MessageFreeSpin.prototype.startAnimationAfterPause = function () {
+    if (this.action.paused) {
+        if (sound) {
+            sound.playMove();
+        }
+        this.soundIsPlaying = false;
+    }
     this.action.paused = false;
     this.resolutionStop = true;
 };
