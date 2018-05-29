@@ -217,7 +217,9 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
                     dtCollect += deltaTime;
                 }
                 if (slot.getTotalSum() > 0) {
-                    sound.playWin();
+                    if (sound) {
+                        sound.playWin();
+                    }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.getTotalSum());
                 }
@@ -225,7 +227,9 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
                 if (slot.totalRoundFreeSpin > 0) {
                     totalRound2D.nameSlot.visible = false;
                     if (slot.getTotalSum() > 0) {
-                        sound.playWin();
+                        if (sound) {
+                            sound.playWin();
+                        }
                     }
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
                     boolUpdateScore = true;
@@ -243,7 +247,9 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
         boolStartStopAutoPlay = false;
 
         if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
-            sound.playWin();
+            if (sound) {
+                sound.playWin();
+            }
             if (!slot.boolFreeSpin) {
                 var totalRound = slot.getTotalSum();
                 if (totalRound2D.boolEndOfCount) {
@@ -569,14 +575,18 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
                     dtCollect += deltaTime;
                 }
                 if (slot.getTotalSum() > 0) {
-                    sound.playWin();
+                    if (sound) {
+                        sound.playWin();
+                    }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.getTotalSum());
                 }
             } else {
                 if (slot.totalRoundFreeSpin > 0) {
                     if (slot.getTotalSum() > 0) {
-                        sound.playWin();
+                        if (sound) {
+                            sound.playWin();
+                        }
                     }
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
@@ -595,7 +605,9 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
         boolStartStopAutoPlay = false;
 
         if (slot.getTotalSum() > 0 && boolStopScore && slot.getBoolEndAnimation()) {
-            sound.playWin();
+            if (sound) {
+                sound.playWin();
+            }
             if (!slot.boolFreeSpin) {
                 var totalRound = slot.getTotalSum();
                 if (totalRound2D.boolEndOfCount) {
@@ -864,7 +876,7 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
 
 function init() {
     isMobile = new DetectedMobile().getIsMobile();
-   // isMobile = true;
+  //  isMobile = true;
 
     if (isMobile) {
         stringInsert = "mobile/";
@@ -1206,7 +1218,9 @@ function onDocumentMouseDown( event ) {
             }
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloFullScreen") {
-            sound.playButtonBet();
+            if (sound) {
+                sound.playButtonBet();
+            }
             if( THREEx.FullScreen.activated() ){
                 THREEx.FullScreen.cancel();
                 buttonHoloFullScreen.setTexture( textureFullScreen );
@@ -1217,7 +1231,9 @@ function onDocumentMouseDown( event ) {
             buttonHoloFullScreen.startGlitch();
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloAutoPlay") {
-            sound.playButtonAutoplay();
+            if (sound) {
+                sound.playButtonAutoplay();
+            }
             if (!slot.genArraySymb.boolFreeSpin) {
                 if (!boolStartStopAutoPlay) {
                     console.log("AutoPlay = Start");
@@ -1252,8 +1268,9 @@ function onDocumentMouseDown( event ) {
             }
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
-
-            sound.playButtonBet();
+            if (sound) {
+                sound.playButtonBet();
+            }
             var uv = intersects[ 0 ].uv;
 
             buttonHoloBet.startGlitch();
