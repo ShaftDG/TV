@@ -899,8 +899,8 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
 }
 
 function init() {
-  //  isMobile = new DetectedMobile().getIsMobile();
-    isMobile = true;
+    isMobile = new DetectedMobile().getIsMobile();
+  //  isMobile = true;
 
     if (isMobile) {
         stringInsert = "mobile/";
