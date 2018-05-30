@@ -132,6 +132,26 @@ function SoundController(loadingManager) {
     });
     this.soundEndCoins = soundEndCoins;
     totalFreeSpin.add(soundEndCoins);
+
+    var soundSwitch = new THREE.PositionalAudio( listener );
+    audioLoader.load( 'sounds/switch.mp3', function( buffer ) {
+        soundSwitch.setBuffer( buffer );
+        soundSwitch.setLoop(false);
+        soundSwitch.setRefDistance( 200 );
+        soundSwitch.setVolume(0.7);
+    });
+    this.soundSwitch = soundSwitch;
+    totalFreeSpin.add(soundSwitch);
+
+    var soundIntro = new THREE.PositionalAudio( listener );
+    audioLoader.load( 'sounds/intro.mp3', function( buffer ) {
+        soundIntro.setBuffer( buffer );
+        soundIntro.setLoop(false);
+        soundIntro.setRefDistance( 200 );
+        soundIntro.setVolume(0.5);
+    });
+    this.soundIntro = soundIntro;
+    totalFreeSpin.add(soundIntro);
 }
 
 SoundController.prototype = Object.create(THREE.Object3D.prototype);
@@ -170,6 +190,12 @@ SoundController.prototype.stopAll = function() {
     }
     if (this.soundEndCoins.isPlaying) {
         this.soundEndCoins.stop();
+    }
+    if (this.soundSwitch.isPlaying) {
+        this.soundSwitch.stop();
+    }
+    if (this.soundIntro.isPlaying) {
+        this.soundIntro.stop();
     }
 
 };
@@ -240,11 +266,23 @@ SoundController.prototype.playCoins = function() {
     }
 };
 
+SoundController.prototype.playSwitch = function() {
+    if (!this.soundSwitch.isPlaying) {
+        this.soundSwitch.play();
+    }
+};
+
 SoundController.prototype.playEndCoins = function() {
     if (!this.soundEndCoins.isPlaying && this.soundCoins.isPlaying) {
         this.soundEndCoins.play();
     }
     if (this.soundCoins.isPlaying) {
         this.soundCoins.stop();
+    }
+};
+
+SoundController.prototype.playIntro = function() {
+    if (!this.soundIntro.isPlaying) {
+        this.soundIntro.play();
     }
 };

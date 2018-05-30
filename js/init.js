@@ -13,6 +13,8 @@ var sunlight, tv, slot, sound;
 var dtCollect = 0;
 var dtNameSlot = 0;
 
+var boolIntro = true;
+
 var boolStartStop = false;
 var boolStartStopAutoPlay = false;
 var boolUpdateScore = false;
@@ -1097,6 +1099,13 @@ function animate() {
     stats.update();
    // rendererStats.update(renderer);
     render();
+
+    if (boolIntro) {
+        if (sound) {
+            sound.playIntro();
+        }
+        boolIntro = false;
+    }
 }
 
 function render() {
@@ -1243,7 +1252,7 @@ function onDocumentMouseDown( event ) {
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloFullScreen") {
             if (sound) {
-                sound.playButtonBet();
+                sound.playSwitch();
             }
             if( THREEx.FullScreen.activated() ){
                 THREEx.FullScreen.cancel();
@@ -1293,7 +1302,7 @@ function onDocumentMouseDown( event ) {
         }
         if (intersects[0].object.parent.parent.parent.name == "buttonHoloBet") {
             if (sound) {
-                sound.playButtonBet();
+                sound.playSwitch();
             }
             var uv = intersects[ 0 ].uv;
 
