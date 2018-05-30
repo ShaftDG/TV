@@ -4,7 +4,8 @@ function MessageTotalScore(posX, posY, posZ, textureLoader, stringPattern, col, 
     this.name = "MessageTotalScore";
 
     this.StartStopSwitch = false;
-    this.OnOffSwitch = false;
+    this.endScore = false;
+   // this.OnOffSwitch = false;
 
     this.stringInsert = "";
     if (isMobile) {
@@ -399,8 +400,8 @@ MessageTotalScore.prototype.constructor = MessageTotalScore;
 
 MessageTotalScore.prototype.setNumber = function(number) {
     this.number = number;
-    var deltaNumber = Math.abs(this.number - (this.k));
-    this.lengthChangeNumbers = deltaNumber.toString().length;
+   // var deltaNumber = Math.abs(this.number - (this.k));
+   // this.lengthChangeNumbers = deltaNumber.toString().length;
     this.StartStopSwitch = true;
 };
 
@@ -488,11 +489,11 @@ MessageTotalScore.prototype.stop = function() {
         this.groupNumbers.children[j].visible = false;
     }
     this.StartStopSwitch = false;
-    this.OnOffSwitch = false;
+   // this.OnOffSwitch = false;
 };
 
 MessageTotalScore.prototype.start = function() {
-    this.OnOffSwitch = true;
+   // this.OnOffSwitch = true;
     this.StartStopSwitch = true;
 };
 
@@ -521,7 +522,7 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                 }
                 this.groupNumbers.children[this.arrayNumbers.length - 1 - j].geometry.attributes.uv.needsUpdate = true;
 
-                if (j < this.lengthChangeNumbers) {
+                if (j < Math.abs(this.number - this.k).toString().length) {
                     this.groupNumbers.children[this.arrayNumbers.length - 1 - j].material.uniforms.boolGlitch.value = true;
                     this.dt1 = 0.0;
                 }
@@ -531,11 +532,11 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                 this.dt += deltaTime;
                 if (this.dt > this.speedSwitchNumber) {
                     if (this.k < this.number) {
-                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 5) {
+                        if ((this.number - this.k).toString().length > 4 /*|| this.lengthChangeNumbers > 4*/) {
                             this.k += 1111;
-                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 4) {
+                        } else if ((this.number - this.k).toString().length > 3 /*|| this.lengthChangeNumbers > 3*/) {
                             this.k += 111;
-                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 3) {
+                        } else if ((this.number - this.k).toString().length > 2 /*|| this.lengthChangeNumbers > 2*/) {
                             this.k += 11;
                         } else {
                             this.k++;
@@ -545,11 +546,11 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                             this.k = this.number;
                         }
                     } else if (this.k > this.number) {
-                        if (/*this.k.toString().length > 5 ||*/ this.lengthChangeNumbers > 5) {
+                        if ((this.k - this.number).toString().length > 4 /*|| this.lengthChangeNumbers > 4*/) {
                             this.k -= 1111;
-                        } else if (/*this.k.toString().length > 4 ||*/ this.lengthChangeNumbers > 4) {
+                        } else if ((this.k - this.number).toString().length > 3 /*|| this.lengthChangeNumbers > 3*/) {
                             this.k -= 111;
-                        } else if (/*this.k.toString().length > 2 ||*/ this.lengthChangeNumbers > 3) {
+                        } else if ((this.k - this.number).toString().length > 2 /*|| this.lengthChangeNumbers > 2*/) {
                             this.k -= 11;
                         } else {
                             this.k--;
@@ -560,6 +561,7 @@ MessageTotalScore.prototype.update = function(deltaTime) {
                         }
                     } else if (this.k == this.number) {
                         this.StartStopSwitch = false;
+                        this.endScore = true;
                     }
                 }
 

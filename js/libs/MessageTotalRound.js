@@ -534,11 +534,11 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                 this.dt += deltaTime;
                 if (this.dt > this.speedSwitchNumber) {
                     if (this.k < this.number) {
-                        if (this.k.toString().length > 4) {
+                        if ((this.number - this.k).toString().length > 4) {
                             this.k += 1111;
-                        } else if (this.k.toString().length > 3) {
+                        } else if ((this.number - this.k).toString().length > 3) {
                             this.k += 111;
-                        } else if (this.k.toString().length > 2) {
+                        } else if ((this.number - this.k).toString().length > 2) {
                             this.k += 11;
                         } else {
                             this.k++;
@@ -548,11 +548,11 @@ MessageTotalRound.prototype.update = function(deltaTime) {
                             this.boolEndOfCount = true;
                         }
                     } else if (this.k > this.number) {
-                        if (this.k.toString().length > 4) {
+                        if ((this.k - this.number).toString().length > 4) {
                             this.k -= 1111;
-                        } else if (this.k.toString().length > 3) {
+                        } else if ((this.k - this.number).toString().length > 3) {
                             this.k -= 111;
-                        } else if (this.k.toString().length > 2) {
+                        } else if ((this.k - this.number).toString().length > 2) {
                             this.k -= 11;
                         } else {
                             this.k--;

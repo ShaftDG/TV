@@ -273,6 +273,16 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
         boolStopScore = false;
         slot.autoPlayStop = false;
         boolStartColor = true;
+        if (sound) {
+            sound.playCoins();
+        }
+    }
+
+    if (totalScore2D.endScore) {
+        if (sound) {
+            sound.playEndCoins();
+        }
+        totalScore2D.endScore = false;
     }
     if (totalRound2D.isZero) {
         dtNameSlot += deltaTime;
@@ -287,6 +297,9 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
         totalScore2D.setNumber(slot.getTotalScore());
         totalRound2D.setNumber(0);
         boolUpdateScore = false;
+        if (sound) {
+            sound.playCoins();
+        }
     }
     if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinPlus) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
@@ -631,8 +644,16 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
         boolStopScore = false;
         slot.autoPlayStop = false;
         boolStartColor = true;
+        if (sound) {
+            sound.playCoins();
+        }
     }
-
+    if (totalScore2D.endScore) {
+        if (sound) {
+            sound.playEndCoins();
+        }
+        totalScore2D.endScore = false;
+    }
     if (totalRound2D.isZero) {
         dtNameSlot += deltaTime;
         if (!totalRound2D.nameSlot.visible && dtNameSlot > 0.5) {
@@ -646,6 +667,9 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
         totalScore2D.setNumber(slot.getTotalScore());
         totalRound2D.setNumber(0);
         boolUpdateScore = false;
+        if (sound) {
+            sound.playCoins();
+        }
     }
     if (slot.genArraySymb.numFreeSpin >= 0 && slot.boolFreeSpin && slot.switchNumFreeSpinPlus) {
         totalFreeSpin.setNumber(slot.genArraySymb.numFreeSpin);
@@ -875,8 +899,8 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
 }
 
 function init() {
-    isMobile = new DetectedMobile().getIsMobile();
-  //  isMobile = true;
+  //  isMobile = new DetectedMobile().getIsMobile();
+    isMobile = true;
 
     if (isMobile) {
         stringInsert = "mobile/";

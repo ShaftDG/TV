@@ -113,21 +113,64 @@ function SoundController(loadingManager) {
     this.soundMove = soundMove;
     totalFreeSpin.add(soundMove);
 
+    var soundCoins = new THREE.PositionalAudio( listener );
+    audioLoader.load( 'sounds/coins.mp3', function( buffer ) {
+        soundCoins.setBuffer( buffer );
+        soundCoins.setLoop(true);
+        soundCoins.setRefDistance( 200 );
+        soundCoins.setVolume(0.3);
+    });
+    this.soundCoins = soundCoins;
+    totalFreeSpin.add(soundCoins);
+
+    var soundEndCoins = new THREE.PositionalAudio( listener );
+    audioLoader.load( 'sounds/endCoins.mp3', function( buffer ) {
+        soundEndCoins.setBuffer( buffer );
+        soundEndCoins.setLoop(false);
+        soundEndCoins.setRefDistance( 200 );
+        soundEndCoins.setVolume(0.3);
+    });
+    this.soundEndCoins = soundEndCoins;
+    totalFreeSpin.add(soundEndCoins);
 }
 
 SoundController.prototype = Object.create(THREE.Object3D.prototype);
 SoundController.prototype.constructor = SoundController;
 
 SoundController.prototype.stopAll = function() {
-
+    if (this.soundButtonBet.isPlaying) {
         this.soundButtonBet.stop();
+    }
+    if (this.soundButtonAutoplay.isPlaying) {
         this.soundButtonAutoplay.stop();
+    }
+    if (this.soundButtonStart.isPlaying) {
         this.soundButtonStart.stop();
+    }
+    if (this.soundButtonStop.isPlaying) {
         this.soundButtonStop.stop();
+    }
+    if (this.soundWin.isPlaying) {
         this.soundWin.stop();
+    }
+    if (this.soundFreespin.isPlaying) {
         this.soundFreespin.stop();
+    }
+    if (this.soundPlazma.isPlaying) {
         this.soundPlazma.stop();
+    }
+    if (this.soundExplode.isPlaying) {
         this.soundExplode.stop();
+    }
+    if (this.soundMove.isPlaying) {
+        this.soundMove.stop();
+    }
+    if (this.soundCoins.isPlaying) {
+        this.soundCoins.stop();
+    }
+    if (this.soundEndCoins.isPlaying) {
+        this.soundEndCoins.stop();
+    }
 
 };
 
@@ -150,7 +193,9 @@ SoundController.prototype.playButtonStart = function() {
 };
 
 SoundController.prototype.stopButtonStart = function() {
-    this.soundButtonStart.stop();
+    if (this.soundButtonStart.isPlaying) {
+        this.soundButtonStart.stop();
+    }
     if (!this.soundButtonStop.isPlaying) {
         this.soundButtonStop.play();
     }
@@ -163,6 +208,9 @@ SoundController.prototype.playWin = function() {
 };
 
 SoundController.prototype.playFreespin = function() {
+    if (this.soundWin.isPlaying) {
+        this.soundWin.stop();
+    }
     if (!this.soundFreespin.isPlaying) {
         this.soundFreespin.play();
     }
@@ -183,5 +231,20 @@ SoundController.prototype.playExplode = function() {
 SoundController.prototype.playMove = function() {
     if (!this.soundMove.isPlaying) {
         this.soundMove.play();
+    }
+};
+
+SoundController.prototype.playCoins = function() {
+    if (!this.soundCoins.isPlaying) {
+        this.soundCoins.play();
+    }
+};
+
+SoundController.prototype.playEndCoins = function() {
+    if (!this.soundEndCoins.isPlaying && this.soundCoins.isPlaying) {
+        this.soundEndCoins.play();
+    }
+    if (this.soundCoins.isPlaying) {
+        this.soundCoins.stop();
     }
 };
