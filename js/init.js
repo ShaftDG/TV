@@ -9,6 +9,7 @@ var camera, cubeCamera, scene, renderer, controls;
 var cameraParent = new THREE.Object3D;
 
 var sunlight, tv, slot, sound;
+var audioContext;
 
 var dtCollect = 0;
 var dtNameSlot = 0;
@@ -1034,6 +1035,8 @@ function init() {
 
     if (!isMobile) {
         document.addEventListener('mousemove', onDocumentMouseMove, false);
+    } else {
+        audioContext = new AudioContext();
     }
 
     document.addEventListener( 'keydown', onKeyDown, false );
@@ -1102,6 +1105,7 @@ function animate() {
 
     if (boolIntro) {
         if (sound) {
+            audioContext.resume();
             sound.playIntro();
         }
         boolIntro = false;
