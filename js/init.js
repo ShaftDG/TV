@@ -226,13 +226,13 @@ function updateDesktop(deltaTime, deltaTimeElapsed) {
                     totalRound2D.setNumber(slot.getTotalSum());
                 }
             } else {
+                if (slot.getTotalSum() > 0) {
+                    if (sound) {
+                        sound.playWin();
+                    }
+                }
                 if (slot.totalRoundFreeSpin > 0) {
                     totalRound2D.nameSlot.visible = false;
-                    if (slot.getTotalSum() > 0) {
-                        if (sound) {
-                            sound.playWin();
-                        }
-                    }
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
                     boolUpdateScore = true;
                 } else {
@@ -597,12 +597,12 @@ function updateMobile(deltaTime, deltaTimeElapsed) {
                     totalRound2D.setNumber(slot.getTotalSum());
                 }
             } else {
-                if (slot.totalRoundFreeSpin > 0) {
-                    if (slot.getTotalSum() > 0) {
-                        if (sound) {
-                            sound.playWin();
-                        }
+                if (slot.getTotalSum() > 0) {
+                    if (sound) {
+                        sound.playWin();
                     }
+                }
+                if (slot.totalRoundFreeSpin > 0) {
                     totalRound2D.nameSlot.visible = false;
                     totalRound2D.setNumber(slot.totalRoundFreeSpin);
                     boolUpdateScore = true;

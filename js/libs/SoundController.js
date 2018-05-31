@@ -194,9 +194,9 @@ SoundController.prototype.stopAll = function() {
     if (this.soundSwitch.isPlaying) {
         this.soundSwitch.stop();
     }
-    if (this.soundIntro.isPlaying) {
+    /*if (this.soundIntro.isPlaying) {
         this.soundIntro.stop();
-    }
+    }*/
 
 };
 
@@ -228,7 +228,7 @@ SoundController.prototype.stopButtonStart = function() {
 };
 
 SoundController.prototype.playWin = function() {
-    if (!this.soundWin.isPlaying) {
+    if (!this.soundWin.isPlaying && !this.soundFreespin.isPlaying) {
         this.soundWin.play();
     }
 };

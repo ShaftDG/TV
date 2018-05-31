@@ -12,7 +12,7 @@ function  ControllerTV(posX, posY, posZ, numTVperLine, numLineTV, numSymbPerCyli
     this.f = 0;
     this.g = 0;
     if (isMobile) {
-        this.endPosition = new THREE.Vector3(65, 10, 12);
+        this.endPosition = new THREE.Vector3(67, 10, 12);
     } else {
         this.endPosition = new THREE.Vector3(77, 12, 12);
     }
@@ -1697,7 +1697,7 @@ ControllerTV.prototype.updateWithTime = function(deltaTimeElapsed, deltaTime) {
         if (this.children[i].name == "tv") {
             this.children[i].updateWithTime(deltaTimeElapsed, deltaTime);
         } else if (this.children[i].name == "fire") {
-                this.children[i].updateWithTime(deltaTimeElapsed, deltaTimeElapsed);
+                this.children[i].updateWithTime(deltaTimeElapsed, deltaTime);
         }
     }
 

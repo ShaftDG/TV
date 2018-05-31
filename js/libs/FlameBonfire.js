@@ -65,8 +65,8 @@ function FlameBonfire(optionsFire, loadingManager, isMobile) {
             y: 20
         },
         zCoord: 0,
-        totalParticles: 250,
-        sccaleSizeParticles: 20,
+        totalParticles: 500,
+        sccaleSizeParticles: 15,
         beginRadius: 1,
         endRadius: 10,
         combustion: 0.25,
@@ -75,6 +75,7 @@ function FlameBonfire(optionsFire, loadingManager, isMobile) {
     };
     if (isMobile) {
         explodeOption.totalParticles = 200;
+        explodeOption.sccaleSizeParticles = 10;
     }
     this.explodeParticles = new ExplodeParticles(explodeOption);
     // this.explodeParticles.start();
@@ -122,10 +123,10 @@ FlameBonfire.prototype.switchOff = function () {
    // this.explodeParticles.stop();
 };
 
-FlameBonfire.prototype.updateWithTime = function (time, deltaTime ) {
-    this.materialHolo.uniforms.time.value = deltaTime;
-    this.tonguesOfFireParticles.updateParticles( deltaTime );
-    this.originFireParticles.updateParticles( deltaTime );
+FlameBonfire.prototype.updateWithTime = function ( time, deltaTime ) {
+    this.materialHolo.uniforms.time.value = time;
+    this.tonguesOfFireParticles.updateParticles( time );
+    this.originFireParticles.updateParticles( time );
 
     this.explodeParticles.updateParticles(time, deltaTime);
 
