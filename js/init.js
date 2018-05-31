@@ -1102,6 +1102,14 @@ function animate() {
 
     if (boolIntro) {
         if (sound) {
+          ///  var AudioContext = window.AudioContext || window.webkitAudioContext;
+
+            var context = new AudioContext();
+            if (context.state === 'suspended')
+            {
+                context.resume();
+            }
+         // sound.listener.context.resume().then(function() { console.log("play sound") });
             sound.playIntro();
         }
         boolIntro = false;

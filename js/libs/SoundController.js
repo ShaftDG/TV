@@ -2,11 +2,11 @@ function SoundController(loadingManager) {
     THREE.Object3D.apply(this);
     this.name = "SoundController";
 
-    var listener = new THREE.AudioListener();
-    camera.add( listener );
+    this.listener = new THREE.AudioListener();
+    camera.add( this.listener );
     var audioLoader = new THREE.AudioLoader(loadingManager);
 
-   /* var soundBonfire = new THREE.PositionalAudio( listener );
+   /* var soundBonfire = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/bonfire.mp3', function( buffer ) {
         soundBonfire.setBuffer( buffer );
         soundBonfire.setLoop(true);
@@ -15,7 +15,7 @@ function SoundController(loadingManager) {
         soundBonfire.play();
     });
     this.add( soundBonfire );
-    var soundMusic = new THREE.Audio( listener );
+    var soundMusic = new THREE.Audio( this.listener );
     audioLoader.load( 'sounds/song.ogg', function( buffer ) {
         soundMusic.setBuffer( buffer );
         soundMusic.setLoop(true);
@@ -23,7 +23,7 @@ function SoundController(loadingManager) {
         soundMusic.play();
     });*/
 
-    var soundButtonBet = new THREE.PositionalAudio( listener );
+    var soundButtonBet = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/ama_btn.mp3', function( buffer ) {
         soundButtonBet.setBuffer( buffer );
         soundButtonBet.setLoop(false);
@@ -33,7 +33,7 @@ function SoundController(loadingManager) {
     this.soundButtonBet = soundButtonBet;
     buttonHoloBet.add(soundButtonBet);
 
-    var soundButtonAutoplay = new THREE.PositionalAudio( listener );
+    var soundButtonAutoplay = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/autoplay.mp3', function( buffer ) {
         soundButtonAutoplay.setBuffer( buffer );
         soundButtonAutoplay.setLoop(false);
@@ -43,7 +43,7 @@ function SoundController(loadingManager) {
     this.soundButtonAutoplay = soundButtonAutoplay;
     buttonHoloAutoPlay.add(soundButtonAutoplay);
 
-    var soundButtonStart = new THREE.PositionalAudio( listener );
+    var soundButtonStart = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/start.mp3', function( buffer ) {
         soundButtonStart.setBuffer( buffer );
         soundButtonStart.setLoop(false);
@@ -53,7 +53,7 @@ function SoundController(loadingManager) {
     this.soundButtonStart = soundButtonStart;
     button.add(soundButtonStart);
 
-    var soundButtonStop = new THREE.PositionalAudio( listener );
+    var soundButtonStop = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/stop.mp3', function( buffer ) {
         soundButtonStop.setBuffer( buffer );
         soundButtonStop.setLoop(false);
@@ -63,7 +63,7 @@ function SoundController(loadingManager) {
     this.soundButtonStop = soundButtonStop;
     button.add(soundButtonStop);
 
-    var soundWin = new THREE.PositionalAudio( listener );
+    var soundWin = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/win.mp3', function( buffer ) {
         soundWin.setBuffer( buffer );
         soundWin.setLoop(false);
@@ -73,7 +73,7 @@ function SoundController(loadingManager) {
     this.soundWin = soundWin;
     totalRound2D.add(soundWin);
 
-    var soundFreespin = new THREE.PositionalAudio( listener );
+    var soundFreespin = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/freespin.mp3', function( buffer ) {
         soundFreespin.setBuffer( buffer );
         soundFreespin.setLoop(false);
@@ -83,7 +83,7 @@ function SoundController(loadingManager) {
     this.soundFreespin = soundFreespin;
     totalRound2D.add(soundFreespin);
 
-    var soundPlazma = new THREE.PositionalAudio( listener );
+    var soundPlazma = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/plazma.mp3', function( buffer ) {
         soundPlazma.setBuffer( buffer );
         soundPlazma.setLoop(false);
@@ -93,7 +93,7 @@ function SoundController(loadingManager) {
     this.soundPlazma = soundPlazma;
     totalRound2D.add(soundPlazma);
 
-    var soundExplode = new THREE.PositionalAudio( listener );
+    var soundExplode = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/explode.mp3', function( buffer ) {
         soundExplode.setBuffer( buffer );
         soundExplode.setLoop(false);
@@ -103,7 +103,7 @@ function SoundController(loadingManager) {
     this.soundExplode = soundExplode;
     totalRound2D.add(soundExplode);
 
-    var soundMove = new THREE.PositionalAudio( listener );
+    var soundMove = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/move.mp3', function( buffer ) {
         soundMove.setBuffer( buffer );
         soundMove.setLoop(false);
@@ -113,7 +113,7 @@ function SoundController(loadingManager) {
     this.soundMove = soundMove;
     totalFreeSpin.add(soundMove);
 
-    var soundCoins = new THREE.PositionalAudio( listener );
+    var soundCoins = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/coins.mp3', function( buffer ) {
         soundCoins.setBuffer( buffer );
         soundCoins.setLoop(true);
@@ -123,7 +123,7 @@ function SoundController(loadingManager) {
     this.soundCoins = soundCoins;
     totalFreeSpin.add(soundCoins);
 
-    var soundEndCoins = new THREE.PositionalAudio( listener );
+    var soundEndCoins = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/endCoins.mp3', function( buffer ) {
         soundEndCoins.setBuffer( buffer );
         soundEndCoins.setLoop(false);
@@ -133,7 +133,7 @@ function SoundController(loadingManager) {
     this.soundEndCoins = soundEndCoins;
     totalFreeSpin.add(soundEndCoins);
 
-    var soundSwitch = new THREE.PositionalAudio( listener );
+    var soundSwitch = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/switch.mp3', function( buffer ) {
         soundSwitch.setBuffer( buffer );
         soundSwitch.setLoop(false);
@@ -143,7 +143,7 @@ function SoundController(loadingManager) {
     this.soundSwitch = soundSwitch;
     totalFreeSpin.add(soundSwitch);
 
-    var soundIntro = new THREE.PositionalAudio( listener );
+    var soundIntro = new THREE.PositionalAudio( this.listener );
     audioLoader.load( 'sounds/intro.mp3', function( buffer ) {
         soundIntro.setBuffer( buffer );
         soundIntro.setLoop(false);
